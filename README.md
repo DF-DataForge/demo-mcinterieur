@@ -121,7 +121,9 @@ mc_interieur/          Odoo 20.0 module
   tests/               flow and portal tests
   views/               backend views, menus, portal templates
   wizard/              Ardis result import
-mockup/                clickable HTML mockup the module is based on
+mockup/                intake-odoo.html: clickable HTML mockup the module is based on
+                       klant-traject.html: the project in 8 steps, for customers
+                       interne-flow.html: the internal flow in 9 phases, for the team
 .github/workflows/     installs the module with demo data on Odoo 20.0 and runs the tests
 ```
 

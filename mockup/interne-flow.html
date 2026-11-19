@@ -1,0 +1,364 @@
+<title>Interne projectflow MC Interieur</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: internal explainer. Intro band, systems map, role filter + numbered track of 9 phases with one detail panel, who-does-what matrix, rules, open points. */
+:root{
+  --bg:#f4f2ee; --paper:#ffffff; --ink:#2b251c; --muted:#6e6556; --line:#e2ded7; --line-strong:#cbc3b5;
+  --brown:#574a36; --brown-2:#78664a; --brown-soft:#efebe3; --on-brown:#ffffff;
+  --green:#95ba3c; --green-strong:#5f7d1c; --green-soft:#eef4dc; --on-green:#ffffff;
+  --amber:#9a5d0c; --amber-soft:#fbefd9;
+  --grid:rgba(87,74,54,.07);
+  --font:"Open Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1a1712; --paper:#231f19; --ink:#ece7de; --muted:#a89f90; --line:#3a342b; --line-strong:#4e463a;
+  --brown:#c9b38f; --brown-2:#b39c78; --brown-soft:#352d22; --on-brown:#1a1712;
+  --green:#abcb5d; --green-strong:#abcb5d; --green-soft:#2a3317; --on-green:#16200a;
+  --amber:#e2ab5a; --amber-soft:#3a2c15; --grid:rgba(201,179,143,.07); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1a1712; --paper:#231f19; --ink:#ece7de; --muted:#a89f90; --line:#3a342b; --line-strong:#4e463a;
+  --brown:#c9b38f; --brown-2:#b39c78; --brown-soft:#352d22; --on-brown:#1a1712;
+  --green:#abcb5d; --green-strong:#abcb5d; --green-soft:#2a3317; --on-green:#16200a;
+  --amber:#e2ab5a; --amber-soft:#3a2c15; --grid:rgba(201,179,143,.07); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--font);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:3px solid var(--green);outline-offset:2px;border-radius:6px}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.2}
+code,.mono{font-family:var(--mono);font-size:.86em}
+
+.band{background:var(--brown);color:var(--on-brown);border-top:5px solid var(--green)}
+.band .wrap{padding-block:40px 36px;display:grid;gap:12px}
+.eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;opacity:.85}
+.band h1{font-size:clamp(28px,4.2vw,46px);font-weight:800;letter-spacing:-.01em;max-width:20ch}
+.band p{margin:0;max-width:66ch;font-size:clamp(16px,1.5vw,18px);opacity:.92}
+.keys{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.keys span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:600}
+
+main{padding-block:36px 56px;display:grid;grid-template-columns:minmax(0,1fr);gap:56px}
+main > section{min-width:0}
+section > h2{font-size:clamp(22px,2.6vw,30px);font-weight:800;margin-bottom:6px}
+section > p.sub{margin:0 0 18px;color:var(--muted);max-width:70ch}
+
+/* systems map */
+.map{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow-x:auto}
+.map svg{display:block;width:100%;min-width:760px;height:auto}
+.map .box{fill:var(--paper);stroke:var(--line-strong);stroke-width:1.5}
+.map .core{fill:var(--brown-soft);stroke:var(--brown);stroke-width:2}
+.map .ext{fill:var(--paper);stroke:var(--brown-2);stroke-width:1.5}
+.map .floor{fill:var(--green-soft);stroke:var(--green-strong);stroke-width:1.5}
+.map .t{fill:var(--ink);font:700 15px var(--font)}
+.map .s{fill:var(--muted);font:500 12px var(--font)}
+.map .m{fill:var(--ink);font:600 12.5px var(--font)}
+.map .lab{fill:var(--brown);font:600 12px var(--mono)}
+.map .arr{stroke:var(--brown);stroke-width:1.8;fill:none}
+.map .arr.d{stroke-dasharray:5 4}
+.map .chip{fill:var(--paper);stroke:var(--line-strong)}
+.map .head{fill:var(--brown)}
+.legend{display:flex;flex-wrap:wrap;gap:18px;padding:12px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:28px;border-top:2px solid var(--brown);vertical-align:middle;margin-right:6px}
+.legend i.d{border-top-style:dashed}
+
+/* roles + track */
+.roles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center}
+.roles .lbl{font-size:13px;color:var(--muted);font-weight:600;margin-right:4px}
+.chip{all:unset;cursor:pointer;border:1.5px solid var(--line-strong);border-radius:999px;padding:5px 14px;font-size:14px;font-weight:600;background:var(--paper)}
+.chip[aria-pressed="true"]{background:var(--brown);border-color:var(--brown);color:var(--on-brown)}
+.track{display:flex;list-style:none;margin:0 0 18px;padding:6px 0 4px;overflow-x:auto;scrollbar-width:thin}
+.track li{flex:1 0 104px;position:relative}
+.track li::before{content:"";position:absolute;top:20px;left:-50%;width:100%;height:3px;background:var(--line);z-index:0}
+.track li:first-child::before{display:none}
+.track li.done::before,.track li.current::before{background:var(--green)}
+.track button{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;text-align:center;position:relative;z-index:1}
+.track .dot{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--paper);border:3px solid var(--line-strong);color:var(--muted);font-weight:800}
+.track .lbl{font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.25;padding-inline:3px}
+.track li.done .dot{background:var(--green);border-color:var(--green);color:var(--on-green)}
+.track li.current .dot{background:var(--brown);border-color:var(--brown);color:var(--on-brown)}
+.track li.current .lbl{color:var(--ink)}
+.track li.dim{opacity:.32}
+
+.panel{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+@media (max-width:860px){.panel{grid-template-columns:minmax(0,1fr)}}
+.side{background-color:var(--brown-soft);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;padding:26px 24px;display:grid;gap:14px;align-content:start}
+.side .num{font:800 56px/1 var(--font);color:var(--brown);opacity:.25}
+.side h3{font-size:24px;font-weight:800}
+.who{display:flex;flex-wrap:wrap;gap:6px}
+.who span{background:var(--brown);color:var(--on-brown);border-radius:999px;padding:3px 12px;font-size:13px;font-weight:700}
+.who span.cust{background:var(--green-strong);color:var(--on-green)}
+.where{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.where small{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:2px}
+.where div{font:500 13.5px var(--mono);color:var(--ink);word-break:break-word}
+.stagechg{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:700}
+.stagechg span{border-radius:6px;padding:3px 9px;background:var(--paper);border:1px solid var(--line-strong)}
+.stagechg span.to{background:var(--green-strong);border-color:var(--green-strong);color:var(--on-green)}
+.body{padding:26px 28px;display:grid;gap:16px;align-content:start}
+@media (max-width:560px){.body{padding:20px 16px}.side{padding:20px 16px}}
+.body .lead{margin:0;font-size:17.5px;max-width:66ch}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px}
+.col{border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.col h4{margin:0 0 6px;font-size:14px;color:var(--brown);display:flex;gap:8px;align-items:center}
+.col.auto{background:var(--green-soft);border-color:transparent}
+.col.auto h4{color:var(--green-strong)}
+.col.sys h4{color:var(--brown-2)}
+.col ul{margin:0;padding-left:18px;font-size:15px}
+.col li+li{margin-top:4px}
+.col svg{width:18px;height:18px;flex:none}
+.nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:15px;padding:9px 17px;border-radius:999px;border:2px solid var(--brown);color:var(--brown)}
+.btn.primary{background:var(--brown);color:var(--on-brown)}
+.btn[aria-disabled="true"]{opacity:.35;pointer-events:none}
+.count{margin-left:auto;font:500 13px var(--mono);color:var(--muted)}
+
+/* matrix */
+.matrix{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:center}
+th{font-size:12.5px;color:var(--muted);font-weight:700;background:var(--brown-soft)}
+th:first-child,td:first-child{text-align:left}
+tbody tr:last-child td{border-bottom:0}
+td .y{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--brown);color:var(--on-brown);font-size:12px;font-weight:800}
+td .c{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--green-strong);color:var(--on-green);font-size:12px;font-weight:800}
+td .n{color:var(--line-strong)}
+td button{all:unset;cursor:pointer;font-weight:700;color:var(--ink)}
+td button:hover{color:var(--brown)}
+
+/* rules + open */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.rule{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
+.rule h3{font-size:16px;margin-bottom:4px}
+.rule p{margin:0;font-size:15px;color:var(--muted)}
+.rule .k{display:inline-block;font:600 11.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--green-strong);margin-bottom:6px}
+.open{background:var(--amber-soft);border-radius:14px;padding:22px 24px}
+.open h2{font-size:22px;margin-bottom:10px}
+.open ul{margin:0;padding-left:20px;display:grid;gap:6px;max-width:80ch}
+.open b{color:var(--amber)}
+footer{padding-block:0 40px;color:var(--muted);font-size:13px}
+</style>
+
+<header class="band">
+  <div class="wrap">
+    <div class="eyebrow">Interne werking</div>
+    <h1>Hoe een project door het bedrijf loopt</h1>
+    <p>Eén project in Odoo verbindt alle stappen: van de intake van de verkoper tot de handtekening bij de oplevering. TopSolid en Ardis blijven de vertrouwde werktuigen; Odoo zorgt dat de gegevens tussen mensen en machines doorstromen zonder overtypen.</p>
+    <div class="keys"><span>1 projectreferentie</span><span>1 materiaallijst uit TopSolid</span><span>1 barcode per onderdeel</span><span>9 fases</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section aria-labelledby="sys-title">
+    <h2 id="sys-title">De systemen en hoe ze samenhangen</h2>
+    <p class="sub">Odoo staat in het midden. Bestanden gaan van TopSolid naar Odoo en van Odoo naar Ardis. De CNC-programma's gaan zoals vandaag rechtstreeks uit TopSolid naar de machine; het etiket op elk onderdeel legt de link.</p>
+    <div class="map">
+      <svg viewBox="0 0 980 520" role="img" aria-labelledby="map-t map-d">
+        <title id="map-t">Systemenkaart</title>
+        <desc id="map-d">Odoo in het midden met projecten, offertes, werkvoorbereiding, voorraad en planning. Links TopSolid 6, rechts Ardis, boven het klantportaal, onder de werkvloer met paneelzaag, CNC en montage.</desc>
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" class="head"/></marker></defs>
+
+        <rect x="370" y="30" width="240" height="64" rx="12" class="ext"/>
+        <text x="490" y="57" text-anchor="middle" class="t">Klantportaal</text>
+        <text x="490" y="78" text-anchor="middle" class="s">tekening + offerte, vragen, goedkeuring</text>
+
+        <rect x="300" y="150" width="380" height="210" rx="16" class="core"/>
+        <text x="490" y="180" text-anchor="middle" class="t">Odoo</text>
+        <rect x="322" y="198" width="160" height="34" rx="8" class="chip"/><text x="402" y="220" text-anchor="middle" class="m">Projecten en intake</text>
+        <rect x="498" y="198" width="160" height="34" rx="8" class="chip"/><text x="578" y="220" text-anchor="middle" class="m">Offertes</text>
+        <rect x="322" y="244" width="160" height="34" rx="8" class="chip"/><text x="402" y="266" text-anchor="middle" class="m">Werkvoorbereiding</text>
+        <rect x="498" y="244" width="160" height="34" rx="8" class="chip"/><text x="578" y="266" text-anchor="middle" class="m">Voorraad en aankoop</text>
+        <rect x="322" y="290" width="160" height="34" rx="8" class="chip"/><text x="402" y="312" text-anchor="middle" class="m">Etiketten (barcode)</text>
+        <rect x="498" y="290" width="160" height="34" rx="8" class="chip"/><text x="578" y="312" text-anchor="middle" class="m">Planning plaatsing</text>
+
+        <rect x="30" y="170" width="190" height="90" rx="12" class="ext"/>
+        <text x="125" y="205" text-anchor="middle" class="t">TopSolid 6</text>
+        <text x="125" y="228" text-anchor="middle" class="s">tekening, materiaallijst</text>
+        <text x="125" y="246" text-anchor="middle" class="s">CNC-plugin</text>
+
+        <rect x="760" y="170" width="190" height="90" rx="12" class="ext"/>
+        <text x="855" y="205" text-anchor="middle" class="t">Ardis</text>
+        <text x="855" y="228" text-anchor="middle" class="s">zaagoptimalisatie</text>
+        <text x="855" y="246" text-anchor="middle" class="s">etiketten printen</text>
+
+        <rect x="120" y="420" width="190" height="64" rx="12" class="floor"/>
+        <text x="215" y="447" text-anchor="middle" class="t">Paneelzaag</text>
+        <text x="215" y="468" text-anchor="middle" class="s">scannen per onderdeel</text>
+        <rect x="395" y="420" width="190" height="64" rx="12" class="floor"/>
+        <text x="490" y="447" text-anchor="middle" class="t">CNC</text>
+        <text x="490" y="468" text-anchor="middle" class="s">scan laadt programma</text>
+        <rect x="670" y="420" width="190" height="64" rx="12" class="floor"/>
+        <text x="765" y="447" text-anchor="middle" class="t">Montage en plaatsing</text>
+        <text x="765" y="468" text-anchor="middle" class="s">verzamelen, oplevering</text>
+
+        <path d="M220 200 H296" class="arr" marker-end="url(#ah)"/>
+        <text x="258" y="192" text-anchor="middle" class="lab">CSV</text>
+        <path d="M680 200 H756" class="arr" marker-end="url(#ah)"/>
+        <text x="718" y="192" text-anchor="middle" class="lab">CSV</text>
+        <path d="M756 236 H684" class="arr" marker-end="url(#ah)"/>
+        <text x="718" y="254" text-anchor="middle" class="lab">resultaat</text>
+        <path d="M490 146 V98" class="arr" marker-end="url(#ah)" marker-start="url(#ah)"/>
+        <path d="M855 260 V380 H215 V416" class="arr" marker-end="url(#ah)"/>
+        <text x="600" y="374" text-anchor="middle" class="lab">zaagplannen + etiketten</text>
+        <path d="M60 260 V400 H470 Q490 400 490 410 V416" class="arr d" marker-end="url(#ah)"/>
+        <text x="300" y="392" text-anchor="middle" class="lab">CNC-programma's (plugin)</text>
+        <path d="M402 324 V364" class="arr d"/>
+        <text x="410" y="350" class="lab">barcode</text>
+      </svg>
+      <div class="legend"><span><i></i>bestand of gegevens die Odoo doorgeeft</span><span><i class="d"></i>blijft zoals vandaag (TopSolid-plugin naar CNC)</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="flow-title">
+    <h2 id="flow-title">De flow in 9 fases</h2>
+    <p class="sub">Kies een rol om te zien wanneer die aan zet is. Klik een fase aan voor wie, waar in Odoo, wat de medewerker doet en wat Odoo automatisch doet.</p>
+    <div class="roles" id="roles"><span class="lbl">Toon rol:</span></div>
+    <ol class="track" id="track"></ol>
+    <div class="panel" id="panel" aria-live="polite"></div>
+  </section>
+
+  <section aria-labelledby="mx-title">
+    <h2 id="mx-title">Wie doet wat</h2>
+    <p class="sub">Per fase wie aan zet is. Klik op een fase om ze hierboven te openen.</p>
+    <div class="matrix"><table id="matrix"></table></div>
+  </section>
+
+  <section aria-labelledby="rules-title">
+    <h2 id="rules-title">Spelregels die Odoo bewaakt</h2>
+    <p class="sub">Op deze punten helpt of blokkeert het systeem, zodat er niets tussen de plooien valt.</p>
+    <div class="rules">
+      <div class="rule"><span class="k">Intake</span><h3>Niets is verplicht</h3><p>Een lege vraag blokkeert het doorsturen niet. Ze wordt automatisch een open vraag voor de tekenaar.</p></div>
+      <div class="rule"><span class="k">Klantvalidatie</span><h3>Eerst de vragen, dan goedkeuren</h3><p>Zolang er een vraag open staat in het klantportaal, kan de klant tekening en offerte niet goedkeuren.</p></div>
+      <div class="rule"><span class="k">Offerte</span><h3>Prijs uit de tekening</h3><p>De offerte wordt berekend uit de TopSolid-materiaallijst. Een materiaal zonder prijs of Ardis-code houdt de offerte tegen tot het gekoppeld is.</p></div>
+      <div class="rule"><span class="k">Werkvoorbereiding</span><h3>Geen export zonder Ardis-code</h3><p>Elk materiaal moet gekoppeld zijn aan een voorraadartikel met Ardis-code. Een voorraadtekort blokkeert de export niet; de batch wacht dan op levering.</p></div>
+      <div class="rule"><span class="k">Werkvloer</span><h3>Volgorde zaag, CNC, montage</h3><p>Een onderdeel dat nog niet gezaagd is, wordt aan de CNC geweigerd. Een kast kan pas gemonteerd worden als alle onderdelen verzameld zijn.</p></div>
+      <div class="rule"><span class="k">Oplevering</span><h3>Controlelijst eerst</h3><p>De klant kan pas tekenen als alle controlepunten afgevinkt zijn. Open nazorgpunten worden automatisch taken.</p></div>
+    </div>
+  </section>
+
+  <section class="open" aria-labelledby="open-title">
+    <h2 id="open-title">Nog samen af te stemmen</h2>
+    <ul>
+      <li><b>TopSolid 6:</b> welk exportformaat de materiaallijst krijgt (kolommen, materiaalnamen, kantenband, CNC-programmanaam).</li>
+      <li><b>Ardis:</b> het importprofiel en het resultaatbestand, en of etiketten met de Odoo-barcode geprint kunnen worden.</li>
+      <li><b>CNC:</b> of een scan het programma op de machine kan laden, of dat Odoo enkel de status bijhoudt.</li>
+      <li><b>Prijzen en tarieven:</b> plaatprijzen, kantenband, beslag, machine- en montage-uren, dagtarief plaatsing, voorschot en btw-regels.</li>
+      <li><b>Montage:</b> monteren jullie in het atelier of enkel op de werf? Dat bepaalt of de stap "verzamelen per kast" in het atelier of bij het laden gebeurt.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="wrap">Pijltjestoetsen links en rechts bladeren door de fases.</footer>
+
+<script>
+const S='viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+const IC={
+  person:`<svg ${S}><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>`,
+  auto:`<svg ${S}><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>`,
+  file:`<svg ${S}><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>`,
+  prev:`<svg ${S}><path d="M15 6l-6 6 6 6"/></svg>`, next:`<svg ${S}><path d="M9 6l6 6-6 6"/></svg>`,
+};
+const ROLES={sales:'Verkoop',drawer:'Tekenaar',customer:'Klant',prep:'Werkvoorbereiding',floor:'Werkvloer',install:'Plaatsing'};
+
+const PHASES=[
+ {short:'Intake',title:'Intake bij de klant',roles:['sales'],from:'nieuw',to:'Tekening',
+  where:'Interieur > Projecten > Nieuw',
+  lead:'De verkoper maakt het project aan tijdens of na het klantbezoek, op laptop of tablet.',
+  does:['Klant, werfadres en type project invullen','Intake per thema: ruimte, materialen, beslag, toestellen, plaatsing','Foto\'s en schetsen toevoegen (tablet opent de camera)','Tekenaar kiezen en "Doorsturen naar tekenaar"'],
+  auto:['Projectreferentie PRJ-jaar-nummer','Lege intakevragen worden open vragen','Taak voor de tekenaar in zijn activiteiten'],
+  sys:['Odoo']},
+ {short:'Tekening',title:'Ontwerp in TopSolid',roles:['drawer'],from:'Tekening',to:'Tekening',
+  where:'TopSolid 6 · Odoo: project > Overzicht tekenaar',
+  lead:'De tekenaar start in TopSolid met de projectreferentie en werkt de open vragen af.',
+  does:['Projectmap en referentie kopiëren uit "Overzicht tekenaar"','Tekening maken in TopSolid','Materiaallijst exporteren en inlezen in Odoo','Tekeningversie (PDF of afbeelding) toevoegen'],
+  auto:['Materialen vertaald naar Ardis-codes via de materiaalkoppeling','Ontbrekende koppelingen gemeld','Ingevulde intakevelden sluiten de gekoppelde vraag'],
+  sys:['TopSolid 6','Odoo']},
+ {short:'Offerte',title:'Offerte uit de materiaallijst',roles:['sales','drawer'],from:'Tekening',to:'Klantvalidatie',
+  where:'Project > tab Offerte > Offerte genereren',
+  lead:'De offerte wordt berekend uit de onderdelen van de tekening en gaat samen met de tekening naar de klant.',
+  does:['Marge, korting, plaatsingsdagen, werkblad en toestellen nakijken','"Offerte genereren"','"Tekening + offerte naar klant"'],
+  auto:['Prijs per meubelgroep: platen, kantenband, beslag, machinetijd, montage','Btw voorgesteld uit de intake (6 of 21 %)','Verkoopofferte in Odoo Verkoop, gekoppeld aan de tekeningversie','E-mail en portaaltoegang voor de klant'],
+  sys:['Odoo']},
+ {short:'Klantvalidatie',title:'Klant keurt goed in het portaal',roles:['customer','sales'],from:'Klantvalidatie',to:'Werkvoorbereiding',
+  where:'Klantportaal: /my/interieur',
+  lead:'De klant bekijkt tekening en offerte, beantwoordt vragen en keurt goed of vraagt wijzigingen.',
+  does:['Klant: vragen beantwoorden','Klant: goedkeuren met naam en bevestiging','Of: opmerkingen doorsturen (elke lijn een vraag)','Verkoop: vragen opvolgen, herinnering sturen'],
+  auto:['Goedkeuring geblokkeerd zolang er klantvragen open staan','Offerte wordt verkooporder, voorschot kan gefactureerd worden','Etiket met barcode per onderdeel aangemaakt','Bij wijzigingen: terug naar Tekening met vragen voor de tekenaar'],
+  sys:['Klantportaal','Odoo']},
+ {short:'Werkvoorbereiding',title:'Zaagbatch en Ardis-export',roles:['prep'],from:'Werkvoorbereiding',to:'Zagen',
+  where:'Interieur > Werkvoorbereiding > Zaagbatches',
+  lead:'Goedgekeurde projecten worden gebundeld in een zaagbatch, zodat Ardis over projecten heen optimaliseert.',
+  does:['Projecten in een zaagbatch zetten','Materiaal en voorraad nakijken','Tekorten bestellen bij de leverancier','"Exporteer naar Ardis", optimaliseren in Ardis','"Resultaat Ardis inlezen"'],
+  auto:['Materiaalbehoefte: platen (82 % rendement) en kantenband (+10 %)','Aankooporders per leverancier','CSV voor Ardis, één lijn per etiket','Verbruik en resten geboekt op de voorraad'],
+  sys:['Odoo','Ardis']},
+ {short:'Zagen',title:'Paneelzaag',roles:['floor'],from:'Zagen',to:'CNC',
+  where:'Interieur > Werkvloer > Paneelzaag',
+  lead:'De operator zaagt volgens het Ardis-zaagplan en scant elk onderdeel met zijn etiket.',
+  does:['Etiket kleven en scannen','Bij een melding: onbekend of al gezaagd, nakijken'],
+  auto:['Onderdeel gemarkeerd als gezaagd','Melding of het naar CNC of rechtstreeks naar montage gaat','Alles gezaagd: project naar CNC'],
+  sys:['Ardis','Odoo']},
+ {short:'CNC',title:'CNC-bewerking',roles:['floor'],from:'CNC',to:'Montage & plaatsing',
+  where:'Interieur > Werkvloer > CNC',
+  lead:'Scannen van het etiket toont het juiste programma uit de TopSolid-plugin.',
+  does:['Onderdeel scannen','Programma starten op de machine','"Bewerking klaar" bevestigen'],
+  auto:['Weigering als het onderdeel nog niet gezaagd is','Wachtrij met gezaagde onderdelen','Alle CNC-bewerkingen klaar: project naar Montage'],
+  sys:['TopSolid-plugin','Odoo']},
+ {short:'Montage',title:'Montage in het atelier',roles:['floor'],from:'Montage & plaatsing',to:'Montage & plaatsing',
+  where:'Interieur > Werkvloer > Montage werkplaats',
+  lead:'Onderdelen worden per kast verzameld en gemonteerd. Het beslag komt van de picklijst.',
+  does:['Onderdelen scannen: Odoo zegt bij welke kast','Beslag picken volgens de picklijst','"Kast gemonteerd" per kast'],
+  auto:['Teller per kast: verzameld / totaal','Picklijst beslag uit onderdelen en intake','Melding "Klaar voor plaatsing"'],
+  sys:['Odoo']},
+ {short:'Plaatsing',title:'Plaatsing en oplevering',roles:['install','prep'],from:'Montage & plaatsing',to:'Opgeleverd',
+  where:'Interieur > Plaatsing > Mijn planning',
+  lead:'De plaatsing wordt ingepland per ploeg. Ter plaatse werkt de ploeg op de tablet.',
+  does:['Planner: ploeg en dag kiezen','Plaatser: werfgegevens bekijken, controlelijst afvinken','Nazorgpunten en foto\'s toevoegen','Klant laten tekenen op de tablet'],
+  auto:['Werfgegevens uit de intake: toegang, parkeren, demontage','Controlelijst op maat van het project','Tekenen pas mogelijk als alles afgevinkt is','Project opgeleverd, nazorg als taak'],
+  sys:['Odoo']},
+];
+
+let cur=0, role='';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ul=a=>`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+
+function renderRoles(){
+  $('roles').innerHTML='<span class="lbl">Toon rol:</span>'+[['','Alle'],...Object.entries(ROLES)].map(([k,l])=>`<button type="button" class="chip" data-role="${k}" aria-pressed="${role===k}">${l}</button>`).join('');
+}
+function render(){
+  renderRoles();
+  $('track').innerHTML=PHASES.map((p,i)=>`<li class="${i<cur?'done':i===cur?'current':''} ${role&&!p.roles.includes(role)?'dim':''}"><button type="button" data-step="${i}" ${i===cur?'aria-current="step"':''} aria-label="Fase ${i+1}: ${esc(p.short)}"><span class="dot">${i<cur?'&#10003;':i+1}</span><span class="lbl">${esc(p.short)}</span></button></li>`).join('');
+  const p=PHASES[cur];
+  $('panel').innerHTML=`
+   <div class="side">
+     <div class="num">${String(cur+1).padStart(2,'0')}</div>
+     <h3>${esc(p.title)}</h3>
+     <div class="who">${p.roles.map(r=>`<span class="${r==='customer'?'cust':''}">${ROLES[r]}</span>`).join('')}</div>
+     <div class="where"><small>Waar</small><div>${esc(p.where)}</div></div>
+     <div class="stagechg"><span>${esc(p.from)}</span>&#8594;<span class="to">${esc(p.to)}</span></div>
+   </div>
+   <div class="body">
+     <p class="lead">${esc(p.lead)}</p>
+     <div class="cols">
+       <div class="col"><h4>${IC.person}Wat de medewerker doet</h4>${ul(p.does)}</div>
+       <div class="col auto"><h4>${IC.auto}Wat Odoo automatisch doet</h4>${ul(p.auto)}</div>
+     </div>
+     <div class="col sys"><h4>${IC.file}Systemen in deze fase</h4><div>${p.sys.map(esc).join(' · ')}</div></div>
+     <div class="nav">
+       <button type="button" class="btn" data-go="-1" aria-disabled="${cur===0}">${IC.prev}Vorige</button>
+       <button type="button" class="btn primary" data-go="1" aria-disabled="${cur===PHASES.length-1}">Volgende${IC.next}</button>
+       <span class="count">${cur+1} / ${PHASES.length}</span>
+     </div>
+   </div>`;
+  const roleKeys=Object.keys(ROLES);
+  $('matrix').innerHTML=`<thead><tr><th>Fase</th>${roleKeys.map(r=>`<th>${ROLES[r]}</th>`).join('')}</tr></thead><tbody>${PHASES.map((ph,i)=>`<tr><td><button type="button" data-step="${i}" data-scroll="1">${i+1}. ${esc(ph.short)}</button></td>${roleKeys.map(r=>`<td>${ph.roles.includes(r)?`<span class="${r==='customer'?'c':'y'}" aria-label="ja">&#10003;</span>`:'<span class="n" aria-label="nee">&middot;</span>'}</td>`).join('')}</tr>`).join('')}</tbody>`;
+}
+function go(i,scroll){cur=Math.max(0,Math.min(PHASES.length-1,i));try{history.replaceState(null,'','#fase-'+(cur+1))}catch(e){}render();
+  if(scroll)$('flow-title').scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}
+document.addEventListener('click',e=>{
+  const r=e.target.closest('[data-role]'); if(r){role=r.dataset.role;const first=PHASES.findIndex(p=>p.roles.includes(role));if(role&&first>=0&&!PHASES[cur].roles.includes(role))cur=first;render();return}
+  const b=e.target.closest('[data-step],[data-go]'); if(!b)return;
+  if(b.dataset.go)go(cur+Number(b.dataset.go)); else go(Number(b.dataset.step),!!b.dataset.scroll);
+});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(cur+1)}if(e.key==='ArrowLeft'){e.preventDefault();go(cur-1)}});
+const m=location.hash.match(/^#fase-(\d)$/); if(m)cur=Math.max(0,Math.min(PHASES.length-1,Number(m[1])-1));
+render();
+</script>
