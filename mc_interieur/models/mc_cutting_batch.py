@@ -1,10 +1,10 @@
-import base64
 import csv
 import io
 import math
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.binary import BinaryBytes
 
 from .mc_project import SHEET_YIELD
 
@@ -147,7 +147,7 @@ class McCuttingBatch(models.Model):
                 ])
             filename = f"{batch.name}.csv"
             batch.write({
-                'export_file': base64.b64encode(buffer.getvalue().encode('utf-8')),
+                'export_file': BinaryBytes(buffer.getvalue().encode('utf-8'), filename=filename),
                 'export_filename': filename,
                 'exported_on': fields.Datetime.now(),
                 'state': 'exported',

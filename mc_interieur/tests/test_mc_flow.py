@@ -1,8 +1,7 @@
-import base64
-
 from odoo.exceptions import UserError
 from odoo.tests import HttpCase, TransactionCase, tagged
 from odoo.tools import file_open
+from odoo.tools.binary import BinaryBytes
 
 
 @tagged('post_install', '-at_install')
@@ -54,7 +53,7 @@ class TestMcFlow(TransactionCase):
         installation = desk.installation_ids[:1]
         self.assertEqual(installation.state, 'planned')
         with file_open('mc_interieur/static/description/icon.png', 'rb') as image:
-            signature = base64.b64encode(image.read())
+            signature = BinaryBytes(image.read(), filename='signature.png')
         installation.write({'signed_by': "An De Smet", 'signature': signature})
         with self.assertRaises(UserError):
             installation.action_sign_off()

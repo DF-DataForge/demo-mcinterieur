@@ -1,4 +1,3 @@
-import base64
 import csv
 import io
 
@@ -20,7 +19,7 @@ class McArdisResult(models.TransientModel):
 
     def _mc_parse_file(self):
         """Expected columns: Materiaal;Verbruik (Ardis code and sheets or metres used)."""
-        content = base64.b64decode(self.result_file).decode('utf-8-sig')
+        content = self.result_file.content.decode('utf-8-sig')
         reader = csv.DictReader(io.StringIO(content), delimiter=';')
         quantities = {}
         Product = self.env['product.product']
