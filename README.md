@@ -93,6 +93,20 @@ All demo passwords are `demo`. Change or remove these users on a real database.
    details from the intake, checklist, snag list, photos, customer signature. Signing is blocked while
    checklist items are open; after signing the project is *Opgeleverd*.
 
+## Demo TopSolid and Ardis files
+
+Sample files are in [`mc_interieur/static/demo_files/`](mc_interieur/static/demo_files/) and are also
+attached to the demo projects (download them from the project chatter):
+
+* `topsolid_keuken_peeters.csv`: read it into *Keuken Peeters* (tab *Onderdelen (TopSolid)* →
+  *TopSolid-materiaallijst inlezen*), then generate the quote.
+* `topsolid_inkomkast_peeters_v2.csv`: revised list for *Inkomkast Peeters*; still needs the Ardis code
+  for "Eiken fineer 19".
+* `ardis_export_voorbeeld.csv`: what Odoo writes for Ardis, to set up the Ardis import profile.
+* `ardis_resultaat_tv_wand_vandamme.csv`: upload it in *Resultaat Ardis inlezen* for the TV-wand batch.
+
+The [demo files README](mc_interieur/static/demo_files/README.md) describes the columns.
+
 ## Repository layout
 
 ```

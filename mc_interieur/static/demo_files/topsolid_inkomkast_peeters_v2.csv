@@ -1,0 +1,8 @@
+Kast;Onderdeel;Materiaal;Lengte;Breedte;Dikte;Aantal;Nerf;Kant_L1;Kant_L2;Kant_B1;Kant_B2;CNC
+K1 inkomkast;Zijwand;Melamine Wit 18;2450;600;18;2;0;ABS-WIT-1;;;;INKOMKAST_ZIJWAND.tsw
+K1 inkomkast;Tussenwand;Melamine Wit 18;2414;580;18;1;0;ABS-WIT-1;;;;INKOMKAST_TUSSENWAND.tsw
+K1 inkomkast;Bodem / top;Melamine Wit 18;1764;580;18;2;0;ABS-WIT-1;;;;INKOMKAST_BODEM.tsw
+K1 inkomkast;Legplank;Melamine Wit 18;870;560;18;6;0;ABS-WIT-1;;;;
+K1 inkomkast;Hangroede-drager;Melamine Wit 18;560;100;18;2;0;ABS-WIT-1;;;;INKOMKAST_ROEDE.tsw
+K1 inkomkast;Rug;HDF Wit 3;2440;1790;3;1;0;;;;;
+K1 inkomkast;Deur;Eiken fineer 19;2440;596;19;3;1;ABS-EIK-1;ABS-EIK-1;ABS-EIK-1;ABS-EIK-1;INKOMKAST_DEUR.tsw

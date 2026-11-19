@@ -1,0 +1,15 @@
+Kast;Onderdeel;Materiaal;Lengte;Breedte;Dikte;Aantal;Nerf;Kant_L1;Kant_L2;Kant_B1;Kant_B2;CNC
+O1-O5;Zijwand onderkast;Melamine Wit 18;720;560;18;10;0;ABS-WIT-1;;;;PEETERS_O_ZIJWAND.tsw
+O1-O5;Bodem onderkast;Melamine Wit 18;764;560;18;5;0;ABS-WIT-1;;;;PEETERS_O_BODEM.tsw
+O1-O5;Regel;Melamine Wit 18;764;100;18;10;0;;;;;
+O1-O5;Rug onderkast;HDF Wit 3;716;796;3;5;0;;;;;
+H1-H2;Zijwand kolomkast;Melamine Wit 18;2300;580;18;3;0;ABS-WIT-1;;;;PEETERS_H_ZIJWAND.tsw
+H1-H2;Legplank kolomkast;Melamine Wit 18;564;540;18;6;0;ABS-WIT-1;;;;
+H1-H2;Rug kolomkast;HDF Wit 3;2296;596;3;2;0;;;;;
+E1;Zijwand eiland;Melamine Wit 18;900;880;18;2;0;ABS-WIT-1;;;;PEETERS_E_ZIJWAND.tsw
+E1;Bodem eiland;Melamine Wit 18;2364;880;18;1;0;ABS-WIT-1;;;;PEETERS_E_BODEM.tsw
+O1, O2;Front lade;MDF 19 lak;796;236;19;6;0;;;;;PEETERS_FRONT_LADE.tsw
+O3-O5;Front deur;MDF 19 lak;396;716;19;6;0;;;;;PEETERS_FRONT_DEUR.tsw
+H1-H2;Front kolomkast;MDF 19 lak;596;1450;19;2;0;;;;;PEETERS_FRONT_KOLOM.tsw
+E1;Afdekpaneel eiland;MDF 19 lak;2400;900;19;2;0;;;;;PEETERS_E_AFDEK.tsw
+E1;Front lade eiland;MDF 19 lak;796;236;19;3;0;;;;;PEETERS_E_LADE.tsw

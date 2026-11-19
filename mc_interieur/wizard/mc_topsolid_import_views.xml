@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mc_topsolid_import_view_form" model="ir.ui.view">
+        <field name="name">mc.topsolid.import.view.form</field>
+        <field name="model">mc.topsolid.import</field>
+        <field name="arch" type="xml">
+            <form string="TopSolid-materiaallijst inlezen">
+                <group>
+                    <field name="project_id" readonly="1"/>
+                    <field name="parts_file" filename="parts_filename"/>
+                    <field name="parts_filename" invisible="1"/>
+                    <field name="replace_existing"/>
+                </group>
+                <p class="text-muted">
+                    CSV met puntkomma, eerste lijn kolomnamen:
+                    <code>Kast;Onderdeel;Materiaal;Lengte;Breedte;Dikte;Aantal;Nerf;Kant_L1;Kant_L2;Kant_B1;Kant_B2;CNC</code>.
+                    Materiaal is de naam uit TopSolid, kantenband de Ardis-code, CNC de programmanaam van de plugin.
+                </p>
+                <footer>
+                    <button name="action_import" type="object" string="Inlezen" class="btn-primary"/>
+                    <button special="cancel" string="Annuleren"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mc_topsolid_import_action" model="ir.actions.act_window">
+        <field name="name">TopSolid-materiaallijst inlezen</field>
+        <field name="res_model">mc.topsolid.import</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

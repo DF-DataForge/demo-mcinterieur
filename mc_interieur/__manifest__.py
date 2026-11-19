@@ -40,6 +40,7 @@ Maatwerkflow voor een interieurbouwer / schrijnwerker
         'views/sale_order_views.xml',
         'views/mc_scan_station_views.xml',
         'wizard/mc_ardis_result_views.xml',
+        'wizard/mc_topsolid_import_views.xml',
         'views/mc_interieur_menus.xml',
         'views/mc_portal_templates.xml',
     ],
@@ -47,6 +48,7 @@ Maatwerkflow voor een interieurbouwer / schrijnwerker
         'demo/res_users_demo.xml',
         'demo/product_demo.xml',
         'demo/mc_project_demo.xml',
+        'demo/ir_attachment_demo.xml',
     ],
     'assets': {
         'web._assets_primary_variables': [

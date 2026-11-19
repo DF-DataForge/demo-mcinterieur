@@ -296,8 +296,10 @@
                         </page>
                         <page string="Onderdelen (TopSolid)" name="parts">
                             <div class="d-flex gap-2 mb-2">
-                                <button name="action_import_parts_demo" type="object" string="Materiaallijst opnieuw inlezen"
-                                        class="btn-secondary"/>
+                                <button name="action_open_topsolid_import" type="object" string="TopSolid-materiaallijst inlezen"
+                                        class="btn-primary" invisible="piece_ids"/>
+                                <button name="action_relink_materials" type="object" string="Materiaalkoppeling opnieuw toepassen"
+                                        class="btn-secondary" invisible="not part_ids"/>
                                 <span class="text-muted align-self-center">
                                     Ingelezen op <field name="parts_imported_on" class="d-inline" readonly="1"/>
                                 </span>

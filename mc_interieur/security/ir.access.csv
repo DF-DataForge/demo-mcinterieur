@@ -18,6 +18,7 @@ access_mc_cutting_batch_shopfloor,mc.cutting.batch shopfloor,mc.cutting.batch,mc
 access_mc_cutting_batch_user,mc.cutting.batch user,mc.cutting.batch,mc_interieur_group_user,crud,
 mc_cutting_batch_rule_company,mc.cutting.batch: multi-company,mc.cutting.batch,,crud,"[('company_id', 'in', company_ids)]"
 access_mc_ardis_result_user,mc.ardis.result user,mc.ardis.result,mc_interieur_group_user,crud,
+access_mc_topsolid_import_user,mc.topsolid.import user,mc.topsolid.import,mc_interieur_group_user,crud,
 access_mc_installation_shopfloor,mc.installation shopfloor,mc.installation,mc_interieur_group_shopfloor,ru,
 access_mc_installation_user,mc.installation user,mc.installation,mc_interieur_group_user,crud,
 access_mc_installation_check_shopfloor,mc.installation.check shopfloor,mc.installation.check,mc_interieur_group_shopfloor,cru,

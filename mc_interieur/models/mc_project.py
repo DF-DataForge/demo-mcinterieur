@@ -651,13 +651,15 @@ class McProject(models.Model):
     # ------------------------------------------------------------------
     # Production
     # ------------------------------------------------------------------
-    def action_import_parts_demo(self):
-        """Stand-in for reading the TopSolid export folder: re-reads the parts already linked."""
-        for project in self:
-            project.parts_imported_on = fields.Datetime.now()
-            project.part_ids._mc_apply_mapping()
-            project.message_post(body=self.env._(
-                "TopSolid-materiaallijst ingelezen: %s lijnen.", len(project.part_ids)))
+    def action_open_topsolid_import(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('mc_interieur.mc_topsolid_import_action')
+        action['context'] = {'default_project_id': self.id}
+        return action
+
+    def action_relink_materials(self):
+        """Apply the TopSolid to Ardis material links again, after a link was added or changed."""
+        self.part_ids._mc_apply_mapping()
         return True
 
     def _mc_generate_pieces(self):

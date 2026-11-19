@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Sample TopSolid and Ardis files, attached to the demo projects so they can be downloaded from the chatter -->
+    <record id="attachment_topsolid_keuken_peeters" model="ir.attachment">
+        <field name="name">topsolid_keuken_peeters.csv</field>
+        <field name="mimetype">text/csv</field>
+        <field name="res_model">mc.project</field>
+        <field name="res_id" ref="project_peeters_keuken"/>
+        <field name="raw" type="bytes" file="mc_interieur/static/demo_files/topsolid_keuken_peeters.csv"/>
+    </record>
+    <record id="attachment_topsolid_inkomkast_peeters_v2" model="ir.attachment">
+        <field name="name">topsolid_inkomkast_peeters_v2.csv</field>
+        <field name="mimetype">text/csv</field>
+        <field name="res_model">mc.project</field>
+        <field name="res_id" ref="project_peeters_inkomkast"/>
+        <field name="raw" type="bytes" file="mc_interieur/static/demo_files/topsolid_inkomkast_peeters_v2.csv"/>
+    </record>
+    <record id="attachment_ardis_export_voorbeeld" model="ir.attachment">
+        <field name="name">ardis_export_voorbeeld.csv</field>
+        <field name="mimetype">text/csv</field>
+        <field name="res_model">mc.project</field>
+        <field name="res_id" ref="project_vandamme_tv"/>
+        <field name="raw" type="bytes" file="mc_interieur/static/demo_files/ardis_export_voorbeeld.csv"/>
+    </record>
+    <record id="attachment_ardis_resultaat_tv_wand" model="ir.attachment">
+        <field name="name">ardis_resultaat_tv_wand_vandamme.csv</field>
+        <field name="mimetype">text/csv</field>
+        <field name="res_model">mc.project</field>
+        <field name="res_id" ref="project_vandamme_tv"/>
+        <field name="raw" type="bytes" file="mc_interieur/static/demo_files/ardis_resultaat_tv_wand_vandamme.csv"/>
+    </record>
+</odoo>
