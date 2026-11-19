@@ -49,6 +49,9 @@ Maatwerkflow voor een interieurbouwer / schrijnwerker
         'demo/mc_project_demo.xml',
     ],
     'assets': {
+        'web._assets_primary_variables': [
+            ('prepend', 'mc_interieur/static/src/scss/primary_variables.scss'),
+        ],
         'web.assets_backend': [
             'mc_interieur/static/src/scan_station/**/*',
         ],

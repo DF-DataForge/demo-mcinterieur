@@ -1,0 +1,14 @@
+// MC Interieur house colours (walnut brown, leaf green), applied to the whole Odoo interface:
+// backend (navbar, buttons, links, active states) and the customer portal.
+// Prepended to web._assets_primary_variables, so these values win over Odoo's !default ones.
+$o-mc-brown: #574a36 !default;
+$o-mc-brown-light: #78664a !default;
+$o-mc-green: #95ba3c !default;
+$o-mc-green-dark: #5f7d1c !default;
+
+$o-community-color: $o-mc-brown !default;
+$o-enterprise-color: $o-mc-brown !default;
+$o-brand-odoo: $o-mc-brown !default;
+$o-brand-primary: $o-mc-brown !default;
+$o-action: $o-mc-brown !default;
+$o-success: $o-mc-green-dark !default;
