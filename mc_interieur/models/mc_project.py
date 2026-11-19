@@ -405,8 +405,7 @@ class McProject(models.Model):
     # Quote from the TopSolid material list
     # ------------------------------------------------------------------
     def _mc_rate(self, key, default):
-        value = self.env['ir.config_parameter'].sudo().get_param(f'mc_interieur.{key}')
-        return float(value) if value else default
+        return self.env['ir.config_parameter'].sudo().get_float(f'mc_interieur.{key}', default)
 
     def _mc_cabinet_label(self, cabinet):
         cabinet = (cabinet or '').strip()

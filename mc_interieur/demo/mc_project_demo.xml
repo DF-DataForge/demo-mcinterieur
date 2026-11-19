@@ -69,7 +69,7 @@
         <field name="project_id" ref="project_peeters_inkomkast"/>
         <field name="number">1</field>
         <field name="note">Eerste ontwerp: twee hoge deuren, legplanken binnenin.</field>
-        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/inkomkast_peeters_v1.png"/>
+        <field name="drawing_image" type="bytes" file="mc_interieur/static/demo/inkomkast_peeters_v1.png"/>
     </record>
 
     <!-- 3. Customer validation: version 2 waits for the customer, two questions are still open -->
@@ -133,13 +133,13 @@
         <field name="note">Eerste ontwerp.</field>
         <field name="customer_remarks">Hoge kast links in plaats van rechts.
 Extra lade onder de kookplaat.</field>
-        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/keuken_maes_v1.png"/>
+        <field name="drawing_image" type="bytes" file="mc_interieur/static/demo/keuken_maes_v1.png"/>
     </record>
     <record id="version_maes_keuken_2" model="mc.drawing.version">
         <field name="project_id" ref="project_maes_keuken"/>
         <field name="number">2</field>
         <field name="note">Opmerkingen van versie 1 verwerkt: kolomkast links, eiland toegevoegd.</field>
-        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/keuken_maes_v2.png"/>
+        <field name="drawing_image" type="bytes" file="mc_interieur/static/demo/keuken_maes_v2.png"/>
     </record>
 
     <!-- 4. In production at the CNC -->
@@ -164,7 +164,7 @@ Extra lade onder de kookplaat.</field>
         <field name="project_id" ref="project_maes_badkamer"/>
         <field name="number">1</field>
         <field name="note">Wastafelmeubel met twee lades en spiegelkast.</field>
-        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/badkamer_maes_v1.png"/>
+        <field name="drawing_image" type="bytes" file="mc_interieur/static/demo/badkamer_maes_v1.png"/>
     </record>
 
     <!-- 5. At the panel saw -->
@@ -195,7 +195,7 @@ Extra lade onder de kookplaat.</field>
         <field name="project_id" ref="project_vandamme_dressing"/>
         <field name="number">1</field>
         <field name="note">Dressing met drie deuren en open kast.</field>
-        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/dressing_vandamme_v1.png"/>
+        <field name="drawing_image" type="bytes" file="mc_interieur/static/demo/dressing_vandamme_v1.png"/>
     </record>
 
     <!-- 6. Work preparation: approved, waiting in a draft cutting batch with a material shortage -->
@@ -218,7 +218,7 @@ Extra lade onder de kookplaat.</field>
         <field name="project_id" ref="project_vandamme_tv"/>
         <field name="number">1</field>
         <field name="note">Lowboard met wandpaneel en LED-strip.</field>
-        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/tvwand_vandamme_v1.png"/>
+        <field name="drawing_image" type="bytes" file="mc_interieur/static/demo/tvwand_vandamme_v1.png"/>
     </record>
 
     <!-- 7. Assembly and installation planned -->
@@ -249,7 +249,7 @@ Extra lade onder de kookplaat.</field>
         <field name="project_id" ref="project_desmet_bureau"/>
         <field name="number">1</field>
         <field name="note">Bureau met ladeblok en boekenkast.</field>
-        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/bureau_desmet_v1.png"/>
+        <field name="drawing_image" type="bytes" file="mc_interieur/static/demo/bureau_desmet_v1.png"/>
     </record>
 
     <!-- Parts lists, quotes, approvals, cutting batches, stock and installations -->
