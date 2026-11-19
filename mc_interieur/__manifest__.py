@@ -56,6 +56,7 @@ Maatwerkflow voor een interieurbouwer / schrijnwerker
         ],
         'web.assets_backend': [
             'mc_interieur/static/src/scan_station/**/*',
+            'mc_interieur/static/src/backend/**/*',
         ],
         'web.assets_frontend': [
             'mc_interieur/static/src/portal/**/*',

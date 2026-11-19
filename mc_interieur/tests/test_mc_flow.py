@@ -97,6 +97,24 @@ class TestMcFlow(TransactionCase):
 
 
 @tagged('post_install', '-at_install')
+class TestMcBackendScreens(HttpCase):
+    """Open the main screens in a browser: fails on asset, template or JS errors."""
+
+    def _open(self, path):
+        self.browser_js(path, "setTimeout(() => console.log('test successful'), 1500)", login='admin')
+
+    def test_project_kanban(self):
+        self._open('/odoo/action-mc_interieur.mc_project_action')
+
+    def test_project_form(self):
+        project = self.env.ref('mc_interieur.project_maes_keuken')
+        self._open(f'/odoo/action-mc_interieur.mc_project_action/{project.id}')
+
+    def test_scan_station(self):
+        self._open('/odoo/action-mc_interieur.mc_scan_station_action_assembly')
+
+
+@tagged('post_install', '-at_install')
 class TestMcPortal(HttpCase):
 
     def test_portal_pages(self):

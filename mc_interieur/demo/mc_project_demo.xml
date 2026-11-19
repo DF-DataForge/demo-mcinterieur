@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo noupdate="1">
+<odoo>
+    <data noupdate="1">
     <!-- 1. Intake: sales rep just visited the customer -->
     <record id="project_peeters_keuken" model="mc.project">
         <field name="name">Keuken Peeters</field>
@@ -252,6 +253,10 @@ Extra lade onder de kookplaat.</field>
         <field name="drawing_image" type="bytes" file="mc_interieur/static/demo/bureau_desmet_v1.png"/>
     </record>
 
-    <!-- Parts lists, quotes, approvals, cutting batches, stock and installations -->
+    </data>
+
+    <!-- Parts lists, quotes, approvals, cutting batches, stock and installations.
+         Outside the noupdate block so it also runs when demo data is loaded later or on an upgrade;
+         the method itself skips when it already ran. -->
     <function model="mc.project" name="_mc_demo_setup"/>
 </odoo>

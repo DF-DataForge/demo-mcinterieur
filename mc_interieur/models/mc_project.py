@@ -177,6 +177,10 @@ class McProject(models.Model):
 
     intake_progress = fields.Integer(string="Intake ingevuld (%)", compute='_compute_intake_progress')
     intake_missing = fields.Integer(string="Lege intakevragen", compute='_compute_intake_progress')
+    intake_answered = fields.Integer(string="Beantwoorde intakevragen", compute='_compute_intake_progress')
+    intake_total = fields.Integer(string="Intakevragen", compute='_compute_intake_progress')
+    attachment_count = fields.Integer(string="Foto's en plannen ", compute='_compute_attachment_count')
+    topsolid_folder = fields.Char(string="TopSolid-projectmap", compute='_compute_topsolid_folder')
 
     # ------------------------------------------------------------------
     # Questions, drawings, quotes
@@ -226,6 +230,19 @@ class McProject(models.Model):
             done = sum(1 for name in relevant if project[name])
             project.intake_progress = round(done * 100 / len(relevant)) if relevant else 0
             project.intake_missing = len(relevant) - done
+            project.intake_answered = done
+            project.intake_total = len(relevant)
+
+    @api.depends('attachment_ids')
+    def _compute_attachment_count(self):
+        for project in self:
+            project.attachment_count = len(project.attachment_ids)
+
+    @api.depends('ref', 'partner_id.name')
+    def _compute_topsolid_folder(self):
+        for project in self:
+            customer = ''.join((project.partner_id.name or 'klant').split())
+            project.topsolid_folder = f"\\\\server\\TopSolid\\Projecten\\{project.ref}_{customer}"
 
     @api.depends('question_ids.done', 'question_ids.to_customer')
     def _compute_question_counts(self):
@@ -392,6 +409,17 @@ class McProject(models.Model):
             'type': 'ir.actions.act_url',
             'target': 'new',
             'url': self.get_portal_url(),
+        }
+
+    def action_view_questions(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Open vragen"),
+            'res_model': 'mc.project.question',
+            'view_mode': 'list',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id, 'search_default_open': 1},
         }
 
     def action_view_quotes(self):

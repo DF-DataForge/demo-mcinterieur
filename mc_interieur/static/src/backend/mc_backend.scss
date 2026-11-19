@@ -1,0 +1,84 @@
+// Backend look of the interior projects, following the mockup:
+// walnut brown for actions and chosen options, leaf green for progress, warm tinted panels.
+$o-mc-brown: #574a36;
+$o-mc-green: #95ba3c;
+$o-mc-green-dark: #5f7d1c;
+$o-mc-amber: #9a5d0c;
+
+.o_mc_project_form,
+.o_mc_kanban,
+.o_mc_scan_station {
+    .progress .progress-bar {
+        background-color: $o-mc-green;
+    }
+}
+
+.o_mc_project_form {
+    .o_mc_ref {
+        font-family: $font-family-monospace;
+        font-size: 0.85rem;
+        opacity: 0.7;
+    }
+    // Choices as chips, the chosen one filled in brown
+    .o_selection_badge {
+        border-radius: 999px;
+        padding-inline: 0.75rem;
+        &.active {
+            background-color: $o-mc-brown;
+            border-color: $o-mc-brown;
+            color: #fff;
+        }
+    }
+    .o_mc_intake {
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba($o-mc-brown, 0.35);
+        border-radius: 8px;
+        background-color: rgba($o-mc-brown, 0.08);
+        .o_mc_intake_bar {
+            flex: 0 0 auto;
+            --ProgressBarField-width: 220px;
+            --ProgressBarField-height: 8px;
+        }
+        .o_mc_intake_text {
+            min-width: 0;
+            flex-basis: 280px;
+        }
+    }
+    .o_mc_box {
+        padding: 0.75rem 1rem;
+        border: 1px solid $border-color;
+        border-radius: 8px;
+    }
+    .o_notebook .nav-link.active {
+        border-bottom-color: $o-mc-brown;
+    }
+}
+
+.o_mc_kanban {
+    .o_kanban_record {
+        border-radius: 8px;
+    }
+    .o_mc_badge .badge,
+    .o_mc_badge.badge {
+        background-color: rgba($o-mc-green, 0.2);
+        color: inherit;
+        border-radius: 999px;
+    }
+    .o_mc_badge_warn {
+        background-color: rgba($o-mc-amber, 0.18);
+        color: inherit;
+        font-weight: 600;
+    }
+    .o_mc_progress {
+        --ProgressBarField-height: 6px;
+    }
+}
+
+.o_mc_table {
+    td, th {
+        vertical-align: top;
+    }
+    tfoot tr:last-child td {
+        font-weight: 600;
+    }
+}

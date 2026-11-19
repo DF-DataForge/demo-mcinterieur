@@ -78,6 +78,9 @@ class McProject(models.Model):
     @api.model
     def _mc_demo_setup(self):
         ref = self.env.ref
+        maes_keuken = ref('mc_interieur.project_maes_keuken', raise_if_not_found=False)
+        if not maes_keuken or maes_keuken.part_ids:
+            return True  # demo records missing, or the setup already ran
         Product = self.env['product.product']
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         for code, qty in DEMO_STOCK.items():

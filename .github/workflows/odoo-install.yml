@@ -67,6 +67,22 @@ jobs:
             exit 1
           fi
 
+      - name: Install without demo data, load demo data afterwards
+        env:
+          PGPASSWORD: odoo
+        run: |
+          ODOO="python odoo/odoo-bin --addons-path=odoo/addons,odoo/odoo/addons,addons --db_host=localhost --db_user=odoo --db_password=odoo"
+          $ODOO -d mc_late -i mc_interieur --stop-after-init --log-level=warn
+          $ODOO shell -d mc_late --log-level=warn > late.log 2>&1 <<'EOF'
+          import odoo.modules.loading
+          odoo.modules.loading.force_demo(env)
+          env.cr.commit()
+          project = env.ref('mc_interieur.project_maes_keuken')
+          print('LATE_DEMO', project.stage, len(project.part_ids), len(env['mc.cutting.batch'].search([])))
+          EOF
+          cat late.log | tail -20
+          grep -q "LATE_DEMO validation 12 3" late.log
+
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v4
