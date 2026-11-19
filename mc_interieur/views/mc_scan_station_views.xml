@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mc_scan_station_action_saw" model="ir.actions.client">
+        <field name="name">Paneelzaag</field>
+        <field name="tag">mc_scan_station</field>
+        <field name="context">{'mc_station': 'saw'}</field>
+    </record>
+    <record id="mc_scan_station_action_cnc" model="ir.actions.client">
+        <field name="name">CNC</field>
+        <field name="tag">mc_scan_station</field>
+        <field name="context">{'mc_station': 'cnc'}</field>
+    </record>
+    <record id="mc_scan_station_action_assembly" model="ir.actions.client">
+        <field name="name">Montage werkplaats</field>
+        <field name="tag">mc_scan_station</field>
+        <field name="context">{'mc_station': 'assembly'}</field>
+    </record>
+</odoo>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Suppliers -->
+    <record id="partner_supplier_plates" model="res.partner">
+        <field name="name">Plaatgroothandel Vlaanderen</field>
+        <field name="is_company" eval="True"/>
+        <field name="email">bestel@plaatgroothandel.example.com</field>
+        <field name="city">Kortrijk</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+    <record id="partner_supplier_wood" model="res.partner">
+        <field name="name">Houthandel Deinze</field>
+        <field name="is_company" eval="True"/>
+        <field name="email">orders@houthandel.example.com</field>
+        <field name="city">Deinze</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+    <record id="partner_supplier_edges" model="res.partner">
+        <field name="name">Kantenband &amp; Beslag BV</field>
+        <field name="is_company" eval="True"/>
+        <field name="email">verkoop@kantenband.example.com</field>
+        <field name="city">Roeselare</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <!-- Sheet material: internal reference = Ardis code, cost = price per sheet -->
+    <record id="product_mel_wit_18" model="product.product">
+        <field name="name">Melamine wit 18 mm</field>
+        <field name="default_code">MEL-WIT-18</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">plate</field>
+        <field name="mc_thickness">18</field>
+        <field name="standard_price">48</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_plates'), 'price': 48, 'delay': 3})]"/>
+    </record>
+    <record id="product_mel_ant_18" model="product.product">
+        <field name="name">Melamine antraciet 18 mm</field>
+        <field name="default_code">MEL-ANT-18</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">plate</field>
+        <field name="mc_thickness">18</field>
+        <field name="standard_price">62</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_plates'), 'price': 62, 'delay': 3})]"/>
+    </record>
+    <record id="product_mel_eik_18" model="product.product">
+        <field name="name">Melamine eiken natuur 18 mm</field>
+        <field name="default_code">MEL-EIK-18</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">plate</field>
+        <field name="mc_thickness">18</field>
+        <field name="mc_grain" eval="True"/>
+        <field name="standard_price">58</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_plates'), 'price': 58, 'delay': 3})]"/>
+    </record>
+    <record id="product_mdf_lak_19" model="product.product">
+        <field name="name">MDF lakdraagplaat 19 mm</field>
+        <field name="default_code">MDF-LAK-19</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">plate</field>
+        <field name="mc_thickness">19</field>
+        <field name="standard_price">54</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_wood'), 'price': 54, 'delay': 5})]"/>
+    </record>
+    <record id="product_fin_eik_19" model="product.product">
+        <field name="name">Eikenfineer op MDF 19 mm</field>
+        <field name="default_code">FIN-EIK-19</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">plate</field>
+        <field name="mc_thickness">19</field>
+        <field name="mc_grain" eval="True"/>
+        <field name="standard_price">145</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_wood'), 'price': 145, 'delay': 7})]"/>
+    </record>
+    <record id="product_hdf_wit_3" model="product.product">
+        <field name="name">HDF wit 3 mm (ruggen)</field>
+        <field name="default_code">HDF-WIT-3</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">plate</field>
+        <field name="mc_thickness">3</field>
+        <field name="standard_price">18</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_plates'), 'price': 18, 'delay': 3})]"/>
+    </record>
+
+    <!-- Edge banding: cost per metre -->
+    <record id="product_abs_wit_1" model="product.product">
+        <field name="name">ABS wit 23 x 1 mm</field>
+        <field name="default_code">ABS-WIT-1</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">edge</field>
+        <field name="uom_id" ref="uom.product_uom_meter"/>
+        <field name="standard_price">0.9</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_edges'), 'price': 0.9, 'delay': 2})]"/>
+    </record>
+    <record id="product_abs_ant_1" model="product.product">
+        <field name="name">ABS antraciet 23 x 1 mm</field>
+        <field name="default_code">ABS-ANT-1</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">edge</field>
+        <field name="uom_id" ref="uom.product_uom_meter"/>
+        <field name="standard_price">1.1</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_edges'), 'price': 1.1, 'delay': 2})]"/>
+    </record>
+    <record id="product_abs_eik_1" model="product.product">
+        <field name="name">ABS eiken 23 x 1 mm</field>
+        <field name="default_code">ABS-EIK-1</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">edge</field>
+        <field name="uom_id" ref="uom.product_uom_meter"/>
+        <field name="standard_price">1.6</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_edges'), 'price': 1.6, 'delay': 2})]"/>
+    </record>
+
+    <!-- Hardware: the default codes are used by the hardware pick list and the quote -->
+    <record id="product_hw_hinge" model="product.product">
+        <field name="name">Scharnier softclose 110 graden</field>
+        <field name="default_code">HW-SCHARNIER</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">hardware</field>
+        <field name="standard_price">6.5</field>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_edges'), 'price': 6.5})]"/>
+    </record>
+    <record id="product_hw_drawer_std" model="product.product">
+        <field name="name">Ladeset standaard dubbelwandig</field>
+        <field name="default_code">HW-LADE-STD</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">hardware</field>
+        <field name="standard_price">38</field>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_edges'), 'price': 38})]"/>
+    </record>
+    <record id="product_hw_drawer_premium" model="product.product">
+        <field name="name">Ladeset premium dunwandig</field>
+        <field name="default_code">HW-LADE-PREM</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">hardware</field>
+        <field name="standard_price">95</field>
+        <field name="seller_ids" eval="[Command.create({'partner_id': ref('partner_supplier_edges'), 'price': 95})]"/>
+    </record>
+    <record id="product_hw_drawer_wood" model="product.product">
+        <field name="name">Ladeset houten lade</field>
+        <field name="default_code">HW-LADE-HOUT</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">hardware</field>
+        <field name="standard_price">120</field>
+    </record>
+    <record id="product_hw_handle" model="product.product">
+        <field name="name">Greep lijngreep 160 mm</field>
+        <field name="default_code">HW-GREEP</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">hardware</field>
+        <field name="standard_price">14</field>
+    </record>
+    <record id="product_hw_knob" model="product.product">
+        <field name="name">Knop rond 30 mm</field>
+        <field name="default_code">HW-KNOP</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">hardware</field>
+        <field name="standard_price">9</field>
+    </record>
+    <record id="product_hw_shelf_support" model="product.product">
+        <field name="name">Plankdrager 5 mm</field>
+        <field name="default_code">HW-PLANKDRAGER</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">hardware</field>
+        <field name="standard_price">0.15</field>
+    </record>
+    <record id="product_hw_leg" model="product.product">
+        <field name="name">Stelpoot 100-150 mm</field>
+        <field name="default_code">HW-STELPOOT</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">hardware</field>
+        <field name="standard_price">1.2</field>
+    </record>
+    <record id="product_hw_hanger" model="product.product">
+        <field name="name">Ophangbeslag bovenkast (paar)</field>
+        <field name="default_code">HW-OPHANG</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">hardware</field>
+        <field name="standard_price">9</field>
+    </record>
+    <record id="product_hw_connector" model="product.product">
+        <field name="name">Excenterverbinder en deuvel</field>
+        <field name="default_code">HW-EXCENTER</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">hardware</field>
+        <field name="standard_price">0.6</field>
+    </record>
+    <record id="product_hw_led" model="product.product">
+        <field name="name">LED-strip met driver</field>
+        <field name="default_code">HW-LED</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="mc_kind">hardware</field>
+        <field name="standard_price">145</field>
+    </record>
+
+    <!-- TopSolid material names to Ardis codes. "Eiken fineer 19" is left unlinked on purpose for the demo. -->
+    <record id="mapping_mel_wit" model="mc.material.mapping">
+        <field name="name">Melamine Wit 18</field>
+        <field name="product_id" ref="product_mel_wit_18"/>
+    </record>
+    <record id="mapping_mel_ant" model="mc.material.mapping">
+        <field name="name">Melamine Antraciet 18</field>
+        <field name="product_id" ref="product_mel_ant_18"/>
+    </record>
+    <record id="mapping_mel_eik" model="mc.material.mapping">
+        <field name="name">Melamine Eiken 18</field>
+        <field name="product_id" ref="product_mel_eik_18"/>
+    </record>
+    <record id="mapping_mdf_lak" model="mc.material.mapping">
+        <field name="name">MDF 19 lak</field>
+        <field name="product_id" ref="product_mdf_lak_19"/>
+    </record>
+    <record id="mapping_hdf_wit" model="mc.material.mapping">
+        <field name="name">HDF Wit 3</field>
+        <field name="product_id" ref="product_hdf_wit_3"/>
+    </record>
+    <record id="mapping_fin_eik" model="mc.material.mapping">
+        <field name="name">Eiken fineer 19</field>
+    </record>
+</odoo>

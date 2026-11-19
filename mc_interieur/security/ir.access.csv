@@ -1,0 +1,28 @@
+id,name,model_id,group_id/id,operation,domain
+access_mc_project_shopfloor,mc.project shopfloor,mc.project,mc_interieur_group_shopfloor,ru,
+access_mc_project_user,mc.project user,mc.project,mc_interieur_group_user,crud,
+mc_project_rule_portal,mc.project: portal users see the projects of their company,mc.project,base.group_portal,r,"[('commercial_partner_id', '=', user.commercial_partner_id.id)]"
+mc_project_rule_company,mc.project: multi-company,mc.project,,crud,"[('company_id', 'in', company_ids)]"
+access_mc_project_question_shopfloor,mc.project.question shopfloor,mc.project.question,mc_interieur_group_shopfloor,r,
+access_mc_project_question_user,mc.project.question user,mc.project.question,mc_interieur_group_user,crud,
+access_mc_drawing_version_shopfloor,mc.drawing.version shopfloor,mc.drawing.version,mc_interieur_group_shopfloor,r,
+access_mc_drawing_version_user,mc.drawing.version user,mc.drawing.version,mc_interieur_group_user,crud,
+mc_drawing_version_rule_portal,mc.drawing.version: portal users see the shared drawings of their company,mc.drawing.version,base.group_portal,r,"[('project_id.commercial_partner_id', '=', user.commercial_partner_id.id), ('state', '!=', 'draft')]"
+access_mc_part_shopfloor,mc.part shopfloor,mc.part,mc_interieur_group_shopfloor,r,
+access_mc_part_user,mc.part user,mc.part,mc_interieur_group_user,crud,
+access_mc_piece_shopfloor,mc.piece shopfloor,mc.piece,mc_interieur_group_shopfloor,ru,
+access_mc_piece_user,mc.piece user,mc.piece,mc_interieur_group_user,crud,
+access_mc_material_mapping_user,mc.material.mapping user,mc.material.mapping,mc_interieur_group_user,r,
+access_mc_material_mapping_manager,mc.material.mapping manager,mc.material.mapping,mc_interieur_group_manager,crud,
+access_mc_cutting_batch_shopfloor,mc.cutting.batch shopfloor,mc.cutting.batch,mc_interieur_group_shopfloor,r,
+access_mc_cutting_batch_user,mc.cutting.batch user,mc.cutting.batch,mc_interieur_group_user,crud,
+mc_cutting_batch_rule_company,mc.cutting.batch: multi-company,mc.cutting.batch,,crud,"[('company_id', 'in', company_ids)]"
+access_mc_ardis_result_user,mc.ardis.result user,mc.ardis.result,mc_interieur_group_user,crud,
+access_mc_installation_shopfloor,mc.installation shopfloor,mc.installation,mc_interieur_group_shopfloor,ru,
+access_mc_installation_user,mc.installation user,mc.installation,mc_interieur_group_user,crud,
+access_mc_installation_check_shopfloor,mc.installation.check shopfloor,mc.installation.check,mc_interieur_group_shopfloor,cru,
+access_mc_installation_check_user,mc.installation.check user,mc.installation.check,mc_interieur_group_user,crud,
+access_mc_installation_punch_shopfloor,mc.installation.punch shopfloor,mc.installation.punch,mc_interieur_group_shopfloor,cru,
+access_mc_installation_punch_user,mc.installation.punch user,mc.installation.punch,mc_interieur_group_user,crud,
+access_mc_team_shopfloor,mc.team shopfloor,mc.team,mc_interieur_group_shopfloor,r,
+access_mc_team_manager,mc.team manager,mc.team,mc_interieur_group_manager,crud,

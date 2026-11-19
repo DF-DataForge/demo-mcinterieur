@@ -1,0 +1,61 @@
+// Customer portal: interior projects. Palette follows the client's site (walnut brown, leaf green).
+$o-mc-brown: #574a36;
+$o-mc-green: #5f7d1c;
+$o-mc-green-soft: #eef4dc;
+
+.o_mc_portal_project {
+    h2, .card-title {
+        color: $o-mc-brown;
+    }
+    .btn-primary {
+        background-color: $o-mc-green;
+        border-color: $o-mc-green;
+    }
+    .o_mc_steps {
+        gap: 0;
+        overflow-x: auto;
+    }
+    .o_mc_step {
+        min-width: 90px;
+        color: $text-muted;
+    }
+    .o_mc_step_dot {
+        display: inline-grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid $border-color;
+        margin-bottom: 4px;
+        background: $white;
+    }
+    .o_mc_step_done {
+        color: $body-color;
+        .o_mc_step_dot {
+            background: $o-mc-green;
+            border-color: $o-mc-green;
+            color: $white;
+        }
+    }
+    .o_mc_step_current {
+        color: $body-color;
+        .o_mc_step_dot {
+            border-color: $o-mc-green;
+            color: $o-mc-green;
+        }
+    }
+    .o_mc_question_answered {
+        background: $o-mc-green-soft;
+        border-color: $o-mc-green !important;
+    }
+    .o_mc_check_icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: $o-mc-green;
+        color: $white;
+        display: grid;
+        place-items: center;
+        font-size: 26px;
+    }
+}

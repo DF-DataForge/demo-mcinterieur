@@ -1,0 +1,18 @@
+.o_mc_scan_station {
+    .o_mc_scan_input {
+        font-family: $font-family-monospace;
+        text-transform: uppercase;
+    }
+    .o_mc_queue_row {
+        cursor: pointer;
+    }
+    .o_mc_cabinets {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 0.5rem;
+    }
+    .o_mc_cabinet_done {
+        background-color: rgba($success, 0.1);
+        border-color: $success !important;
+    }
+}

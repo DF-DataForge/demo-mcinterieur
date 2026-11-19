@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mc_project_view_list" model="ir.ui.view">
+        <field name="name">mc.project.view.list</field>
+        <field name="model">mc.project</field>
+        <field name="arch" type="xml">
+            <list string="Interieurprojecten">
+                <field name="ref"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="city" optional="show"/>
+                <field name="project_type" optional="show"/>
+                <field name="stage" widget="badge"/>
+                <field name="intake_progress" widget="progressbar" optional="show"/>
+                <field name="open_question_count" optional="show"/>
+                <field name="desired_date" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="drawer_id" widget="many2one_avatar_user" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mc_project_view_kanban" model="ir.ui.view">
+        <field name="name">mc.project.view.kanban</field>
+        <field name="model">mc.project</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage" highlight_color="color" sample="1">
+                <field name="stage"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold"/>
+                        <div class="text-muted small">
+                            <field name="ref"/> - <field name="partner_id"/>
+                        </div>
+                        <div class="d-flex gap-1 flex-wrap mt-1">
+                            <field name="project_type" widget="badge"/>
+                            <span t-if="record.open_question_count.raw_value" class="badge text-bg-warning">
+                                <field name="open_question_count"/> open vragen
+                            </span>
+                        </div>
+                        <field name="intake_progress" widget="progressbar" class="mt-1"/>
+                        <footer class="pt-1">
+                            <field name="desired_date" class="small text-muted"/>
+                            <div class="ms-auto d-flex gap-1">
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                                <field name="drawer_id" widget="many2one_avatar_user"/>
+                            </div>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="mc_project_view_search" model="ir.ui.view">
+        <field name="name">mc.project.view.search</field>
+        <field name="model">mc.project</field>
+        <field name="arch" type="xml">
+            <search string="Interieurprojecten">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('ref', 'ilike', self)]"/>
+                <field name="partner_id"/>
+                <field name="city"/>
+                <filter name="my_projects" string="Mijn projecten"
+                        domain="['|', ('user_id', '=', uid), ('drawer_id', '=', uid)]"/>
+                <separator/>
+                <filter name="stage_intake" string="Intake" domain="[('stage', '=', 'intake')]"/>
+                <filter name="stage_drawing" string="Tekening" domain="[('stage', '=', 'drawing')]"/>
+                <filter name="stage_validation" string="Klantvalidatie" domain="[('stage', '=', 'validation')]"/>
+                <filter name="stage_production" string="In productie"
+                        domain="[('stage', 'in', ('prep', 'sawing', 'cnc', 'assembly'))]"/>
+                <separator/>
+                <filter name="with_questions" string="Met open vragen" domain="[('question_ids.done', '=', False)]"/>
+                <group>
+                    <filter name="group_stage" string="Fase" context="{'group_by': 'stage'}"/>
+                    <filter name="group_partner" string="Klant" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'project_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mc_project_view_form" model="ir.ui.view">
+        <field name="name">mc.project.view.form</field>
+        <field name="model">mc.project</field>
+        <field name="arch" type="xml">
+            <form string="Interieurproject">
+                <header>
+                    <button name="action_handoff_drawer" type="object" string="Doorsturen naar tekenaar"
+                            class="btn-primary" invisible="stage != 'intake'"
+                            confirm="Lege intakevragen worden open vragen voor de tekenaar. Doorsturen?"/>
+                    <button name="action_generate_quote" type="object" string="Offerte genereren"
+                            invisible="stage not in ('drawing', 'validation') or not part_ids"/>
+                    <button name="action_send_to_customer" type="object" string="Tekening + offerte naar klant"
+                            class="btn-primary" invisible="stage != 'drawing'"/>
+                    <button name="action_view_portal" type="object" string="Bekijk als klant"
+                            invisible="stage == 'intake'"/>
+                    <button name="action_plan_installation" type="object" string="Plaatsing plannen"
+                            invisible="stage not in ('prep', 'sawing', 'cnc', 'assembly')"/>
+                    <field name="stage" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_quotes" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="quote_count" widget="statinfo" string="Offertes"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <div class="text-muted"><field name="ref" readonly="1"/></div>
+                        <h1><field name="name" placeholder="bv. Keuken Peeters"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="street"/>
+                            <field name="city"/>
+                            <field name="project_type"/>
+                        </group>
+                        <group>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="drawer_id" widget="many2one_avatar_user"/>
+                            <field name="desired_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info mb-3" role="status" invisible="stage != 'intake'">
+                        Intake <field name="intake_progress" class="d-inline fw-bold" readonly="1"/> % ingevuld,
+                        <field name="intake_missing" class="d-inline" readonly="1"/> vragen leeg.
+                        Niets is verplicht: wat ontbreekt, wordt bij het doorsturen een open vraag voor de tekenaar.
+                    </div>
+                    <notebook>
+                        <page string="Intake" name="intake">
+                            <group string="Algemeen">
+                                <group>
+                                    <field name="room" placeholder="bv. keuken gelijkvloers"/>
+                                    <field name="situation" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="budget"/>
+                                </group>
+                                <group>
+                                    <field name="third_party" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="third_party_contact" invisible="third_party in (False, 'none')"/>
+                                    <field name="style"/>
+                                </group>
+                            </group>
+                            <group string="Ruimte en opmeting">
+                                <group>
+                                    <field name="space_width"/>
+                                    <field name="space_height"/>
+                                    <field name="space_depth"/>
+                                    <field name="ceiling_height"/>
+                                </group>
+                                <group>
+                                    <field name="measure_state"/>
+                                    <field name="floor_state"/>
+                                    <field name="walls_state"/>
+                                    <field name="wall_type"/>
+                                    <field name="obstacles"/>
+                                    <field name="access_info"/>
+                                </group>
+                            </group>
+                            <group string="Materialen en afwerking">
+                                <group>
+                                    <field name="carcass_material"/>
+                                    <field name="carcass_color"/>
+                                    <field name="front_material"/>
+                                    <field name="front_color"/>
+                                </group>
+                                <group>
+                                    <field name="gloss" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="grain"/>
+                                    <field name="edge_finish"/>
+                                </group>
+                            </group>
+                            <group string="Beslag en indeling">
+                                <group>
+                                    <field name="handles"/>
+                                    <field name="handle_model" invisible="handles not in ('handles', 'knobs')"/>
+                                    <field name="hinges"/>
+                                    <field name="drawers"/>
+                                </group>
+                                <group>
+                                    <field name="inner_drawers" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="layout_wishes"/>
+                                    <field name="lighting"/>
+                                </group>
+                            </group>
+                            <group string="Werkblad en toestellen" invisible="project_type != 'kitchen'">
+                                <group>
+                                    <field name="worktop"/>
+                                    <field name="appliances"/>
+                                    <field name="fridge_niche"/>
+                                </group>
+                                <group>
+                                    <field name="hood"/>
+                                    <field name="sink"/>
+                                    <field name="appliance_supply"/>
+                                </group>
+                            </group>
+                            <group string="Plaatsing">
+                                <group>
+                                    <field name="installer"/>
+                                    <field name="dismantle" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="disposal" widget="radio" options="{'horizontal': true}"/>
+                                </group>
+                                <group>
+                                    <field name="utilities"/>
+                                    <field name="parking"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Foto's en plannen" name="media">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                            <field name="notes" placeholder="Wensen, gewoontes, wat de klant belangrijk vindt"/>
+                        </page>
+                        <page string="Open vragen" name="questions">
+                            <field name="question_ids">
+                                <list editable="bottom" decoration-muted="done">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="to_customer" widget="boolean_toggle"/>
+                                    <field name="answer"/>
+                                    <field name="answered_by_customer" optional="hide"/>
+                                    <field name="field_name" optional="hide"/>
+                                    <field name="done" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                            <p class="text-muted small">
+                                Zet "In klantportaal" aan om een vraag aan de klant te stellen. Zolang zo'n vraag open
+                                staat, kan de klant tekening en offerte niet goedkeuren.
+                            </p>
+                        </page>
+                        <page string="Tekening" name="drawing">
+                            <field name="version_ids" context="{'default_project_id': id}">
+                                <list>
+                                    <field name="number"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'pending'" decoration-success="state == 'approved'"
+                                           decoration-warning="state == 'changes'"/>
+                                    <field name="note"/>
+                                    <field name="shared_on"/>
+                                    <field name="approved_by"/>
+                                    <field name="approved_on"/>
+                                </list>
+                                <form string="Tekeningversie">
+                                    <group>
+                                        <group>
+                                            <field name="number"/>
+                                            <field name="state"/>
+                                            <field name="note"/>
+                                        </group>
+                                        <group>
+                                            <field name="drawing_pdf" filename="drawing_pdf_name"/>
+                                            <field name="drawing_pdf_name" invisible="1"/>
+                                            <field name="shared_on"/>
+                                            <field name="approved_by"/>
+                                            <field name="approved_on"/>
+                                        </group>
+                                    </group>
+                                    <field name="drawing_image" widget="image" class="w-100"/>
+                                    <group string="Opmerkingen klant" invisible="not customer_remarks">
+                                        <field name="customer_remarks" nolabel="1" colspan="2"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Offerte" name="quote">
+                            <div class="alert alert-secondary" role="status" invisible="part_ids">
+                                Nog geen TopSolid-materiaallijst. Zodra de tekenaar de lijst exporteert, kan je hier
+                                de offerte genereren.
+                            </div>
+                            <group invisible="not part_ids">
+                                <group>
+                                    <field name="quote_margin"/>
+                                    <field name="quote_margin_external"/>
+                                    <field name="quote_discount"/>
+                                    <field name="quote_deposit"/>
+                                </group>
+                                <group>
+                                    <field name="quote_install_days"/>
+                                    <field name="quote_worktop_amount"/>
+                                    <field name="quote_appliance_amount"/>
+                                    <field name="quote_vat"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </group>
+                            </group>
+                            <field name="quote_preview_html" nolabel="1" readonly="1" invisible="not part_ids"/>
+                            <field name="sale_order_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="mc_version_id"/>
+                                    <field name="date_order"/>
+                                    <field name="amount_total" sum="Totaal"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Onderdelen (TopSolid)" name="parts">
+                            <div class="d-flex gap-2 mb-2">
+                                <button name="action_import_parts_demo" type="object" string="Materiaallijst opnieuw inlezen"
+                                        class="btn-secondary"/>
+                                <span class="text-muted align-self-center">
+                                    Ingelezen op <field name="parts_imported_on" class="d-inline" readonly="1"/>
+                                </span>
+                            </div>
+                            <field name="part_ids" context="{'default_project_id': id}">
+                                <list editable="bottom" decoration-warning="not product_id">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="cabinet"/>
+                                    <field name="name"/>
+                                    <field name="topsolid_material"/>
+                                    <field name="product_id" optional="show"/>
+                                    <field name="length"/>
+                                    <field name="width"/>
+                                    <field name="thickness"/>
+                                    <field name="quantity"/>
+                                    <field name="grain" optional="show"/>
+                                    <field name="edge_l1_id" optional="hide"/>
+                                    <field name="edge_l2_id" optional="hide"/>
+                                    <field name="edge_w1_id" optional="hide"/>
+                                    <field name="edge_w2_id" optional="hide"/>
+                                    <field name="cnc_program" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Productie" name="production" invisible="stage in ('intake', 'drawing', 'validation')">
+                            <group>
+                                <group>
+                                    <field name="piece_progress"/>
+                                    <field name="batch_ids" widget="many2many_tags"/>
+                                </group>
+                                <group>
+                                    <field name="installation_ids" widget="many2many_tags"/>
+                                </group>
+                            </group>
+                            <separator string="Picklijst beslag"/>
+                            <field name="hardware_html" nolabel="1" readonly="1"/>
+                            <separator string="Etiketten"/>
+                            <field name="piece_ids" readonly="1">
+                                <list>
+                                    <field name="barcode"/>
+                                    <field name="cabinet"/>
+                                    <field name="name"/>
+                                    <field name="sawn"/>
+                                    <field name="needs_cnc" optional="hide"/>
+                                    <field name="cnc_done"/>
+                                    <field name="kitted"/>
+                                    <field name="assembled"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="mc_project_action" model="ir.actions.act_window">
+        <field name="name">Interieurprojecten</field>
+        <field name="res_model">mc.project</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="mc_project_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Start een nieuw project bij het klantbezoek</p>
+            <p>De verkoper vult de intake in, neemt foto's en stuurt het project door naar de tekenaar.</p>
+        </field>
+    </record>
+</odoo>

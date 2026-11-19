@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mc_material_mapping_view_list" model="ir.ui.view">
+        <field name="name">mc.material.mapping.view.list</field>
+        <field name="model">mc.material.mapping</field>
+        <field name="arch" type="xml">
+            <list string="Materiaalkoppeling" editable="bottom" decoration-warning="not product_id">
+                <field name="name"/>
+                <field name="product_id" context="{'default_mc_kind': 'plate', 'default_is_storable': True}"/>
+                <field name="ardis_code"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mc_material_mapping_action" model="ir.actions.act_window">
+        <field name="name">Materiaalkoppeling TopSolid - Ardis</field>
+        <field name="res_model">mc.material.mapping</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Koppel TopSolid-materialen aan Ardis-codes</p>
+            <p>Het voorraadartikel draagt de Ardis-code als interne referentie. Ontbreekt het materiaal nog, maak
+               het dan rechtstreeks aan vanuit de keuzelijst.</p>
+        </field>
+    </record>
+</odoo>

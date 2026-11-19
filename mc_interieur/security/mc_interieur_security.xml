@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_groups_privilege_mc_interieur" model="res.groups.privilege">
+        <field name="name">Interieurprojecten</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="base.module_category_supply_chain"/>
+    </record>
+
+    <record id="mc_interieur_group_shopfloor" model="res.groups">
+        <field name="name">Werkvloer en plaatsing</field>
+        <field name="comment">Scannen aan zaag, CNC en montage. Planning en oplevering van plaatsingen.</field>
+        <field name="sequence">10</field>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]"/>
+        <field name="privilege_id" ref="res_groups_privilege_mc_interieur"/>
+    </record>
+
+    <record id="mc_interieur_group_user" model="res.groups">
+        <field name="name">Verkoop, tekenaar en werkvoorbereiding</field>
+        <field name="comment">Projecten, intake, offertes, tekeningversies, zaagbatches.</field>
+        <field name="sequence">20</field>
+        <field name="implied_ids" eval="[Command.link(ref('mc_interieur_group_shopfloor'))]"/>
+        <field name="privilege_id" ref="res_groups_privilege_mc_interieur"/>
+    </record>
+
+    <record id="mc_interieur_group_manager" model="res.groups">
+        <field name="name">Beheerder</field>
+        <field name="comment">Configuratie: materiaalkoppeling, ploegen.</field>
+        <field name="sequence">30</field>
+        <field name="implied_ids" eval="[Command.link(ref('mc_interieur_group_user'))]"/>
+        <field name="privilege_id" ref="res_groups_privilege_mc_interieur"/>
+        <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+    </record>
+</odoo>

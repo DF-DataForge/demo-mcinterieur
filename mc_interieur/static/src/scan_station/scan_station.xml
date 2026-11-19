@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mc_interieur.ScanStation">
+        <div class="o_action o_mc_scan_station h-100 overflow-auto p-3">
+            <div class="d-flex align-items-baseline gap-2 mb-3">
+                <h2 class="mb-0" t-out="this.stationLabel"/>
+                <span class="text-muted">Werkvloer</span>
+            </div>
+            <div class="row g-3">
+                <div class="col-lg-5">
+                    <form class="o_mc_scan_form card card-body" t-on-submit="(ev) => this.onSubmit(ev)">
+                        <label class="fw-bold mb-1" for="o_mc_scan_input">Scan barcode</label>
+                        <div class="d-flex gap-2">
+                            <input id="o_mc_scan_input" t-ref="this.scanInput" class="form-control form-control-lg o_mc_scan_input"
+                                   autocomplete="off" spellcheck="false" placeholder="Etiket scannen"/>
+                            <button type="submit" class="btn btn-primary">OK</button>
+                        </div>
+                        <div class="d-flex gap-2 align-items-center mt-2">
+                            <button type="button" class="btn btn-secondary btn-sm" t-on-click="() => this.onClickNext()"
+                                    t-att-disabled="!this.queue().length">Scan volgend etiket (demo)</button>
+                            <span class="text-muted small">Een scanner typt de code en drukt op Enter.</span>
+                        </div>
+                    </form>
+                    <t t-set="fb" t-value="this.feedback()"/>
+                    <div t-if="fb" role="status"
+                         t-attf-class="alert mt-3 o_mc_feedback #{fb.kind === 'success' ? 'alert-success' : fb.kind === 'info' ? 'alert-info' : 'alert-warning'}">
+                        <div class="fs-5 fw-bold" t-out="fb.title"/>
+                        <div t-if="fb.detail" t-out="fb.detail"/>
+                        <div t-if="fb.piece" class="small mt-2 text-body">
+                            <span class="font-monospace" t-out="fb.piece.barcode"/>
+                            <span> - </span><t t-out="fb.piece.project"/>
+                            <span> - </span><span class="font-monospace" t-out="fb.piece.size"/>
+                            <span> - </span><t t-out="fb.piece.material"/>
+                            <div t-if="fb.piece.edges">Kantenband: <span class="font-monospace" t-out="fb.piece.edges"/></div>
+                        </div>
+                    </div>
+                    <div t-if="this.pendingCnc()" class="card card-body mt-3 border-success">
+                        <div class="text-muted small">Programma uit de TopSolid CNC-plugin</div>
+                        <div class="fs-5 font-monospace" t-out="this.pendingCnc().cnc_program"/>
+                        <button class="btn btn-success mt-2" t-on-click="() => this.onConfirmCnc()">Bewerking klaar</button>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div t-if="this.station === 'assembly' and this.cabinets().length" class="card card-body mb-3">
+                        <h5>Kasten</h5>
+                        <div class="o_mc_cabinets">
+                            <div t-foreach="this.cabinets()" t-as="cabinet" t-key="cabinet.project_id + '-' + cabinet.cabinet"
+                                 t-attf-class="o_mc_cabinet border rounded p-2 #{cabinet.assembled ? 'o_mc_cabinet_done' : ''}">
+                                <div class="fw-bold" t-out="cabinet.cabinet"/>
+                                <div class="small text-muted" t-out="cabinet.project"/>
+                                <div class="small"><t t-out="cabinet.kitted"/>/<t t-out="cabinet.total"/> verzameld</div>
+                                <span t-if="cabinet.assembled" class="badge text-bg-success">Gemonteerd</span>
+                                <button t-else="" class="btn btn-sm btn-primary mt-1"
+                                        t-att-disabled="cabinet.kitted !== cabinet.total"
+                                        t-on-click="() => this.onCabinetAssembled(cabinet)">Kast gemonteerd</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-body">
+                        <h5>Wachtrij <span class="text-muted fs-6">(<t t-out="this.queue().length"/>)</span></h5>
+                        <table class="table table-sm table-hover mb-0">
+                            <thead><tr><th>Etiket</th><th>Onderdeel</th><th>Project</th><th t-if="this.station === 'cnc'">Programma</th></tr></thead>
+                            <tbody>
+                                <tr t-foreach="this.queue()" t-as="piece" t-key="piece.id" class="o_mc_queue_row"
+                                    t-on-click="() => this.processCode(piece.barcode)">
+                                    <td class="font-monospace" t-out="piece.barcode"/>
+                                    <td><t t-out="piece.name"/> <span class="text-muted small" t-out="piece.cabinet"/></td>
+                                    <td class="small" t-out="piece.project"/>
+                                    <td t-if="this.station === 'cnc'" class="font-monospace small" t-out="piece.cnc_program"/>
+                                </tr>
+                                <tr t-if="!this.queue().length">
+                                    <td colspan="4" class="text-muted text-center">Niets in de wachtrij.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

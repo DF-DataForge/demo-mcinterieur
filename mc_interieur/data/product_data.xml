@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Service products used on the quotes generated from the TopSolid material list -->
+    <record id="product_mc_furniture" model="product.product">
+        <field name="name">Maatwerk meubel</field>
+        <field name="default_code">MC-MEUBEL</field>
+        <field name="type">service</field>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="list_price">0</field>
+    </record>
+    <record id="product_mc_hardware" model="product.product">
+        <field name="name">Beslag en verlichting</field>
+        <field name="default_code">MC-BESLAG</field>
+        <field name="type">service</field>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="list_price">0</field>
+    </record>
+    <record id="product_mc_installation" model="product.product">
+        <field name="name">Levering en plaatsing</field>
+        <field name="default_code">MC-PLAATSING</field>
+        <field name="type">service</field>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="list_price">0</field>
+    </record>
+    <record id="product_mc_worktop" model="product.product">
+        <field name="name">Werkblad (extern)</field>
+        <field name="default_code">MC-WERKBLAD</field>
+        <field name="type">service</field>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="list_price">0</field>
+    </record>
+    <record id="product_mc_appliances" model="product.product">
+        <field name="name">Inbouwtoestellen</field>
+        <field name="default_code">MC-TOESTELLEN</field>
+        <field name="type">service</field>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="list_price">0</field>
+    </record>
+</odoo>

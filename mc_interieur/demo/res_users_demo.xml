@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Internal users (employees). Demo passwords only: change or remove them on a real database. -->
+    <record id="partner_sofie" model="res.partner">
+        <field name="name">Sofie Verhaeghe</field>
+        <field name="email">sofie@interieur-demo.example.com</field>
+    </record>
+    <record id="user_sofie" model="res.users" context="{'no_reset_password': True}">
+        <field name="partner_id" ref="partner_sofie"/>
+        <field name="login">sofie</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_user'), ref('sales_team.group_sale_salesman'), ref('stock.group_stock_user')])]"/>
+    </record>
+
+    <record id="partner_jonas" model="res.partner">
+        <field name="name">Jonas De Vos</field>
+        <field name="email">jonas@interieur-demo.example.com</field>
+    </record>
+    <record id="user_jonas" model="res.users" context="{'no_reset_password': True}">
+        <field name="partner_id" ref="partner_jonas"/>
+        <field name="login">jonas</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_user'), ref('sales_team.group_sale_salesman'), ref('stock.group_stock_user')])]"/>
+    </record>
+
+    <record id="partner_lien" model="res.partner">
+        <field name="name">Lien Martens</field>
+        <field name="email">lien@interieur-demo.example.com</field>
+    </record>
+    <record id="user_lien" model="res.users" context="{'no_reset_password': True}">
+        <field name="partner_id" ref="partner_lien"/>
+        <field name="login">lien</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_manager'), ref('sales_team.group_sale_salesman'), ref('stock.group_stock_user'), ref('purchase.group_purchase_user')])]"/>
+    </record>
+
+    <record id="partner_kevin" model="res.partner">
+        <field name="name">Kevin Desmet</field>
+        <field name="email">kevin@interieur-demo.example.com</field>
+    </record>
+    <record id="user_kevin" model="res.users" context="{'no_reset_password': True}">
+        <field name="partner_id" ref="partner_kevin"/>
+        <field name="login">kevin</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_shopfloor')])]"/>
+    </record>
+
+    <record id="partner_bart" model="res.partner">
+        <field name="name">Bart Vandenberghe</field>
+        <field name="email">bart@interieur-demo.example.com</field>
+    </record>
+    <record id="user_bart" model="res.users" context="{'no_reset_password': True}">
+        <field name="partner_id" ref="partner_bart"/>
+        <field name="login">bart</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_shopfloor')])]"/>
+    </record>
+
+    <record id="partner_jens" model="res.partner">
+        <field name="name">Jens Coppens</field>
+        <field name="email">jens@interieur-demo.example.com</field>
+    </record>
+    <record id="user_jens" model="res.users" context="{'no_reset_password': True}">
+        <field name="partner_id" ref="partner_jens"/>
+        <field name="login">jens</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_shopfloor')])]"/>
+    </record>
+
+    <!-- Installation teams -->
+    <record id="team_1" model="mc.team">
+        <field name="name">Ploeg 1 - Bart en Kevin</field>
+        <field name="sequence">1</field>
+        <field name="color">4</field>
+        <field name="user_ids" eval="[Command.set([ref('user_bart'), ref('user_kevin')])]"/>
+    </record>
+    <record id="team_2" model="mc.team">
+        <field name="name">Ploeg 2 - Jens</field>
+        <field name="sequence">2</field>
+        <field name="color">10</field>
+        <field name="user_ids" eval="[Command.set([ref('user_jens')])]"/>
+    </record>
+
+    <!-- Customers with a portal login. Karen Maes, the Peeters family and Tom Van Damme have several projects. -->
+    <record id="partner_maes" model="res.partner">
+        <field name="name">Karen Maes</field>
+        <field name="email">karen.maes@example.com</field>
+        <field name="street">Stationsstraat 12</field>
+        <field name="city">Tielt</field>
+        <field name="zip">8700</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="phone">+32 470 11 22 33</field>
+    </record>
+    <record id="portal_user_maes" model="res.users" context="{'no_reset_password': True}">
+        <field name="partner_id" ref="partner_maes"/>
+        <field name="login">karen</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[Command.clear()]"/>
+    </record>
+
+    <record id="partner_peeters" model="res.partner">
+        <field name="name">Jan Peeters</field>
+        <field name="email">jan.peeters@example.com</field>
+        <field name="street">Kerkstraat 4</field>
+        <field name="city">Aalter</field>
+        <field name="zip">9880</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="phone">+32 471 22 33 44</field>
+    </record>
+    <record id="portal_user_peeters" model="res.users" context="{'no_reset_password': True}">
+        <field name="partner_id" ref="partner_peeters"/>
+        <field name="login">peeters</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[Command.clear()]"/>
+    </record>
+
+    <record id="partner_vandamme" model="res.partner">
+        <field name="name">Tom Van Damme</field>
+        <field name="email">tom.vandamme@example.com</field>
+        <field name="street">Coupure 88</field>
+        <field name="city">Gent</field>
+        <field name="zip">9000</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="phone">+32 472 33 44 55</field>
+    </record>
+    <record id="portal_user_vandamme" model="res.users" context="{'no_reset_password': True}">
+        <field name="partner_id" ref="partner_vandamme"/>
+        <field name="login">tom</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[Command.clear()]"/>
+    </record>
+
+    <record id="partner_desmet" model="res.partner">
+        <field name="name">An De Smet</field>
+        <field name="email">an.desmet@example.com</field>
+        <field name="street">Markt 3</field>
+        <field name="city">Eeklo</field>
+        <field name="zip">9900</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="phone">+32 473 44 55 66</field>
+    </record>
+    <record id="portal_user_desmet" model="res.users" context="{'no_reset_password': True}">
+        <field name="partner_id" ref="partner_desmet"/>
+        <field name="login">an</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[Command.clear()]"/>
+    </record>
+
+    <record id="base.group_portal" model="res.groups">
+        <field name="user_ids" eval="[Command.link(ref('portal_user_maes')), Command.link(ref('portal_user_peeters')), Command.link(ref('portal_user_vandamme')), Command.link(ref('portal_user_desmet'))]"/>
+    </record>
+</odoo>

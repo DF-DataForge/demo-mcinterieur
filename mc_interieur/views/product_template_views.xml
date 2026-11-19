@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.mc_interieur</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="mc_kind"/>
+                <field name="mc_sheet_length" invisible="mc_kind != 'plate'"/>
+                <field name="mc_sheet_width" invisible="mc_kind != 'plate'"/>
+                <field name="mc_thickness" invisible="mc_kind not in ('plate', 'edge')"/>
+                <field name="mc_grain" invisible="mc_kind != 'plate'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_action_mc_material" model="ir.actions.act_window">
+        <field name="name">Plaatmateriaal, kantenband en beslag</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('mc_kind', '!=', False)]</field>
+        <field name="context">{'default_mc_kind': 'plate', 'default_is_storable': True}</field>
+    </record>
+</odoo>

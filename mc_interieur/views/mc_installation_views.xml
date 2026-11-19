@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mc_installation_view_calendar" model="ir.ui.view">
+        <field name="name">mc.installation.view.calendar</field>
+        <field name="model">mc.installation</field>
+        <field name="arch" type="xml">
+            <calendar string="Planning plaatsing" date_start="date_start" date_stop="date_stop" color="team_id"
+                      mode="week" event_open_popup="false" quick_create="0" scales="day,week,month">
+                <field name="partner_id"/>
+                <field name="site_city"/>
+                <field name="team_id" filters="1"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="mc_installation_view_list" model="ir.ui.view">
+        <field name="name">mc.installation.view.list</field>
+        <field name="model">mc.installation</field>
+        <field name="arch" type="xml">
+            <list string="Plaatsingen">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="site_city"/>
+                <field name="team_id"/>
+                <field name="date_start"/>
+                <field name="date_stop"/>
+                <field name="open_check_count" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'planned'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mc_installation_view_search" model="ir.ui.view">
+        <field name="name">mc.installation.view.search</field>
+        <field name="model">mc.installation</field>
+        <field name="arch" type="xml">
+            <search string="Plaatsingen">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="team_id"/>
+                <filter name="my_installations" string="Mijn plaatsingen" domain="[('team_id.user_ids', 'in', uid)]"/>
+                <separator/>
+                <filter name="to_plan" string="In te plannen" domain="[('state', '=', 'draft')]"/>
+                <filter name="planned" string="Ingepland" domain="[('state', '=', 'planned')]"/>
+                <filter name="done" string="Opgeleverd" domain="[('state', '=', 'done')]"/>
+                <group>
+                    <filter name="group_team" string="Ploeg" context="{'group_by': 'team_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mc_installation_view_form" model="ir.ui.view">
+        <field name="name">mc.installation.view.form</field>
+        <field name="model">mc.installation</field>
+        <field name="arch" type="xml">
+            <form string="Plaatsing">
+                <header>
+                    <button name="action_sign_off" type="object" string="Oplevering ondertekenen" class="btn-primary"
+                            invisible="state == 'done'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Planning">
+                            <field name="project_id" readonly="state == 'done'"/>
+                            <field name="team_id"/>
+                            <field name="user_ids" widget="many2many_avatar_user"/>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                        </group>
+                        <group string="Werfgegevens (uit de intake)">
+                            <field name="partner_id"/>
+                            <field name="site_street"/>
+                            <field name="site_city"/>
+                            <field name="access_info"/>
+                            <field name="parking"/>
+                            <field name="dismantle"/>
+                            <field name="disposal"/>
+                            <field name="utilities"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Controlelijst" name="checks">
+                            <field name="check_ids" readonly="state == 'done'">
+                                <list editable="bottom" decoration-muted="done">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="done" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Nazorgpunten" name="punch">
+                            <field name="punch_ids">
+                                <list editable="bottom" decoration-muted="done">
+                                    <field name="name"/>
+                                    <field name="done" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Foto's" name="photos">
+                            <field name="photo_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Oplevering" name="signoff">
+                            <div class="alert alert-warning" role="status" invisible="state == 'done' or not open_check_count">
+                                Nog <field name="open_check_count" class="d-inline"/> controlepunten open.
+                                Vink alles af voordat de klant tekent.
+                            </div>
+                            <group>
+                                <field name="signed_by" readonly="state == 'done'"/>
+                                <field name="signed_on" invisible="not signed_on"/>
+                                <field name="signature" widget="signature" readonly="state == 'done'"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="mc_installation_action" model="ir.actions.act_window">
+        <field name="name">Planning plaatsing</field>
+        <field name="res_model">mc.installation</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="search_view_id" ref="mc_installation_view_search"/>
+    </record>
+
+    <record id="mc_installation_action_my" model="ir.actions.act_window">
+        <field name="name">Mijn planning</field>
+        <field name="res_model">mc.installation</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="search_view_id" ref="mc_installation_view_search"/>
+        <field name="context">{'search_default_my_installations': 1}</field>
+    </record>
+</odoo>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- 1. Intake: sales rep just visited the customer -->
+    <record id="project_peeters_keuken" model="mc.project">
+        <field name="name">Keuken Peeters</field>
+        <field name="partner_id" ref="partner_peeters"/>
+        <field name="street">Kerkstraat 4</field>
+        <field name="city">Aalter</field>
+        <field name="user_id" ref="user_sofie"/>
+        <field name="project_type">kitchen</field>
+        <field name="room">Keuken en berging gelijkvloers</field>
+        <field name="situation">renovation</field>
+        <field name="desired_date" eval="(DateTime.today() + relativedelta(months=4)).strftime('%Y-%m-%d')"/>
+        <field name="budget">20_35</field>
+        <field name="third_party">contractor</field>
+        <field name="third_party_contact">Bouwbedrijf Mortier, 09 123 45 67</field>
+        <field name="space_width">4120</field>
+        <field name="space_height">2650</field>
+        <field name="space_depth">3240</field>
+        <field name="ceiling_height">2650</field>
+        <field name="measure_state">todo</field>
+        <field name="floor_state">todo</field>
+        <field name="walls_state">unchecked</field>
+        <field name="obstacles">Radiator, raam met vensterbank</field>
+        <field name="front_material">mdf_lacquer</field>
+        <field name="front_color">RAL 7044 zijdegrijs</field>
+        <field name="gloss">matt</field>
+        <field name="edge_finish">lacquered</field>
+        <field name="worktop">stone</field>
+        <field name="handles">none</field>
+        <field name="hinges">push</field>
+        <field name="drawers">premium</field>
+        <field name="appliances">Oven, combi-microgolf, vaatwasser, koelkast, inductie, dampkap</field>
+        <field name="hood">recirculation</field>
+        <field name="sink">under</field>
+        <field name="appliance_supply">us</field>
+        <field name="installer">us</field>
+        <field name="dismantle">yes</field>
+        <field name="notes" type="html"><p>Klant wil een eiland met zitgedeelte voor 2 krukken. Werkblad komt van de steenhouwer, opmeting werkblad na plaatsing van de kasten.</p></field>
+    </record>
+
+    <!-- 2. Drawing: the drawer works on it, material list from TopSolid is in, one material still unlinked -->
+    <record id="project_peeters_inkomkast" model="mc.project">
+        <field name="name">Inkomkast Peeters</field>
+        <field name="partner_id" ref="partner_peeters"/>
+        <field name="city">Aalter</field>
+        <field name="user_id" ref="user_sofie"/>
+        <field name="drawer_id" ref="user_jonas"/>
+        <field name="stage">drawing</field>
+        <field name="project_type">wardrobe</field>
+        <field name="room">Inkomhal onder de trap</field>
+        <field name="situation">renovation</field>
+        <field name="space_width">1800</field>
+        <field name="space_height">2450</field>
+        <field name="space_depth">600</field>
+        <field name="carcass_material">melamine</field>
+        <field name="carcass_color">Wit</field>
+        <field name="front_material">veneer</field>
+        <field name="front_color">Eiken natuur, geolied</field>
+        <field name="handles">profile</field>
+        <field name="installer">us</field>
+    </record>
+    <record id="question_peeters_inkomkast_1" model="mc.project.question">
+        <field name="project_id" ref="project_peeters_inkomkast"/>
+        <field name="name">Wandtype achter de kast?</field>
+        <field name="field_name">wall_type</field>
+    </record>
+    <record id="version_peeters_inkomkast_1" model="mc.drawing.version">
+        <field name="project_id" ref="project_peeters_inkomkast"/>
+        <field name="number">1</field>
+        <field name="note">Eerste ontwerp: twee hoge deuren, legplanken binnenin.</field>
+        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/inkomkast_peeters_v1.png"/>
+    </record>
+
+    <!-- 3. Customer validation: version 2 waits for the customer, two questions are still open -->
+    <record id="project_maes_keuken" model="mc.project">
+        <field name="name">Keuken Maes</field>
+        <field name="partner_id" ref="partner_maes"/>
+        <field name="street">Stationsstraat 12</field>
+        <field name="city">Tielt</field>
+        <field name="user_id" ref="user_sofie"/>
+        <field name="drawer_id" ref="user_jonas"/>
+        <field name="stage">drawing</field>
+        <field name="project_type">kitchen</field>
+        <field name="room">Leefkeuken</field>
+        <field name="situation">renovation</field>
+        <field name="desired_date" eval="(DateTime.today() + relativedelta(months=2)).strftime('%Y-%m-%d')"/>
+        <field name="budget">20_35</field>
+        <field name="third_party">none</field>
+        <field name="space_width">3240</field>
+        <field name="space_height">2600</field>
+        <field name="space_depth">3800</field>
+        <field name="ceiling_height">2600</field>
+        <field name="measure_state">done</field>
+        <field name="floor_state">finished</field>
+        <field name="walls_state">ok</field>
+        <field name="wall_type">concrete</field>
+        <field name="carcass_material">melamine</field>
+        <field name="carcass_color">Wit</field>
+        <field name="front_material">mdf_lacquer</field>
+        <field name="front_color">RAL 9010 zuiver wit</field>
+        <field name="gloss">matt</field>
+        <field name="grain">na</field>
+        <field name="edge_finish">lacquered</field>
+        <field name="worktop">stone</field>
+        <field name="handles">profile</field>
+        <field name="hinges">softclose</field>
+        <field name="drawers">premium</field>
+        <field name="lighting">strip</field>
+        <field name="appliances">Oven, combi-microgolf, vaatwasser, koelkast, kookplaat, dampkap</field>
+        <field name="fridge_niche">178</field>
+        <field name="hood">ceiling</field>
+        <field name="sink">under</field>
+        <field name="appliance_supply">us</field>
+        <field name="installer">us</field>
+        <field name="dismantle">yes</field>
+        <field name="disposal">yes</field>
+    </record>
+    <record id="question_maes_keuken_1" model="mc.project.question">
+        <field name="project_id" ref="project_maes_keuken"/>
+        <field name="name">Wilt u een stopcontact in een lade (laadstation)?</field>
+        <field name="to_customer" eval="True"/>
+    </record>
+    <record id="question_maes_keuken_2" model="mc.project.question">
+        <field name="project_id" ref="project_maes_keuken"/>
+        <field name="name">Kleur van de plint: zoals de fronten of inox-look?</field>
+        <field name="to_customer" eval="True"/>
+    </record>
+    <record id="version_maes_keuken_1" model="mc.drawing.version">
+        <field name="project_id" ref="project_maes_keuken"/>
+        <field name="number">1</field>
+        <field name="state">changes</field>
+        <field name="note">Eerste ontwerp.</field>
+        <field name="customer_remarks">Hoge kast links in plaats van rechts.
+Extra lade onder de kookplaat.</field>
+        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/keuken_maes_v1.png"/>
+    </record>
+    <record id="version_maes_keuken_2" model="mc.drawing.version">
+        <field name="project_id" ref="project_maes_keuken"/>
+        <field name="number">2</field>
+        <field name="note">Opmerkingen van versie 1 verwerkt: kolomkast links, eiland toegevoegd.</field>
+        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/keuken_maes_v2.png"/>
+    </record>
+
+    <!-- 4. In production at the CNC -->
+    <record id="project_maes_badkamer" model="mc.project">
+        <field name="name">Badkamermeubel Maes</field>
+        <field name="partner_id" ref="partner_maes"/>
+        <field name="city">Tielt</field>
+        <field name="user_id" ref="user_sofie"/>
+        <field name="drawer_id" ref="user_lien"/>
+        <field name="stage">drawing</field>
+        <field name="project_type">bathroom</field>
+        <field name="situation">renovation</field>
+        <field name="carcass_material">melamine</field>
+        <field name="front_material">mdf_lacquer</field>
+        <field name="front_color">RAL 9010</field>
+        <field name="worktop">stone</field>
+        <field name="drawers">standard</field>
+        <field name="installer">us</field>
+        <field name="access_info">1ste verdieping, trap 90 cm breed</field>
+    </record>
+    <record id="version_maes_badkamer_1" model="mc.drawing.version">
+        <field name="project_id" ref="project_maes_badkamer"/>
+        <field name="number">1</field>
+        <field name="note">Wastafelmeubel met twee lades en spiegelkast.</field>
+        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/badkamer_maes_v1.png"/>
+    </record>
+
+    <!-- 5. At the panel saw -->
+    <record id="project_vandamme_dressing" model="mc.project">
+        <field name="name">Dressing Van Damme</field>
+        <field name="partner_id" ref="partner_vandamme"/>
+        <field name="street">Coupure 88</field>
+        <field name="city">Gent</field>
+        <field name="user_id" ref="user_sofie"/>
+        <field name="drawer_id" ref="user_jonas"/>
+        <field name="stage">drawing</field>
+        <field name="project_type">dressing</field>
+        <field name="room">Slaapkamer 1</field>
+        <field name="situation">new</field>
+        <field name="desired_date" eval="(DateTime.today() + relativedelta(days=10)).strftime('%Y-%m-%d')"/>
+        <field name="carcass_material">melamine</field>
+        <field name="carcass_color">Eiken natuur</field>
+        <field name="front_material">mdf_lacquer</field>
+        <field name="front_color">NCS S 2005-Y20R</field>
+        <field name="handles">profile</field>
+        <field name="lighting">sensor</field>
+        <field name="layout_wishes">Hangroede, schoenenrek, broekenrek</field>
+        <field name="installer">us</field>
+        <field name="access_info">Appartement 3de verdieping, lift 1,1 m diep</field>
+        <field name="parking">Laadzone voor de deur, vooraf aanvragen bij de stad</field>
+    </record>
+    <record id="version_vandamme_dressing_1" model="mc.drawing.version">
+        <field name="project_id" ref="project_vandamme_dressing"/>
+        <field name="number">1</field>
+        <field name="note">Dressing met drie deuren en open kast.</field>
+        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/dressing_vandamme_v1.png"/>
+    </record>
+
+    <!-- 6. Work preparation: approved, waiting in a draft cutting batch with a material shortage -->
+    <record id="project_vandamme_tv" model="mc.project">
+        <field name="name">TV-wand Van Damme</field>
+        <field name="partner_id" ref="partner_vandamme"/>
+        <field name="city">Gent</field>
+        <field name="user_id" ref="user_sofie"/>
+        <field name="drawer_id" ref="user_jonas"/>
+        <field name="stage">drawing</field>
+        <field name="project_type">tv</field>
+        <field name="situation">new</field>
+        <field name="carcass_material">melamine</field>
+        <field name="carcass_color">Antraciet</field>
+        <field name="front_material">mdf_lacquer</field>
+        <field name="lighting">strip</field>
+        <field name="installer">us</field>
+    </record>
+    <record id="version_vandamme_tv_1" model="mc.drawing.version">
+        <field name="project_id" ref="project_vandamme_tv"/>
+        <field name="number">1</field>
+        <field name="note">Lowboard met wandpaneel en LED-strip.</field>
+        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/tvwand_vandamme_v1.png"/>
+    </record>
+
+    <!-- 7. Assembly and installation planned -->
+    <record id="project_desmet_bureau" model="mc.project">
+        <field name="name">Bureau-kast De Smet</field>
+        <field name="partner_id" ref="partner_desmet"/>
+        <field name="street">Markt 3</field>
+        <field name="city">Eeklo</field>
+        <field name="user_id" ref="user_sofie"/>
+        <field name="drawer_id" ref="user_lien"/>
+        <field name="stage">drawing</field>
+        <field name="project_type">desk</field>
+        <field name="situation">renovation</field>
+        <field name="carcass_material">melamine</field>
+        <field name="carcass_color">Eiken</field>
+        <field name="handles">handles</field>
+        <field name="handle_model">Lijngreep zwart 160 mm</field>
+        <field name="drawers">standard</field>
+        <field name="lighting">strip</field>
+        <field name="installer">us</field>
+        <field name="dismantle">no</field>
+        <field name="disposal">no</field>
+        <field name="access_info">2de verdieping, lift aanwezig</field>
+        <field name="parking">Parkeerplaats voor de deur</field>
+        <field name="utilities">Door klant geregeld</field>
+    </record>
+    <record id="version_desmet_bureau_1" model="mc.drawing.version">
+        <field name="project_id" ref="project_desmet_bureau"/>
+        <field name="number">1</field>
+        <field name="note">Bureau met ladeblok en boekenkast.</field>
+        <field name="drawing_image" type="base64" file="mc_interieur/static/demo/bureau_desmet_v1.png"/>
+    </record>
+
+    <!-- Parts lists, quotes, approvals, cutting batches, stock and installations -->
+    <function model="mc.project" name="_mc_demo_setup"/>
+</odoo>

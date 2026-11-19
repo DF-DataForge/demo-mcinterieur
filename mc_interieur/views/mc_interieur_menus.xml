@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="mc_interieur_menu_root" name="Interieur" sequence="45"
+              web_icon="mc_interieur,static/description/icon.png"
+              groups="mc_interieur_group_shopfloor"/>
+
+    <menuitem id="mc_project_menu" name="Projecten" parent="mc_interieur_menu_root" sequence="10"
+              action="mc_project_action" groups="mc_interieur_group_user"/>
+
+    <menuitem id="mc_production_menu" name="Werkvoorbereiding" parent="mc_interieur_menu_root" sequence="20"
+              groups="mc_interieur_group_user"/>
+    <menuitem id="mc_cutting_batch_menu" name="Zaagbatches (Ardis)" parent="mc_production_menu" sequence="10"
+              action="mc_cutting_batch_action"/>
+    <menuitem id="mc_piece_menu" name="Etiketten" parent="mc_production_menu" sequence="20"
+              action="mc_piece_action"/>
+
+    <menuitem id="mc_shopfloor_menu" name="Werkvloer" parent="mc_interieur_menu_root" sequence="30"/>
+    <menuitem id="mc_scan_station_menu_saw" name="Paneelzaag" parent="mc_shopfloor_menu" sequence="10"
+              action="mc_scan_station_action_saw"/>
+    <menuitem id="mc_scan_station_menu_cnc" name="CNC" parent="mc_shopfloor_menu" sequence="20"
+              action="mc_scan_station_action_cnc"/>
+    <menuitem id="mc_scan_station_menu_assembly" name="Montage werkplaats" parent="mc_shopfloor_menu" sequence="30"
+              action="mc_scan_station_action_assembly"/>
+
+    <menuitem id="mc_installation_menu" name="Plaatsing" parent="mc_interieur_menu_root" sequence="40"/>
+    <menuitem id="mc_installation_menu_my" name="Mijn planning" parent="mc_installation_menu" sequence="10"
+              action="mc_installation_action_my"/>
+    <menuitem id="mc_installation_menu_all" name="Planning alle ploegen" parent="mc_installation_menu" sequence="20"
+              action="mc_installation_action"/>
+
+    <menuitem id="mc_config_menu" name="Configuratie" parent="mc_interieur_menu_root" sequence="90"
+              groups="mc_interieur_group_manager"/>
+    <menuitem id="mc_material_mapping_menu" name="Materiaalkoppeling TopSolid - Ardis" parent="mc_config_menu"
+              sequence="10" action="mc_material_mapping_action"/>
+    <menuitem id="mc_material_menu" name="Materialen en beslag" parent="mc_config_menu" sequence="20"
+              action="product_template_action_mc_material"/>
+    <menuitem id="mc_team_menu" name="Plaatsingsploegen" parent="mc_config_menu" sequence="30"
+              action="mc_team_action"/>
+</odoo>

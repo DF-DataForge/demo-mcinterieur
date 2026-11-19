@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_breadcrumbs" name="Portal breadcrumbs: interieurprojecten" inherit_id="portal.portal_breadcrumbs" priority="45">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'mc_project'" t-attf-class="breadcrumb-item #{'active' if not project else ''}">
+                <a t-if="project" href="/my/interieur">Interieurprojecten</a>
+                <t t-else="">Interieurprojecten</t>
+            </li>
+            <li t-if="page_name == 'mc_project' and project" class="breadcrumb-item active text-truncate">
+                <t t-out="project.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_mc_projects" name="Mijn interieurprojecten">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Interieurprojecten</t>
+            </t>
+            <div t-if="not projects" class="alert alert-info" role="status">U hebt nog geen interieurprojecten.</div>
+            <t t-if="projects" t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Referentie</th>
+                        <th>Fase</th>
+                        <th class="text-end">Actie nodig</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="projects" t-as="project">
+                        <td><a t-att-href="project.get_portal_url()"><span t-field="project.name"/></a></td>
+                        <td class="font-monospace small"><span t-field="project.ref"/></td>
+                        <td><span t-field="project.stage" class="badge text-bg-light"/></td>
+                        <td class="text-end">
+                            <span t-if="project.stage == 'validation'" class="badge text-bg-warning">Wacht op uw goedkeuring</span>
+                            <span t-elif="project.customer_question_count" class="badge text-bg-warning">
+                                <t t-out="project.customer_question_count"/> open vragen
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_mc_project" name="Interieurproject">
+        <t t-call="portal.portal_layout">
+            <t t-set="o_portal_fullwidth_alert" groups="mc_interieur.mc_interieur_group_user">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/odoo/mc.project/%s' % project.id"/>
+                </t>
+            </t>
+            <div class="o_mc_portal_project mt-3">
+                <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+                    <div>
+                        <div class="text-muted small font-monospace"><t t-out="project.ref"/> - <t t-out="project.city"/></div>
+                        <h2 class="mb-0"><t t-out="project.name"/><t t-if="version">: tekening versie <t t-out="version.number"/></t></h2>
+                    </div>
+                    <span t-if="version and version.state == 'pending'" class="badge rounded-pill text-bg-warning fs-6">Wacht op uw goedkeuring</span>
+                    <span t-elif="version and version.state == 'approved'" class="badge rounded-pill text-bg-success fs-6">Goedgekeurd</span>
+                    <span t-elif="version and version.state == 'changes'" class="badge rounded-pill text-bg-info fs-6">Wijzigingen doorgegeven</span>
+                </div>
+
+                <ol class="o_mc_steps list-unstyled d-flex mb-4">
+                    <li t-foreach="steps" t-as="step"
+                        t-attf-class="o_mc_step flex-fill text-center small #{'o_mc_step_done' if step_index &lt; current_step else ''} #{'o_mc_step_current fw-bold' if step_index == current_step else ''}">
+                        <span class="o_mc_step_dot" aria-hidden="true">
+                            <t t-if="step_index &lt; current_step">&#10003;</t><t t-else="" t-out="step_index + 1"/>
+                        </span>
+                        <span class="d-block" t-out="step[1]"/>
+                    </li>
+                </ol>
+
+                <div t-if="message == 'approved'" class="alert alert-success" role="status">
+                    Bedankt voor uw goedkeuring. We plannen de productie en nemen contact op voor de plaatsing.
+                </div>
+                <div t-if="message == 'changes_sent'" class="alert alert-info" role="status">
+                    Uw opmerkingen zijn doorgestuurd naar de tekenaar. U krijgt een bericht zodra de nieuwe versie klaarstaat.
+                </div>
+                <div t-if="message == 'answered'" class="alert alert-success" role="status">Bedankt, uw antwoord is doorgegeven.</div>
+                <div t-if="error == 'open_questions'" class="alert alert-warning" role="alert">
+                    Beantwoord eerst de open vragen. Daarna kunt u tekening en offerte goedkeuren.
+                </div>
+                <div t-if="error == 'missing_signature'" class="alert alert-warning" role="alert">
+                    Vul uw volledige naam in en bevestig dat u tekening en offerte hebt nagekeken.
+                </div>
+                <div t-if="error == 'empty_remarks'" class="alert alert-warning" role="alert">Beschrijf wat u wilt laten aanpassen.</div>
+                <div t-if="error == 'empty_answer'" class="alert alert-warning" role="alert">Vul een antwoord in.</div>
+                <div t-if="error == 'not_pending'" class="alert alert-warning" role="alert">Deze versie wacht niet meer op goedkeuring.</div>
+
+                <div t-if="not version" class="alert alert-info" role="status">
+                    Uw project is in voorbereiding. Zodra de tekening en de offerte klaar zijn, vindt u ze hier.
+                </div>
+
+                <div t-if="version" class="row g-4">
+                    <div class="col-lg-8">
+                        <section class="card mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title">Tekening</h4>
+                                <p t-if="version.note" class="text-muted" t-out="version.note"/>
+                                <img t-if="version.drawing_image" t-att-src="image_data_uri(version.drawing_image)"
+                                     class="img-fluid border rounded" t-att-alt="'Tekening versie %s' % version.number"/>
+                                <p t-if="version.drawing_pdf" class="mt-2 mb-0">
+                                    <a class="btn btn-sm btn-secondary"
+                                       t-attf-href="/web/content/mc.drawing.version/#{version.id}/drawing_pdf?download=true">
+                                        Tekening als PDF
+                                    </a>
+                                </p>
+                            </div>
+                        </section>
+
+                        <section t-if="quote" class="card mb-4" id="offerte">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h4 class="card-title mb-0">Offerte <t t-out="quote.name"/></h4>
+                                    <a t-att-href="quote.get_portal_url()" class="btn btn-sm btn-secondary">Offerte als PDF en details</a>
+                                </div>
+                                <p class="text-muted small mt-2">
+                                    Hoort bij tekening versie <t t-out="version.number"/>. U keurt tekening en offerte samen goed.
+                                    Klopt er iets niet in de prijs, kies dan "Ik wil iets laten aanpassen".
+                                </p>
+                                <table class="table table-sm align-middle">
+                                    <tbody>
+                                        <tr t-foreach="quote.order_line.filtered(lambda l: not l.display_type)" t-as="line">
+                                            <td>
+                                                <t t-set="line_title" t-value="(line.name or '').split('\n')"/>
+                                                <b t-out="line_title[0]"/>
+                                                <div t-if="len(line_title) &gt; 1" class="small text-muted" t-out="line_title[1]"/>
+                                            </td>
+                                            <td class="text-end text-nowrap">
+                                                <span t-field="line.price_subtotal"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr><td>Totaal excl. btw</td><td class="text-end"><span t-field="quote.amount_untaxed"/></td></tr>
+                                        <tr><td>Btw</td><td class="text-end"><span t-field="quote.amount_tax"/></td></tr>
+                                        <tr class="fw-bold"><td>Totaal incl. btw</td><td class="text-end"><span t-field="quote.amount_total"/></td></tr>
+                                        <tr><td colspan="2" class="text-muted small"><t t-out="quote.note"/></td></tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section t-if="questions" class="card mb-4" id="vragen">
+                            <div class="card-body">
+                                <h4 class="card-title">Vragen van ons
+                                    <span t-if="open_questions" class="badge rounded-pill text-bg-warning fs-6 align-middle"><t t-out="len(open_questions)"/> open</span>
+                                </h4>
+                                <p class="text-muted small">Uw antwoorden komen meteen bij de tekenaar terecht.</p>
+                                <div t-foreach="questions" t-as="question"
+                                     t-attf-class="border rounded p-3 mb-2 #{'o_mc_question_answered' if question.done else ''}">
+                                    <p class="fw-bold mb-1" t-out="question.name"/>
+                                    <p t-if="question.done" class="mb-0">Uw antwoord: <b t-out="question.answer or 'beantwoord'"/></p>
+                                    <form t-else="" method="post" t-attf-action="/my/interieur/#{project.id}/answer" class="d-flex gap-2">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="access_token" t-att-value="access_token"/>
+                                        <input type="hidden" name="question_id" t-att-value="question.id"/>
+                                        <label class="visually-hidden" t-attf-for="answer_#{question.id}">Uw antwoord</label>
+                                        <input type="text" name="answer" t-attf-id="answer_#{question.id}" class="form-control" placeholder="Uw antwoord" required="required"/>
+                                        <button type="submit" class="btn btn-secondary">Antwoorden</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <section class="card mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title">Uw beslissing</h4>
+                                <t t-if="version.state == 'pending'">
+                                    <p class="text-muted small">Versie <t t-out="version.number"/><t t-if="quote">, offerte <t t-out="quote.name"/></t></p>
+                                    <div t-if="open_questions" class="alert alert-warning" role="status">
+                                        <b>Nog <t t-out="len(open_questions)"/> vraag/vragen open.</b>
+                                        Beantwoord eerst de vragen. Daarna kunt u goedkeuren.
+                                        <a href="#vragen" class="d-block mt-1">Naar de vragen</a>
+                                    </div>
+                                    <form t-else="" method="post" t-attf-action="/my/interieur/#{project.id}/approve" class="mb-4">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="access_token" t-att-value="access_token"/>
+                                        <h5>Goedkeuren</h5>
+                                        <label for="signer_name" class="form-label">Uw volledige naam</label>
+                                        <input type="text" id="signer_name" name="signer_name" class="form-control" required="required" autocomplete="name"/>
+                                        <div class="form-check my-3">
+                                            <input type="checkbox" class="form-check-input" id="confirm" name="confirm" value="1" required="required"/>
+                                            <label class="form-check-label small" for="confirm">
+                                                Ik heb maten, materialen, kleuren en toestellen nagekeken<t t-if="quote"> en ga akkoord met offerte
+                                                <t t-out="quote.name"/> van <span t-field="quote.amount_total"/> incl. btw</t>.
+                                                Na goedkeuring start de productie; latere wijzigingen kunnen extra kosten geven.
+                                            </label>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <t t-if="quote">Tekening en offerte goedkeuren</t><t t-else="">Tekening goedkeuren</t>
+                                        </button>
+                                    </form>
+                                    <form method="post" t-attf-action="/my/interieur/#{project.id}/changes">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="access_token" t-att-value="access_token"/>
+                                        <h5>Ik wil iets laten aanpassen</h5>
+                                        <label for="remarks" class="form-label small text-muted">Een opmerking per lijn. Elke lijn wordt een vraag voor de tekenaar.</label>
+                                        <textarea id="remarks" name="remarks" rows="4" class="form-control" required="required"
+                                                  placeholder="bv. Lade onder de kookplaat dieper maken"/>
+                                        <button type="submit" class="btn btn-secondary w-100 mt-2">Wijzigingen versturen</button>
+                                    </form>
+                                </t>
+                                <div t-elif="version.state == 'approved'" class="text-center">
+                                    <div class="o_mc_check_icon mx-auto mb-2" aria-hidden="true">&#10003;</div>
+                                    <p class="mb-0">Versie <t t-out="version.number"/> goedgekeurd door <b t-out="version.approved_by"/>
+                                        op <span t-field="version.approved_on"/>.</p>
+                                </div>
+                                <p t-else="" class="mb-0">De tekenaar verwerkt uw opmerkingen. U krijgt een bericht zodra de nieuwe versie klaarstaat.</p>
+                            </div>
+                        </section>
+                        <section class="card mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title">Versies</h4>
+                                <ul class="list-unstyled small mb-0">
+                                    <li t-foreach="versions" t-as="v" class="border-bottom py-2">
+                                        <b>Versie <t t-out="v.number"/></b> - <span t-field="v.state"/>
+                                        <div t-if="v.customer_remarks" class="text-muted" t-out="v.customer_remarks"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="card mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title">Contact</h4>
+                                <p class="mb-0 small">Vragen over de tekening? Uw contactpersoon is <b t-out="project.user_id.name"/>.</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <t t-call="portal.message_thread">
+                        <t t-set="object" t-value="project"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

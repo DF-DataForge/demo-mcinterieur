@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_mc_projects" model="portal.entry">
+        <field name="name">Mijn interieurprojecten</field>
+        <field name="description">Tekeningen en offertes bekijken, vragen beantwoorden en goedkeuren</field>
+        <field name="url">/my/interieur</field>
+        <field name="image" type="bytes" file="web/static/img/folder.svg"/>
+        <field name="placeholder_count">mc_project_count</field>
+        <field name="category">service_category</field>
+        <field name="sequence" eval="5"/>
+    </record>
+</odoo>

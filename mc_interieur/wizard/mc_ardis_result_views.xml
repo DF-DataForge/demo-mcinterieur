@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mc_ardis_result_view_form" model="ir.ui.view">
+        <field name="name">mc.ardis.result.view.form</field>
+        <field name="model">mc.ardis.result</field>
+        <field name="arch" type="xml">
+            <form string="Ardis-resultaat inlezen">
+                <group>
+                    <field name="batch_id" readonly="1"/>
+                    <field name="mode" widget="radio"/>
+                    <field name="result_file" filename="result_filename" invisible="mode != 'file'"/>
+                    <field name="result_filename" invisible="1"/>
+                </group>
+                <p class="text-muted" invisible="mode != 'file'">
+                    Verwachte kolommen (puntkomma): <code>Materiaal;Verbruik</code>, met de Ardis-code en het aantal
+                    verbruikte platen of meter kantenband.
+                </p>
+                <p class="text-muted" invisible="mode != 'simulate'">
+                    Gebruikt het berekende materiaalverbruik van de batch, alsof Ardis het zo teruggeeft.
+                </p>
+                <footer>
+                    <button name="action_apply" type="object" string="Inlezen" class="btn-primary"/>
+                    <button special="cancel" string="Annuleren"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

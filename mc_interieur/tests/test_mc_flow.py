@@ -1,0 +1,86 @@
+import base64
+
+from odoo.exceptions import UserError
+from odoo.tests import HttpCase, TransactionCase, tagged
+from odoo.tools import file_open
+
+
+@tagged('post_install', '-at_install')
+class TestMcFlow(TransactionCase):
+
+    def test_approval_blocked_while_customer_questions_open(self):
+        project = self.env.ref('mc_interieur.project_maes_keuken')
+        version = project.version_ids.filtered(lambda v: v.state == 'pending')
+        self.assertEqual(project.stage, 'validation')
+        self.assertTrue(version.sale_order_id, "The quote is shared together with the drawing")
+        with self.assertRaises(UserError):
+            version._mc_customer_approve("Karen Maes")
+        for question in project.question_ids.filtered('to_customer'):
+            question._mc_customer_answer("Ja")
+        version._mc_customer_approve("Karen Maes")
+        self.assertEqual(version.state, 'approved')
+        self.assertEqual(project.stage, 'prep')
+        self.assertEqual(version.sale_order_id.state, 'sale')
+        self.assertTrue(project.piece_ids)
+
+    def test_quote_needs_material_mapping(self):
+        project = self.env.ref('mc_interieur.project_peeters_inkomkast')
+        with self.assertRaises(UserError):
+            project.action_generate_quote()
+        mapping = self.env['mc.material.mapping'].search([('name', '=', 'Eiken fineer 19')])
+        mapping.product_id = self.env.ref('mc_interieur.product_fin_eik_19')
+        project.part_ids._mc_apply_mapping()
+        project.action_generate_quote()
+        quote = project.sale_order_ids.filtered(lambda o: o.state == 'draft')
+        self.assertEqual(len(quote), 1)
+        self.assertGreater(quote.amount_untaxed, 0)
+
+    def test_scan_saw_and_cnc(self):
+        Piece = self.env['mc.piece']
+        dressing = self.env.ref('mc_interieur.project_vandamme_dressing')
+        piece = dressing.piece_ids.filtered(lambda p: not p.sawn)[:1]
+        self.assertTrue(piece)
+        result = Piece.mc_scan('cnc', piece.barcode)
+        self.assertEqual(result['kind'], 'warning', "Not sawn yet: the CNC refuses it")
+        result = Piece.mc_scan('saw', piece.barcode)
+        self.assertEqual(result['kind'], 'success')
+        self.assertTrue(piece.sawn)
+        result = Piece.mc_scan('saw', piece.barcode)
+        self.assertEqual(result['kind'], 'warning', "Scanning twice is reported")
+        self.assertEqual(Piece.mc_scan('saw', 'NOPE-123')['kind'], 'warning')
+
+    def test_installation_sign_off(self):
+        desk = self.env.ref('mc_interieur.project_desmet_bureau')
+        installation = desk.installation_ids[:1]
+        self.assertEqual(installation.state, 'planned')
+        with file_open('mc_interieur/static/description/icon.png', 'rb') as image:
+            signature = base64.b64encode(image.read())
+        installation.write({'signed_by': "An De Smet", 'signature': signature})
+        with self.assertRaises(UserError):
+            installation.action_sign_off()
+        installation.check_ids.write({'done': True})
+        installation.action_sign_off()
+        self.assertEqual(desk.stage, 'delivered')
+
+
+@tagged('post_install', '-at_install')
+class TestMcPortal(HttpCase):
+
+    def test_portal_pages(self):
+        self.authenticate('karen', 'demo')
+        response = self.url_open('/my/interieur')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Keuken Maes', response.text)
+        self.assertIn('Badkamermeubel Maes', response.text)
+        self.assertNotIn('Dressing Van Damme', response.text)
+        project = self.env.ref('mc_interieur.project_maes_keuken')
+        response = self.url_open(f'/my/interieur/{project.id}')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Vragen van ons', response.text)
+        self.assertIn('Offerte', response.text)
+
+    def test_portal_other_customer_is_redirected(self):
+        self.authenticate('tom', 'demo')
+        project = self.env.ref('mc_interieur.project_maes_keuken')
+        response = self.url_open(f'/my/interieur/{project.id}')
+        self.assertNotIn('Vragen van ons', response.text)

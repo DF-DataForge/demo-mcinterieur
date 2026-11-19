@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mc_piece_view_list" model="ir.ui.view">
+        <field name="name">mc.piece.view.list</field>
+        <field name="model">mc.piece</field>
+        <field name="arch" type="xml">
+            <list string="Etiketten" create="0">
+                <field name="barcode"/>
+                <field name="project_id"/>
+                <field name="cabinet"/>
+                <field name="name"/>
+                <field name="cnc_program" optional="show"/>
+                <field name="sawn"/>
+                <field name="cnc_done"/>
+                <field name="kitted"/>
+                <field name="assembled"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mc_piece_view_search" model="ir.ui.view">
+        <field name="name">mc.piece.view.search</field>
+        <field name="model">mc.piece</field>
+        <field name="arch" type="xml">
+            <search string="Etiketten">
+                <field name="barcode"/>
+                <field name="project_id"/>
+                <filter name="to_saw" string="Te zagen" domain="[('sawn', '=', False)]"/>
+                <filter name="to_cnc" string="Wacht op CNC"
+                        domain="[('sawn', '=', True), ('needs_cnc', '=', True), ('cnc_done', '=', False)]"/>
+                <group>
+                    <filter name="group_project" string="Project" context="{'group_by': 'project_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mc_piece_action" model="ir.actions.act_window">
+        <field name="name">Etiketten</field>
+        <field name="res_model">mc.piece</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_group_project': 1}</field>
+    </record>
+</odoo>

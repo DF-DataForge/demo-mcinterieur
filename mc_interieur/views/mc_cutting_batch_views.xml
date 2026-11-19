@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mc_cutting_batch_view_list" model="ir.ui.view">
+        <field name="name">mc.cutting.batch.view.list</field>
+        <field name="model">mc.cutting.batch</field>
+        <field name="arch" type="xml">
+            <list string="Zaagbatches">
+                <field name="name"/>
+                <field name="project_ids" widget="many2many_tags"/>
+                <field name="exported_on"/>
+                <field name="sheets_used"/>
+                <field name="yield_percent"/>
+                <field name="state" widget="badge" decoration-success="state in ('ready', 'sawn')"
+                       decoration-warning="state == 'waiting'" decoration-info="state == 'exported'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mc_cutting_batch_view_form" model="ir.ui.view">
+        <field name="name">mc.cutting.batch.view.form</field>
+        <field name="model">mc.cutting.batch</field>
+        <field name="arch" type="xml">
+            <form string="Zaagbatch">
+                <header>
+                    <button name="action_export_ardis" type="object" string="Exporteer naar Ardis"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_open_ardis_result" type="object" string="Resultaat Ardis inlezen"
+                            class="btn-primary" invisible="state != 'exported'"/>
+                    <button name="action_order_shortages" type="object" string="Bestellen voor tekorten"
+                            invisible="shortage_count == 0 or state != 'draft'"/>
+                    <button name="action_consume_after_delivery" type="object" string="Materiaal geleverd"
+                            class="btn-primary" invisible="state != 'waiting'"/>
+                    <button name="action_mark_sawn" type="object" string="Batch gezaagd"
+                            invisible="state != 'ready'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_purchases" type="object" class="oe_stat_button"
+                                icon="fa-shopping-cart" invisible="not purchase_count">
+                            <field name="purchase_count" widget="statinfo" string="Bestellingen"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                            <field name="unmapped_count" invisible="not unmapped_count"/>
+                            <field name="shortage_count" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="export_file" filename="export_filename" invisible="not export_file"/>
+                            <field name="export_filename" invisible="1"/>
+                            <field name="exported_on" invisible="not exported_on"/>
+                            <field name="sheets_used" invisible="not sheets_used"/>
+                            <field name="yield_percent" invisible="not sheets_used"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert" invisible="not unmapped_count">
+                        Sommige onderdelen hebben nog geen Ardis-materiaal. Koppel ze in
+                        Configuratie &gt; Materiaalkoppeling voordat je exporteert.
+                    </div>
+                    <notebook>
+                        <page string="Materiaal en voorraad" name="material">
+                            <field name="material_html" nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="Onderdelen" name="parts">
+                            <field name="part_ids" readonly="1">
+                                <list decoration-warning="not product_id">
+                                    <field name="project_id"/>
+                                    <field name="cabinet"/>
+                                    <field name="name"/>
+                                    <field name="topsolid_material"/>
+                                    <field name="product_id"/>
+                                    <field name="length"/>
+                                    <field name="width"/>
+                                    <field name="quantity"/>
+                                    <field name="cnc_program"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="mc_cutting_batch_action" model="ir.actions.act_window">
+        <field name="name">Zaagbatches</field>
+        <field name="res_model">mc.cutting.batch</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Maak een zaagbatch</p>
+            <p>Bundel goedgekeurde projecten, controleer materiaal en voorraad en exporteer naar Ardis.</p>
+        </field>
+    </record>
+</odoo>

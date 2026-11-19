@@ -1,0 +1,1456 @@
+<title>Interieurprojecten intake</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: back-office ERP shell — sticky app bar, control panel, then kanban, list or form sheet with chatter beside it */
+/* Palette from the client's website: walnut brown #574A36 / #78664A, leaf green #95BA3C / #ABCB5D, warm greys, Open Sans */
+:root{
+  --bg:#f1efeb; --surface:#ffffff; --surface-2:#f6f5f2; --ink:#2b251c; --muted:#6e6556; --line:#e2ded7; --line-strong:#c8c1b4;
+  --accent:#574a36; --accent-ink:#ffffff; --accent-soft:#efebe3; --accent-line:#cbbfa9;
+  --bar:#574a36; --bar-ink:#ffffff; --green:#95ba3c; --green-strong:#5f7d1c; --on-green:#ffffff; --green-soft:#eef4dc;
+  --ok:#5f7d1c; --ok-soft:#eef4dc; --warn:#9a5d0c; --warn-soft:#fbefd9; --info:#2d5d8a; --info-soft:#e4edf6;
+  --scrim:rgba(30,24,18,.45); --shadow:0 1px 2px rgba(40,30,20,.06),0 6px 18px rgba(40,30,20,.07);
+  --font:"Open Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1a1712; --surface:#231f19; --surface-2:#2b261f; --ink:#ece7de; --muted:#a89f90; --line:#3a342b; --line-strong:#4e463a;
+  --accent:#c9b38f; --accent-ink:#1a1712; --accent-soft:#352d22; --accent-line:#6a5a42;
+  --bar:#3b3225; --bar-ink:#f3efe7; --green:#abcb5d; --green-strong:#abcb5d; --on-green:#16200a; --green-soft:#2a3317;
+  --ok:#abcb5d; --ok-soft:#2a3317; --warn:#e2ab5a; --warn-soft:#3a2c15; --info:#8ab6e0; --info-soft:#1d2c3b;
+  --scrim:rgba(0,0,0,.6); --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1a1712; --surface:#231f19; --surface-2:#2b261f; --ink:#ece7de; --muted:#a89f90; --line:#3a342b; --line-strong:#4e463a;
+  --accent:#c9b38f; --accent-ink:#1a1712; --accent-soft:#352d22; --accent-line:#6a5a42;
+  --bar:#3b3225; --bar-ink:#f3efe7; --green:#abcb5d; --green-strong:#abcb5d; --on-green:#16200a; --green-soft:#2a3317;
+  --ok:#abcb5d; --ok-soft:#2a3317; --warn:#e2ab5a; --warn-soft:#3a2c15; --info:#8ab6e0; --info-soft:#1d2c3b;
+  --scrim:rgba(0,0,0,.6); --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 var(--font)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bar)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono);font-size:12.5px}
+.muted{color:var(--muted)}
+
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bar);color:var(--bar-ink);border-top:3px solid var(--green)}
+.topbar .in{display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap;min-height:48px;padding-block:6px}
+.brand{font-weight:700;letter-spacing:.01em;display:flex;align-items:center;gap:8px;margin-right:6px}
+.brand .dot{width:22px;height:22px;border-radius:5px;background:var(--green);color:var(--on-green);display:grid;place-items:center;font-size:11px;font-weight:700}
+.menu{display:flex;gap:2px;flex-wrap:wrap;flex:1}
+.menu button{background:none;border:0;padding:6px 10px;border-radius:6px;color:inherit;cursor:pointer;opacity:.85}
+.menu button[aria-current="page"],.menu button:hover{opacity:1;background:rgba(255,255,255,.14)}
+.mock{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;opacity:.8}
+@media (max-width:1180px){.mock{display:none}.menu button{padding:6px 8px}}
+
+.cp{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-block:12px;border-bottom:1px solid var(--line);background:var(--surface)}
+.crumb{display:flex;gap:6px;align-items:baseline;flex-wrap:wrap;font-size:17px;min-width:0}
+.crumb a{color:var(--accent);cursor:pointer;text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:var(--surface);padding:6px 12px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--accent-line);background:var(--surface-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.small{padding:3px 9px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+main{padding-block:16px 40px}
+
+/* kanban */
+.kanban{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;align-items:flex-start}
+.col{flex:0 0 264px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px}
+.col h3{margin:2px 4px 10px;font-size:13.5px;display:flex;justify-content:space-between}
+.col h3 .n{color:var(--muted);font-weight:500}
+.cards{display:flex;flex-direction:column;gap:8px;min-height:30px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 11px;cursor:pointer;text-align:left;width:100%;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px}
+.card:hover{border-color:var(--accent-line)}
+.card .t{font-weight:600}
+.card .s{color:var(--muted);font-size:12.5px;margin-top:-4px}
+.card .foot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:600;white-space:nowrap}
+.badge.warn{background:var(--warn-soft);color:var(--warn)}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.info{background:var(--info-soft);color:var(--info)}
+.av{width:22px;height:22px;border-radius:50%;background:var(--info-soft);color:var(--info);display:inline-grid;place-items:center;font-size:10.5px;font-weight:700}
+.bar{height:5px;background:var(--line);border-radius:3px;overflow:hidden;flex:1}
+.bar i{display:block;height:100%;background:var(--green);border-radius:3px}
+.meta{display:flex;gap:10px;align-items:center}
+.ico{width:14px;height:14px;vertical-align:-2px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* form */
+.fhead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.status{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.status button{border:0;background:none;padding:5px 11px;font-size:12.5px;color:var(--muted);cursor:pointer;border-right:1px solid var(--line)}
+.status button:last-child{border-right:0}
+.status button[aria-current="step"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.status button:hover:not([aria-current="step"]){background:var(--surface-2);color:var(--ink)}
+.fgrid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}
+@media (max-width:1080px){.fgrid{grid-template-columns:minmax(0,1fr)}}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);min-width:0}
+.smart{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.smart button{flex:1 1 130px;border:0;border-right:1px solid var(--line);background:none;padding:9px 12px;text-align:left;cursor:pointer;display:flex;gap:9px;align-items:center}
+.smart button:last-child{border-right:0}
+.smart button:hover{background:var(--surface-2)}
+.smart b{display:block;font-size:15px;font-variant-numeric:tabular-nums}
+.smart span{font-size:12px;color:var(--muted)}
+.smart .ico{width:20px;height:20px;color:var(--accent)}
+.sheet-in{padding:18px 22px 22px}
+@media (max-width:560px){.sheet-in{padding:14px}}
+.ref{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.title{width:100%;border:0;border-bottom:1px solid transparent;font-size:26px;font-weight:700;padding:2px 0 4px;background:none;letter-spacing:-.01em}
+.title:hover,.title:focus{border-bottom-color:var(--line-strong);outline:none}
+.hgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:4px 28px;margin:12px 0 16px}
+.hgrid .field{grid-template-columns:110px minmax(0,1fr)}
+
+.intake{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--accent-line);background:var(--accent-soft);border-radius:8px;margin-bottom:16px}
+.intake .bar{max-width:260px;min-width:140px;height:7px;background:var(--surface)}
+.intake p{margin:0;flex:1 1 280px;font-size:13px}
+.intake strong{font-variant-numeric:tabular-nums}
+
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:thin}
+.tabs button{border:0;background:none;padding:9px 12px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+.tabs button .c{font-size:11px;font-family:var(--mono);margin-left:5px;opacity:.8}
+.tabs button .c.full{color:var(--ok)}
+.panel{padding-top:16px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:6px 32px}
+@media (max-width:560px){.pgrid{grid-template-columns:minmax(0,1fr)}}
+.field{display:grid;grid-template-columns:170px minmax(0,1fr);gap:4px 12px;align-items:start;padding:7px 0;border-bottom:1px dashed var(--line)}
+.field>label{padding-top:6px;color:var(--muted);font-weight:500}
+.field.is-filled>label{color:var(--ink)}
+@media (max-width:560px){.field{grid-template-columns:minmax(0,1fr)}.field>label{padding-top:0}}
+.ctl{display:flex;gap:6px;align-items:flex-start;min-width:0}
+.ctl>:first-child{flex:1;min-width:0}
+.inp{width:100%;border:0;border-bottom:1px solid var(--line-strong);background:none;padding:5px 2px;border-radius:0}
+.inp:focus{outline:none;border-bottom-color:var(--accent)}
+select.inp{cursor:pointer}
+textarea.inp{border:1px solid var(--line-strong);border-radius:6px;padding:7px 9px;min-height:70px;resize:vertical}
+.dims{display:flex;gap:6px;align-items:center}
+.dims input{width:100%;min-width:0;text-align:right;font-family:var(--mono);font-size:13px}
+.dims span{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{border:1px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:3px 10px;cursor:pointer;font-size:13px}
+.chip:hover{border-color:var(--accent-line)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.flag{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--muted);cursor:pointer;font-weight:700;font-size:12px}
+.flag:hover{border-color:var(--warn);color:var(--warn)}
+.flag.on{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.hint{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.ph{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface-2);display:flex;flex-direction:column}
+.ph .img{aspect-ratio:4/3;max-width:100%;background:var(--line);display:grid;place-items:center;overflow:hidden}
+.ph .img img,.ph .img svg{width:100%;height:100%;object-fit:cover;display:block}
+.ph input{border:0;border-top:1px solid var(--line);background:var(--surface);padding:6px 8px;font-size:12.5px;width:100%}
+.ph .file{font-family:var(--mono);font-size:12px;color:var(--muted);padding:10px;text-align:center;word-break:break-all}
+.upl{border:1.5px dashed var(--line-strong);border-radius:8px;display:grid;place-items:center;aspect-ratio:4/3;cursor:pointer;color:var(--muted);text-align:center;padding:10px;gap:4px}
+.upl:hover{border-color:var(--accent);color:var(--accent)}
+.upl input{position:absolute;width:1px;height:1px;opacity:0}
+h4{margin:18px 0 8px;font-size:14px}
+h4:first-child{margin-top:0}
+
+.qlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.qlist li{display:flex;gap:9px;align-items:flex-start;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface-2)}
+.qlist li.done{opacity:.55}
+.qlist li.done span{text-decoration:line-through}
+.topbar[hidden]{display:none}
+.section{margin-bottom:18px}
+.section h2{font-size:16px;margin:0 0 4px;color:var(--accent)}
+tbody tr.static{cursor:default}
+tbody tr.static:hover{background:none}
+tr.grp td{background:var(--surface-2);font-weight:600;font-size:12.5px}
+tr.bad td{background:var(--warn-soft)}
+td select.inp{min-width:180px;margin-top:4px}
+.wv-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:16px}
+.stepc{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--surface);min-width:0}
+.stepc.ok{border-color:var(--green)}
+.stepc h4{margin:0 0 6px}
+pre.csv{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto;font:12px/1.55 var(--mono);margin:0}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.floor{display:grid;grid-template-columns:220px minmax(0,1fr) 340px;gap:14px;align-items:start}
+.floor.cnc{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:1180px){.floor{grid-template-columns:minmax(0,1fr) 320px}.floor .sheets{grid-column:1/-1;flex-direction:row;flex-wrap:wrap}}
+@media (max-width:760px){.floor,.floor.cnc{grid-template-columns:minmax(0,1fr)}}
+.sheets{display:flex;flex-direction:column;gap:6px}
+.sheetbtn{display:flex;flex-direction:column;gap:1px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 11px;cursor:pointer;font-size:12.5px;min-width:150px}
+.sheetbtn b{font-size:14px}
+.sheetbtn[aria-current="true"]{border:2px solid var(--accent)}
+.sheetbtn.done{background:var(--green-soft);border-color:var(--green)}
+.layout svg{display:block;width:100%;height:auto;max-width:100%}
+.scan{background:var(--surface);border:2px solid var(--accent);border-radius:10px;padding:14px;margin-bottom:12px}
+.scaninp{font:500 18px var(--mono);padding:10px 12px;border:1px solid var(--line-strong);border-radius:8px;width:100%;min-width:0;background:var(--surface);text-transform:uppercase}
+.scaninp:focus{outline:2px solid var(--green);outline-offset:1px}
+.fb{border-radius:10px;padding:14px 16px;margin-bottom:12px;display:flex;flex-direction:column;gap:3px;border:1px solid}
+.fb b{font-size:17px}
+.fb.ok{background:var(--green-soft);border-color:var(--green);color:var(--green-strong)}
+.fb.warn{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.fb.info{background:var(--info-soft);border-color:var(--info);color:var(--info)}
+.fb span{color:var(--ink);font-size:13.5px}
+table.qt{min-width:0;width:100%}
+.qt td,.qt th{white-space:normal;vertical-align:top}
+.qt td.num,.qt th.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.qt tfoot td{border-bottom:0;padding-block:5px}
+.qt tfoot tr:first-child td{border-top:1px solid var(--line-strong);padding-top:10px}
+.qt tr.tot td{font-weight:700;font-size:15px;color:var(--accent)}
+.qt tbody tr{cursor:default}
+.qt tbody tr:hover{background:none}
+.cabs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.cab{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.cab.done{border-color:var(--green);background:var(--green-soft)}
+.plist{list-style:none;margin:0;padding:0;font-size:12.5px;display:flex;flex-direction:column;gap:2px;color:var(--muted)}
+.plist li::before{content:"○ ";color:var(--line-strong)}
+.plist li.ok{color:var(--ink)}
+.plist li.ok::before{content:"✓ ";color:var(--green-strong);font-weight:700}
+.wk{display:grid;grid-template-columns:160px repeat(5,minmax(110px,1fr));grid-template-rows:auto repeat(2,86px);min-width:720px;gap:0}
+.wk-h{padding:8px 10px;font-size:12px;font-weight:600;color:var(--muted);background:var(--surface-2);border-bottom:1px solid var(--line)}
+.wk-t{grid-column:1;padding:10px;font-size:12.5px;font-weight:600;border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
+.wk-c{border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
+.wk-b{margin:6px;border-radius:6px;padding:7px 9px;text-align:left;display:flex;flex-direction:column;gap:2px;font-size:12.5px;background:var(--accent);color:var(--accent-ink);border:0;cursor:pointer;z-index:1;min-width:0}
+.wk-b span{opacity:.85;font-size:11.5px}
+.wk-b.demo{background:var(--surface-2);color:var(--muted);border:1px dashed var(--line-strong);cursor:default}
+.wk-b.signed{background:var(--green-strong);color:var(--on-green)}
+.qlist small{display:block;color:var(--muted);font-size:11.5px}
+.addq{display:flex;gap:8px;margin-top:8px}
+.addq input{flex:1;min-width:0}
+
+.box{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--surface-2);margin-bottom:14px}
+.path{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.path code{font-family:var(--mono);font-size:12.5px;background:var(--surface);border:1px solid var(--line);padding:4px 8px;border-radius:5px;word-break:break-all}
+dl.sum{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:4px 14px;margin:0}
+dl.sum dt{color:var(--muted)}
+dl.sum dd{margin:0}
+.sumgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px 28px}
+@media (max-width:560px){.sumgrid{grid-template-columns:minmax(0,1fr)}}
+
+.chatter{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
+.chatter h3{margin:0 0 10px;font-size:14px}
+.chatter textarea{width:100%;border:1px solid var(--line-strong);border-radius:6px;padding:7px 9px;min-height:56px;resize:vertical;background:var(--surface)}
+.msgs{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.msg{display:grid;grid-template-columns:28px minmax(0,1fr);gap:9px}
+.msg .av{width:28px;height:28px;font-size:11px}
+.msg .who{font-weight:600;font-size:13px}
+.msg .who small{font-weight:400;color:var(--muted);margin-left:6px}
+.msg p{margin:2px 0 0;font-size:13px}
+.msg.log p{color:var(--muted)}
+
+/* list */
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:780px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:12px;color:var(--muted);font-weight:600;background:var(--surface-2)}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--surface-2)}
+td.num{font-variant-numeric:tabular-nums}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+
+.modal-bg{position:fixed;inset:0;background:var(--scrim);z-index:40;display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal{background:var(--surface);border-radius:12px;max-width:560px;width:100%;max-height:100%;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal header,.modal footer{padding:14px 18px;border-bottom:1px solid var(--line)}
+.modal footer{border-bottom:0;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.modal header h2{margin:0;font-size:17px}
+.modal .body{padding:14px 18px}
+.miss{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:13px}
+.miss b{color:var(--ink);font-weight:600}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;z-index:50;font-size:13.5px;box-shadow:var(--shadow);max-width:calc(100% - 32px)}
+@media (prefers-reduced-motion:no-preference){.toast{animation:up .25s ease-out}@keyframes up{from{opacity:0;transform:translate(-50%,8px)}}}
+
+/* customer portal */
+.pt-note{background:var(--warn-soft);color:var(--warn);font-size:13px;padding-block:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.pt-head{background:var(--surface);border-bottom:4px solid var(--green)}
+.pt-head .in{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:12px}
+.pt-logo{display:flex;align-items:center;gap:12px}
+.pt-logo .mark{width:46px;height:46px;background:var(--green);color:var(--on-green);display:grid;place-items:center;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.pt-logo b{display:block;color:var(--accent);font-size:15px}
+.pt-logo span{font-size:12px;color:var(--muted)}
+.pt-user{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.pt-wrap{max-width:1160px;margin:0 auto;padding-block:20px 48px}
+.pt-title{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.pt-title h1{margin:2px 0 0;font-size:26px;color:var(--accent);text-wrap:balance}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600}
+.pill.wait{background:var(--warn-soft);color:var(--warn)}
+.pill.ok{background:var(--green-soft);color:var(--green-strong)}
+.pill.chg{background:var(--info-soft);color:var(--info)}
+.steps{display:flex;list-style:none;margin:0 0 18px;padding:0;gap:0;overflow-x:auto}
+.steps li{flex:1 1 0;min-width:110px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);position:relative;text-align:center}
+.steps li::before{content:"";position:absolute;top:11px;left:-50%;width:100%;height:2px;background:var(--line);z-index:0}
+.steps li:first-child::before{display:none}
+.steps li.done::before,.steps li.cur::before{background:var(--green)}
+.steps .dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--line-strong);background:var(--surface);z-index:1;display:grid;place-items:center;font-size:12px;font-weight:700}
+.steps li.done .dot{background:var(--green);border-color:var(--green);color:var(--on-green)}
+.steps li.cur .dot{border-color:var(--green);color:var(--green-strong)}
+.steps li.cur{color:var(--ink);font-weight:600}
+.pt-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
+@media (max-width:980px){.pt-grid{grid-template-columns:minmax(0,1fr)}}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:18px;min-width:0}
+.pcard h2{margin:0 0 4px;font-size:17px;color:var(--accent)}
+.pcard>.hint{margin-bottom:12px}
+.vtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.viewer{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.viewer svg{display:block;width:100%;height:auto;cursor:crosshair}
+.pin circle{fill:var(--green-strong);stroke:var(--surface);stroke-width:2}
+.pin text{fill:var(--on-green);font:700 12px var(--font);text-anchor:middle}
+.rlist{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.rlist li{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:8px;align-items:start}
+.rnum{width:24px;height:24px;border-radius:50%;background:var(--green-strong);color:var(--on-green);display:grid;place-items:center;font-size:12px;font-weight:700;margin-top:4px}
+.rlist textarea{width:100%;min-height:42px;border:1px solid var(--line-strong);border-radius:6px;padding:6px 8px;resize:vertical;background:var(--surface)}
+.xbtn{border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:6px}
+.xbtn:hover{color:var(--warn)}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px 24px}
+.choices div{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.choices dt{color:var(--muted)}
+.choices dd{margin:0;text-align:right;font-weight:600}
+.qa{display:flex;flex-direction:column;gap:10px}
+.qa .q{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface-2)}
+.qa .q p{margin:0 0 6px;font-weight:600}
+.qa .q .row input{flex:1;min-width:0}
+.qa .q.answered{border-color:var(--green);background:var(--green-soft)}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px)}
+@media (max-width:980px){.side{position:static}}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--line-strong);border-radius:8px;padding:10px 12px;cursor:pointer;margin-bottom:8px}
+.opt:has(input:checked){border-color:var(--green-strong);background:var(--green-soft)}
+.opt input{margin-top:3px;accent-color:var(--green-strong)}
+.opt b{display:block}
+.opt span{font-size:12.5px;color:var(--muted)}
+.btn.go{background:var(--green-strong);border-color:var(--green-strong);color:var(--on-green);font-weight:600;width:100%;justify-content:center;padding:9px 12px}
+.btn.go:hover{filter:brightness(1.08)}
+.err{color:var(--warn);font-size:12.5px;margin:6px 0 0}
+.sig label{display:block;font-size:13px;color:var(--muted);margin:10px 0 2px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin:12px 0}
+.chk input{margin-top:3px;accent-color:var(--green-strong)}
+.vhist{list-style:none;margin:0;padding:0;font-size:13px}
+.vhist li{padding:8px 0;border-bottom:1px solid var(--line)}
+.vhist li:last-child{border-bottom:0}
+.done-card{text-align:center;padding:24px 18px}
+.done-card .big{width:52px;height:52px;border-radius:50%;background:var(--green);color:var(--on-green);display:grid;place-items:center;margin:0 auto 10px;font-size:26px;font-weight:700}
+</style>
+
+<header class="topbar"><div class="in gut">
+  <div class="brand"><span class="dot">IP</span>Interieurprojecten</div>
+  <nav class="menu" id="menu" aria-label="Hoofdmenu"></nav>
+  <span class="mock">Mockup · Odoo 20 maatwerk · voorbeelddata</span>
+</div></header>
+<div id="app"></div>
+<div id="overlay"></div>
+
+<script>
+const STAGES=['Intake','Tekening','Klantvalidatie','Werkvoorbereiding','Zagen','CNC','Montage & plaatsing','Opgeleverd'];
+const TEAMS=['Team 1 · Bart & Kevin','Team 2 · Jens & Ruben'];
+const DAYS=['ma 23 nov','di 24 nov','wo 25 nov','do 26 nov','vr 27 nov'];
+const DEMO_PLAN=[{label:'Dressing Coppens',team:0,day:0,len:2},{label:'Nazorg keuken Verstraete',team:1,day:0,len:1},{label:'Keuken Desmet',team:1,day:2,len:3}];
+const SALES=['Sofie Verhaeghe','Pieter Claeys'];
+const DRAWERS=['Jonas De Vos','Lien Martens'];
+const isKitchen=a=>a.type==='Keuken';
+
+const SECTIONS=[
+ {id:'algemeen',title:'Algemeen',fields:[
+  {id:'type',label:'Type project',type:'chips',options:['Keuken','Inbouwkast','Dressing','Badkamermeubel','TV-meubel','Bureau','Andere']},
+  {id:'ruimte',label:'Ruimte',type:'text',ph:'bv. keuken gelijkvloers, slaapkamer 2'},
+  {id:'situatie',label:'Situatie',type:'chips',options:['Nieuwbouw','Renovatie','Vervanging bestaand meubel']},
+  {id:'deadline',label:'Gewenste plaatsing',type:'date'},
+  {id:'budget',label:'Budgetindicatie',type:'select',options:['< € 5.000','€ 5.000 – 10.000','€ 10.000 – 20.000','€ 20.000 – 35.000','> € 35.000','Nog niet bekend']},
+  {id:'derden',label:'Architect / aannemer',type:'chips',options:['Geen','Architect','Aannemer','Beide']},
+  {id:'derdenContact',label:'Contact architect / aannemer',type:'text',ph:'naam, telefoon',showIf:a=>a.derden&&a.derden!=='Geen'},
+  {id:'stijl',label:'Stijl / inspiratie',type:'text',ph:'bv. landelijk, strak greeploos, foto’s van klant'}
+ ]},
+ {id:'opmeting',title:'Ruimte & opmeting',fields:[
+  {id:'afm',label:'Beschikbare ruimte (mm)',type:'dims'},
+  {id:'plafond',label:'Plafondhoogte (mm)',type:'number',ph:'2600'},
+  {id:'opm',label:'Definitieve opmeting',type:'chips',options:['Gebeurd bij intake','Nog in te plannen','Na pleisterwerk']},
+  {id:'vloer',label:'Vloer',type:'chips',options:['Afgewerkt','Nog te plaatsen','Vloerverwarming']},
+  {id:'muren',label:'Muren haaks en te lood',type:'chips',options:['Ja','Afwijkingen','Niet gecontroleerd']},
+  {id:'wand',label:'Wandtype (ophangen)',type:'chips',options:['Beton / snelbouw','Gyproc','Houtskelet','Gemengd']},
+  {id:'obstakels',label:'Obstakels',type:'multi',options:['Radiator','Stopcontacten','Leidingen','Schuine wand','Raam / vensterbank','Plint','Balk / koof']},
+  {id:'toegang',label:'Toegang voor levering',type:'text',ph:'verdieping, lift, smalste deur of trap'}
+ ]},
+ {id:'materiaal',title:'Materialen & afwerking',fields:[
+  {id:'korpus',label:'Korpusmateriaal',type:'select',options:['Melamine 18 mm','MDF gelakt','Multiplex','Fineer']},
+  {id:'korpusKleur',label:'Kleur korpus',type:'text',ph:'bv. wit, antraciet, eiken'},
+  {id:'front',label:'Fronten',type:'chips',options:['Melamine','MDF gelakt','Fineer','Massief hout','HPL / Fenix','Glas']},
+  {id:'frontKleur',label:'Kleur fronten',type:'text',ph:'RAL, NCS, stalen of referentie'},
+  {id:'glans',label:'Glansgraad',type:'chips',options:['Mat','Satijn','Hoogglans','Structuur']},
+  {id:'nerf',label:'Nerfrichting fronten',type:'chips',options:['Doorlopend','Verticaal per front','Horizontaal','N.v.t.']},
+  {id:'kant',label:'Kantafwerking',type:'chips',options:['ABS 1 mm','ABS 2 mm','Gelakt','Fineer']},
+  {id:'werkblad',label:'Werkblad',type:'select',options:['Melamine / compact','Composiet of natuursteen (extern)','Keramiek (extern)','Massief hout','Geen'],showIf:a=>['Keuken','Badkamermeubel','Bureau'].includes(a.type)},
+  {id:'werkbladDikte',label:'Dikte werkblad (mm)',type:'number',ph:'20',showIf:a=>a.werkblad&&a.werkblad!=='Geen'&&['Keuken','Badkamermeubel','Bureau'].includes(a.type)}
+ ]},
+ {id:'beslag',title:'Beslag & indeling',fields:[
+  {id:'greep',label:'Grepen',type:'chips',options:['Greeploos (push-to-open)','Greeplijst / uitfrezing','Grepen','Knoppen']},
+  {id:'greepModel',label:'Model / lengte greep',type:'text',ph:'merk, model, hart-op-hart',showIf:a=>['Grepen','Knoppen'].includes(a.greep)},
+  {id:'scharnier',label:'Scharnieren',type:'chips',options:['Softclose','Push-to-open','Geen voorkeur']},
+  {id:'lades',label:'Ladesysteem',type:'select',options:['Standaard dubbelwandig','Premium dunwandig','Houten lades','Geen lades']},
+  {id:'binnenlades',label:'Binnenlades',type:'chips',options:['Ja','Nee']},
+  {id:'indeling',label:'Indeling',type:'multi',options:['Verstelbare legplanken','Hangroede','Schoenenrek','Broekenrek','Afvalsysteem','Hoekoplossing','Apothekerskast']},
+  {id:'licht',label:'Verlichting',type:'chips',options:['Geen','LED-strip','LED-spots','Met sensor']}
+ ]},
+ {id:'toestellen',title:'Toestellen',showIf:isKitchen,fields:[
+  {id:'toestel',label:'Inbouwtoestellen',type:'multi',options:['Oven','Combi-microgolf','Stoomoven','Vaatwasser','Koelkast','Diepvries','Kookplaat','Dampkap','Wijnkoeler']},
+  {id:'koelNis',label:'Nishoogte koelkast',type:'select',options:['88 cm','122 cm','140 cm','158 cm','178 cm','Vrijstaand']},
+  {id:'dampkap',label:'Dampkap',type:'chips',options:['Afvoer naar buiten','Recirculatie','In kookplaat','Plafondunit']},
+  {id:'spoelbak',label:'Spoelbak',type:'chips',options:['Onderbouw','Opbouw','Vlakbouw']},
+  {id:'toestelLev',label:'Levering toestellen',type:'chips',options:['Via ons','Klant zelf','Nog te beslissen']},
+  {id:'toestelRef',label:'Merk / typenummers',type:'textarea',ph:'indien gekend: inbouwmaten liggen dan vast'}
+ ]},
+ {id:'plaatsing',title:'Plaatsing',fields:[
+  {id:'plaatser',label:'Plaatsing door',type:'chips',options:['Ons team','Klant zelf','Aannemer']},
+  {id:'demontage',label:'Demontage bestaand',type:'chips',options:['Ja','Nee']},
+  {id:'afvoer',label:'Afvoer oud meubilair',type:'chips',options:['Ja','Nee']},
+  {id:'nuts',label:'Aanpassingen nuts',type:'multi',options:['Elektricien nodig','Loodgieter nodig','Door klant geregeld']},
+  {id:'parking',label:'Parkeren / laden',type:'text',ph:'bv. oprit, betalend parkeren, smalle straat'}
+ ]}
+];
+
+const ICON={
+ cam:'<svg class="ico" viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+ plan:'<svg class="ico" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 12h8V4M12 16h8"/></svg>',
+ q:'<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6M12 17h.01"/></svg>',
+ doc:'<svg class="ico" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>',
+ cal:'<svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></svg>',
+ pen:'<svg class="ico" viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/></svg>'
+};
+
+function sample(label,variant){
+ const v=variant%3;
+ const scene=v===0
+  ?'<rect x="0" y="0" width="160" height="120" fill="#d9d3c8"/><rect x="0" y="92" width="160" height="28" fill="#b9ab96"/><rect x="18" y="22" width="44" height="40" fill="#eef3f6" stroke="#8a8173"/><rect x="88" y="40" width="10" height="52" fill="#a29684"/><rect x="104" y="70" width="18" height="12" fill="#c4b9a8"/>'
+  :v===1
+  ?'<rect x="0" y="0" width="160" height="120" fill="#e3ddd2"/><path d="M0 0 L60 0 L0 45z" fill="#cfc6b7"/><rect x="0" y="96" width="160" height="24" fill="#a99a84"/><rect x="70" y="62" width="40" height="22" rx="2" fill="#f1efe9" stroke="#8a8173"/><line x1="78" y1="66" x2="78" y2="80" stroke="#8a8173"/><line x1="86" y1="66" x2="86" y2="80" stroke="#8a8173"/>'
+  :'<rect x="0" y="0" width="160" height="120" fill="#f4f1ea"/><g stroke="#3d5a80" stroke-width="1.2" fill="none"><rect x="20" y="20" width="120" height="70"/><line x1="60" y1="20" x2="60" y2="90"/><line x1="100" y1="20" x2="100" y2="90"/><line x1="20" y1="60" x2="140" y2="60"/></g><text x="80" y="108" font-size="9" fill="#3d5a80" text-anchor="middle" font-family="monospace">3240</text>';
+ return '<svg viewBox="0 0 160 120" role="img" aria-label="'+esc(label)+'">'+scene+'</svg>';
+}
+
+let seq=156;
+function proj(o){return Object.assign({a:{},photos:[],plans:[],q:[],notes:'',chatter:[],drawer:'',created:'2026-11-18',versions:[],remarks:[],asm:{},pick:{},inst:{checks:{},punch:[],plan:null,signed:null},instPhotos:[],quotes:[],qs:null},o)}
+const projects=[
+ proj({id:153,name:'Keuken Peeters',customer:'Fam. Peeters',city:'Aalter',stage:'Intake',rep:SALES[0],
+  a:{type:'Keuken',ruimte:'Keuken + berging gelijkvloers',situatie:'Renovatie',deadline:'2027-03-15',budget:'€ 20.000 – 35.000',derden:'Aannemer',derdenContact:'Bouwbedrijf Mortier, 09 123 45 67',
+     afm:{b:'4120',h:'2650',d:'3240'},plafond:'2650',opm:'Nog in te plannen',vloer:'Nog te plaatsen',muren:'Niet gecontroleerd',obstakels:['Radiator','Raam / vensterbank'],
+     front:'MDF gelakt',frontKleur:'RAL 7044 zijdegrijs',glans:'Mat',kant:'Gelakt',werkblad:'Composiet of natuursteen (extern)',
+     greep:'Greeploos (push-to-open)',scharnier:'Push-to-open',lades:'Premium dunwandig',indeling:['Afvalsysteem','Hoekoplossing'],
+     toestel:['Oven','Combi-microgolf','Vaatwasser','Koelkast','Kookplaat','Dampkap'],dampkap:'Recirculatie',spoelbak:'Onderbouw',toestelLev:'Via ons',plaatser:'Ons team',demontage:'Ja'},
+  photos:[{cap:'Bestaande keukenwand',s:0},{cap:'Schuine wand berging',s:1},{cap:'Raam + radiator',s:0},{cap:'Inspiratie klant',s:1}],
+  plans:[{cap:'Schets indeling (papier)',s:2},{name:'grondplan_architect.pdf'}],
+  q:[{id:1,text:'Welk wandtype achter de bovenkasten? (aannemer bevestigt)',field:'wand',done:false},{id:2,text:'Nishoogte koelkast: 178 of 158 cm?',field:'koelNis',done:false}],
+  notes:'Klant wil eiland met zitgedeelte, 2 krukken. Werkblad komt van steenhouwer, opmeting werkblad na plaatsing kasten.',
+  chatter:[{who:SALES[0],t:'18 nov 14:32',msg:'Intakegesprek ter plaatse. 4 foto’s en een schets toegevoegd.'},{who:'Systeem',t:'18 nov 14:05',msg:'Project aangemaakt door Sofie Verhaeghe.',log:true}]}),
+ proj({id:155,name:'Inkomkast Wouters',customer:'Lies Wouters',city:'Aalter',stage:'Intake',rep:SALES[1],a:{type:'Inbouwkast',ruimte:'Inkomhal onder trap',afm:{b:'1800',h:'',d:'600'}},photos:[{cap:'Ruimte onder trap',s:1}],chatter:[{who:'Systeem',t:'19 nov 09:10',msg:'Project aangemaakt door Pieter Claeys.',log:true}]}),
+ proj({id:151,name:'Dressing Van Damme',customer:'Tom Van Damme',city:'Gent',stage:'Tekening',rep:SALES[0],drawer:DRAWERS[0],
+  a:{type:'Dressing',ruimte:'Slaapkamer 1',situatie:'Nieuwbouw',deadline:'2027-01-20',afm:{b:'3600',h:'2500',d:'650'},korpus:'Melamine 18 mm',korpusKleur:'Eiken natuur',front:'Fineer',glans:'Mat',greep:'Greeplijst / uitfrezing',indeling:['Hangroede','Schoenenrek','Broekenrek'],licht:'Met sensor',plaatser:'Ons team'},
+  photos:[{cap:'Slaapkamer',s:0},{cap:'Schets',s:2}],q:[{id:1,text:'Spiegel in middelste deur?',done:false},{id:2,text:'Wandtype?',field:'wand',done:false},{id:3,text:'Plafondhoogte nameten na plafonnering',field:'plafond',done:false}],
+  chatter:[{who:'Systeem',t:'12 nov 10:02',msg:'Intake doorgestuurd naar Jonas De Vos. 3 open vragen.',log:true}]}),
+ proj({id:150,name:'Keuken Maes',customer:'Karen Maes',city:'Tielt',stage:'Klantvalidatie',rep:SALES[0],drawer:DRAWERS[1],
+  a:{type:'Keuken',ruimte:'Leefkeuken',situatie:'Renovatie',deadline:'2027-02-10',afm:{b:'3240',h:'2600',d:'3800'},plafond:'2600',korpus:'Melamine 18 mm',korpusKleur:'Wit',
+     front:'MDF gelakt',frontKleur:'RAL 9010 zuiver wit',glans:'Mat',nerf:'N.v.t.',kant:'Gelakt',werkblad:'Composiet of natuursteen (extern)',werkbladDikte:'20',
+     greep:'Greeplijst / uitfrezing',scharnier:'Softclose',lades:'Premium dunwandig',licht:'LED-strip',
+     toestel:['Oven','Combi-microgolf','Vaatwasser','Koelkast','Kookplaat','Dampkap'],koelNis:'178 cm',dampkap:'Plafondunit',spoelbak:'Onderbouw',toestelLev:'Via ons',plaatser:'Ons team'},
+  photos:[{cap:'Bestaande keuken',s:0}],plans:[{cap:'Schets klant',s:2}],
+  q:[{id:1,text:'Wilt u een stopcontact in een lade (laadstation)?',done:false,toCustomer:true},{id:2,text:'Kleur van de plint: zoals de fronten of inox-look?',done:false,toCustomer:true}],
+  versions:[{v:1,date:'4 nov 2026',status:'Wijzigingen gevraagd',note:'Hoge kast links in plaats van rechts. Extra lade onder de kookplaat.'},{v:2,date:'17 nov 2026',status:'Ter goedkeuring',note:'Opmerkingen van versie 1 verwerkt.'}],
+  chatter:[{who:'Systeem',t:'17 nov 16:20',msg:'Tekening versie 2 gedeeld met de klant via het portaal.',log:true},{who:'Systeem',t:'5 nov 09:12',msg:'Klant vroeg wijzigingen op versie 1 (2 opmerkingen).',log:true}]}),
+ proj({id:149,name:'Badkamermeubel De Smet',customer:'An De Smet',city:'Eeklo',stage:'CNC',rep:SALES[1],drawer:DRAWERS[1],a:{type:'Badkamermeubel',front:'HPL / Fenix',werkblad:'Composiet of natuursteen (extern)'},photos:[{cap:'Badkamer',s:0}],q:[{id:1,text:'Kraan wand- of bladmontage?',done:false}]}),
+ proj({id:147,name:'TV-wand Claes',customer:'Bram Claes',city:'Brugge',stage:'Werkvoorbereiding',rep:SALES[0],drawer:DRAWERS[0],a:{type:'TV-meubel',front:'MDF gelakt',licht:'LED-strip'}}),
+ proj({id:144,name:'Inbouwkasten Willems',customer:'Fam. Willems',city:'Deinze',stage:'Werkvoorbereiding',rep:SALES[1],drawer:DRAWERS[1],a:{type:'Inbouwkast'}}),
+ proj({id:140,name:'Keuken Goethals',customer:'Wim Goethals',city:'Tielt',stage:'Zagen',rep:SALES[0],drawer:DRAWERS[0],a:{type:'Keuken'}}),
+ proj({id:138,name:'Bureau-kast Janssens',customer:'Jan Janssens',city:'Kortrijk',stage:'Montage & plaatsing',rep:SALES[1],drawer:DRAWERS[1],
+  a:{type:'Bureau',deadline:'2026-11-27',toegang:'2de verdieping, lift aanwezig (1,1 m diep)',parking:'Parkeerplaats voor de deur, vooraf melden',demontage:'Nee',afvoer:'Nee',plaatser:'Ons team',nuts:['Door klant geregeld'],greep:'Grepen',greepModel:'Lijngreep zwart 160 mm',lades:'Standaard dubbelwandig',licht:'LED-strip'},
+  asm:{'K1 bureau':true},inst:{checks:{},punch:[],plan:{team:0,day:3,len:1},signed:null}})
+];
+
+/* ---------- production + stock demo data ---------- */
+const MATS=[
+ {code:'MEL-WIT-18',name:'Melamine wit 18 mm',fmt:'2800 × 2070',onHand:14,reserved:4,incoming:0,min:10,sup:'Plaatgroothandel A'},
+ {code:'MEL-ANT-18',name:'Melamine antraciet 18 mm',fmt:'2800 × 2070',onHand:3,reserved:0,incoming:0,min:2,sup:'Plaatgroothandel A'},
+ {code:'MEL-EIK-18',name:'Melamine eiken natuur 18 mm',fmt:'2800 × 2070',onHand:6,reserved:0,incoming:0,min:3,sup:'Plaatgroothandel A'},
+ {code:'MDF-LAK-19',name:'MDF lakdraagplaat 19 mm',fmt:'2800 × 2070',onHand:2,reserved:1,incoming:0,min:4,sup:'Houthandel B'},
+ {code:'HDF-WIT-3',name:'HDF wit 3 mm (ruggen)',fmt:'2800 × 2070',onHand:9,reserved:2,incoming:0,min:5,sup:'Plaatgroothandel A'}
+];
+const EDGES=[
+ {code:'ABS-WIT-1',name:'ABS wit 23 × 1 mm',onHand:450,reserved:30,incoming:0,min:150,sup:'Kantenbandhandel C'},
+ {code:'ABS-WIT-2',name:'ABS wit 23 × 2 mm',onHand:120,reserved:0,incoming:0,min:50,sup:'Kantenbandhandel C'},
+ {code:'ABS-ANT-1',name:'ABS antraciet 23 × 1 mm',onHand:60,reserved:0,incoming:0,min:40,sup:'Kantenbandhandel C'},
+ {code:'ABS-EIK-1',name:'ABS eiken 23 × 1 mm',onHand:18,reserved:0,incoming:0,min:50,sup:'Kantenbandhandel C'}
+];
+const MAP={'Melamine Eiken 18':'MEL-EIK-18','Melamine Wit 18':'MEL-WIT-18','Melamine Antraciet 18':'MEL-ANT-18','MDF 19 lak':'MDF-LAK-19','HDF Wit 3':'HDF-WIT-3','Eiken fineer 19':''};
+let OFFCUTS=[
+ {id:'R-0412',code:'MEL-WIT-18',l:1200,w:640,loc:'Rek A3'},{id:'R-0415',code:'MEL-WIT-18',l:820,w:560,loc:'Rek A3'},
+ {id:'R-0420',code:'MDF-LAK-19',l:1500,w:700,loc:'Rek B1'},{id:'R-0423',code:'MEL-ANT-18',l:950,w:400,loc:'Rek A4'},{id:'R-0426',code:'HDF-WIT-3',l:2000,w:500,loc:'Rek C1'}
+];
+let offSeq=430,batchSeq=47,rfqSeq=231;
+const MOVES=[
+ {d:'18 nov',ref:'ZB-2026-046',desc:'Verbruik MEL-WIT-18 (Keuken Goethals)',q:'−6 platen'},
+ {d:'18 nov',ref:'ZB-2026-046',desc:'Nieuwe rest R-0426 HDF-WIT-3',q:'+1 rest'},
+ {d:'15 nov',ref:'IN/2026/0188',desc:'Ontvangst MEL-WIT-18 van Plaatgroothandel A',q:'+12 platen'},
+ {d:'14 nov',ref:'ZB-2026-045',desc:'Verbruik ABS-WIT-1',q:'−84 m'}
+];
+const BATCHES=[
+ {id:'ZB-2026-046',date:'18 nov',proj:'PRJ-2026-0140',ids:[140],sheets:5,yield:'86 %',status:'Klaar om te zagen'},
+ {id:'ZB-2026-045',date:'14 nov',proj:'PRJ-2026-0149, PRJ-2026-0138',ids:[149,138],sheets:7,yield:'83 %',status:'Gezaagd'}
+];
+/* parts lists as imported from TopSolid: [part, cabinet, TopSolid material, L, W, T, qty, grain, edge "CODE:sides", CNC] */
+const PLATE_PRICE={'MEL-WIT-18':48,'MEL-ANT-18':62,'MEL-EIK-18':58,'MDF-LAK-19':54,'HDF-WIT-3':18};
+const EDGE_PRICE={'ABS-WIT-1':0.9,'ABS-WIT-2':1.4,'ABS-ANT-1':1.1,'ABS-EIK-1':1.6};
+const HW_PRICE=[['Scharnier',6.5],['Ladeset premium',95],['Ladeset houten',120],['Ladeset',38],['Greep',14],['Knop',9],['Plankdrager',0.15],['Stelpoot',1.2],['Ophangbeslag',9],['Excenter',0.6],['LED',145]];
+const RATE={lak:85,machine:95,sawMin:2,cncMin:4,asmH:1.5,labour:62,day:992};
+let quoteSeq=150;
+const PARTS={
+ 151:[['Zijwand','D1 kast 1200','Melamine Eiken 18',2450,620,18,3,1,'ABS-EIK-1:L1',1],['Bodem / top','D1 kast 1200','Melamine Eiken 18',1164,600,18,4,1,'ABS-EIK-1:L1',1],
+  ['Legplank','D1 kast 1200','Melamine Eiken 18',1160,580,18,6,1,'ABS-EIK-1:L1',0],['Rug','D1 kast 1200','HDF Wit 3',2440,1190,3,2,0,'',0],
+  ['Zijwand','D2 schoenenkast','Melamine Eiken 18',2450,620,18,2,1,'ABS-EIK-1:L1',1],['Legplank schuin','D2 schoenenkast','Melamine Eiken 18',1164,350,18,6,1,'ABS-EIK-1:L1',1],
+  ['Deur','D1 + D2','Eiken fineer 19',2440,596,19,6,1,'ABS-EIK-1:L1L2B1B2',1]],
+ 140:[['Zijwand onderkast','O1–O3','Melamine Eiken 18',720,560,18,6,1,'ABS-EIK-1:L1',1],['Bodem onderkast','O1–O3','Melamine Eiken 18',764,560,18,3,1,'ABS-EIK-1:L1',1],
+  ['Legplank','O1–O3','Melamine Eiken 18',760,520,18,3,1,'ABS-EIK-1:L1',0],['Zijwand bovenkast','B1–B3','Melamine Eiken 18',740,320,18,6,1,'ABS-EIK-1:L1L2',1],
+  ['Rug','O1–O3','HDF Wit 3',716,796,3,3,0,'',0],['Front deur','O1–O3','Melamine Eiken 18',396,716,18,6,1,'ABS-EIK-1:L1L2B1B2',1]],
+ 138:[['Zijwand','K1 bureau','Melamine Eiken 18',720,600,18,2,1,'ABS-EIK-1:L1',1],['Blad','K1 bureau','Melamine Eiken 18',1600,700,18,1,1,'ABS-EIK-1:L1L2B1B2',1],
+  ['Front lade','K1 bureau','Melamine Eiken 18',446,146,18,2,1,'ABS-EIK-1:L1L2B1B2',1],['Zijwand','K2 boekenkast','Melamine Eiken 18',2000,350,18,2,1,'ABS-EIK-1:L1',1],
+  ['Legplank','K2 boekenkast','Melamine Eiken 18',764,330,18,5,1,'ABS-EIK-1:L1',0],['Rug','K2 boekenkast','HDF Wit 3',1996,796,3,1,0,'',0]],
+ 149:[['Zijwand','K1 wastafelmeubel','Melamine Wit 18',500,450,18,2,0,'ABS-WIT-1:L1',1],['Bodem','K1 wastafelmeubel','Melamine Wit 18',1164,450,18,1,0,'ABS-WIT-1:L1',1],
+  ['Front lade','K1 wastafelmeubel','MDF 19 lak',596,246,19,2,0,'',1],['Rug','K1 wastafelmeubel','HDF Wit 3',1180,480,3,1,0,'',0]],
+ 147:[['Zijwand','K1 lowboard','Melamine Antraciet 18',600,400,18,2,0,'ABS-ANT-1:L1',1],['Bodem','K1 lowboard','Melamine Antraciet 18',1800,400,18,1,0,'ABS-ANT-1:L1',1],
+  ['Top','K1 lowboard','Melamine Antraciet 18',1800,400,18,1,0,'ABS-ANT-1:L1',1],['Tussenwand','K1 lowboard','Melamine Antraciet 18',564,380,18,2,0,'ABS-ANT-1:L1',1],
+  ['Legplank','K1 lowboard','Melamine Antraciet 18',590,370,18,3,0,'ABS-ANT-1:L1',0],['Rug','K1 lowboard','HDF Wit 3',1790,590,3,1,0,'',0],
+  ['Front lade','K1 lowboard','MDF 19 lak',896,296,19,2,0,'',1],['Front klep','K1 lowboard','MDF 19 lak',596,296,19,1,0,'',1],['Wandpaneel','K2 wand','MDF 19 lak',2400,1200,19,1,0,'',1]],
+ 144:[['Zijwand','K1 kast 1200','Melamine Wit 18',2450,600,18,2,0,'ABS-WIT-1:L1',1],['Zijwand','K2 kast 1200','Melamine Wit 18',2450,600,18,2,0,'ABS-WIT-1:L1',1],
+  ['Bodem / top','K1 + K2','Melamine Wit 18',1164,580,18,4,0,'ABS-WIT-1:L1',1],['Legplank','K1 + K2','Melamine Wit 18',1160,560,18,8,0,'ABS-WIT-1:L1',0],
+  ['Rug','K1 + K2','HDF Wit 3',2440,1190,3,2,0,'',0],['Deur','K1 + K2','Eiken fineer 19',2440,596,19,4,1,'ABS-EIK-1:L1L2B1B2',1]],
+ 150:[['Zijwand onderkast','O1–O4','Melamine Wit 18',720,560,18,8,0,'ABS-WIT-1:L1',1],['Bodem onderkast','O1–O4','Melamine Wit 18',764,560,18,4,0,'ABS-WIT-1:L1',1],
+  ['Regel','O1–O4','Melamine Wit 18',764,100,18,8,0,'',0],['Zijwand kolomkast','H1','Melamine Wit 18',2300,580,18,2,0,'ABS-WIT-1:L1',1],
+  ['Legplank kolomkast','H1','Melamine Wit 18',564,540,18,4,0,'ABS-WIT-1:L1',0],['Zijwand bovenkast','B1, B2','Melamine Wit 18',740,320,18,4,0,'ABS-WIT-1:L1L2',1],
+  ['Rug onderkast','O1–O4','HDF Wit 3',716,796,3,4,0,'',0],['Rug kolom + boven','H1, B1, B2','HDF Wit 3',2296,596,3,1,0,'',0],
+  ['Front lade','O1, O2','MDF 19 lak',796,236,19,6,0,'',1],['Front deur','O3, O4','MDF 19 lak',396,716,19,4,0,'',1],
+  ['Front kolomkast','H1','MDF 19 lak',596,1450,19,1,0,'',1],['Front bovenkast','B1, B2','MDF 19 lak',596,736,19,2,0,'',1],['Afdekpaneel eiland','E1','MDF 19 lak',2400,900,19,2,0,'',1]]
+};
+
+const POS=[
+ {id:'AA-00230',sup:'Plaatgroothandel A',date:'12 nov',exp:'15 nov',status:'Ontvangen',lines:[{code:'MEL-WIT-18',qty:12}]},
+ {id:'AA-00229',sup:'Kantenbandhandel C',date:'8 nov',exp:'13 nov',status:'Ontvangen',lines:[{code:'ABS-WIT-1',qty:300}]}
+];
+const S={view:'form',cur:153,tab:'algemeen',drawFilter:'Tekening',portalId:150,pview:'front',decision:'',err:{},
+ wvTab:'parts',stTab:'plates',unsel:new Set(),batch:{id:'ZB-2026-047',status:'Concept'},lastResult:null,
+ sf:{station:'saw',batch:'',sheet:0,msg:null,cnc:'',run:false},nm:null,
+ mp:{tab:'asm',pid:138,msg:null,name:'',chk:false,err:''}};
+const DONE={};
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function initials(n){return (n||'?').split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase()}
+function ref(p){return 'PRJ-2026-'+String(p.id).padStart(4,'0')}
+function P(){return projects.find(p=>p.id===S.cur)}
+function filled(v){if(v==null)return false;if(Array.isArray(v))return v.length>0;if(typeof v==='object')return Object.values(v).some(x=>String(x??'').trim()!=='');return String(v).trim()!==''}
+function visSections(p){return SECTIONS.filter(s=>!s.showIf||s.showIf(p.a))}
+function visFields(p,s){return s.fields.filter(f=>!f.showIf||f.showIf(p.a))}
+function secStats(p,s){const f=visFields(p,s);return{tot:f.length,done:f.filter(x=>filled(p.a[x.id])).length}}
+function stats(p){let tot=0,done=0;visSections(p).forEach(s=>{const r=secStats(p,s);tot+=r.tot;done+=r.done});return{tot,done,pct:tot?Math.round(done/tot*100):0}}
+function openQ(p){return p.q.filter(q=>!q.done)}
+function fieldById(id){for(const s of SECTIONS)for(const f of s.fields)if(f.id===id)return f}
+function fmt(v){if(Array.isArray(v))return v.join(', ');if(v&&typeof v==='object')return ['b','h','d'].map(k=>v[k]||'?').join(' × ')+' mm';return v}
+function fmtDate(d){if(!d)return '—';const [y,m,dd]=d.split('-');return dd+'/'+m+'/'+y}
+
+/* ---------- render ---------- */
+function render(){
+ const menu=[['kanban','Pijplijn'],['form','Intake'],['draw','Tekenwerk'],['wv','Werkvoorbereiding'],['floor','Werkvloer'],['mp','Montage & plaatsing'],['stock','Voorraad'],['portal','Klantportaal'],['config','Configuratie']];
+ document.getElementById('menu').innerHTML=menu.map(([k,l])=>`<button data-act="nav" data-v="${k}" ${S.view===k?'aria-current="page"':''}>${l}</button>`).join('');
+ const app=document.getElementById('app');
+ document.querySelector('.topbar').hidden=S.view==='portal';
+ app.innerHTML=S.view==='kanban'?vKanban():S.view==='draw'?vDraw():S.view==='config'?vConfig():S.view==='portal'?vPortal():S.view==='wv'?vWV():S.view==='stock'?vStock():S.view==='floor'?vFloor():S.view==='mp'?vMP():vForm();
+ if((S.view==='floor'||(S.view==='mp'&&S.mp.tab==='asm'))&&!document.getElementById('overlay').innerHTML)document.getElementById('scan')?.focus({preventScroll:true});
+}
+
+function cp(crumbs,actions=''){
+ return `<div class="cp gut"><div class="crumb">${crumbs}</div><div class="row">${actions}</div></div>`;
+}
+
+function vKanban(){
+ const cols=STAGES.map(st=>{
+  const ps=projects.filter(p=>p.stage===st);
+  return `<section class="col" aria-label="${st}"><h3>${st}<span class="n">${ps.length}</span></h3><div class="cards">${ps.map(card).join('')}</div></section>`;
+ }).join('');
+ return cp('<span>Pijplijn</span>',`<button class="btn primary" data-act="new">+ Nieuw project</button>`)+`<main class="gut"><div class="kanban">${cols}</div></main>`;
+}
+function card(p){
+ const s=stats(p),oq=openQ(p).length;
+ return `<button class="card" data-act="open" data-id="${p.id}">
+  <div class="t">${esc(p.name)}</div><div class="s">${esc(p.customer)} · ${esc(p.city)}</div>
+  <div class="row">${p.a.type?`<span class="badge">${esc(p.a.type)}</span>`:''}${oq?`<span class="badge warn">${oq} open ${oq===1?'vraag':'vragen'}</span>`:''}</div>
+  <div class="meta"><div class="bar" title="Intake ${s.pct}% ingevuld"><i style="width:${s.pct}%"></i></div><span class="mono">${s.pct}%</span></div>
+  <div class="foot"><span class="meta"><span>${ICON.cam} ${p.photos.length}</span><span>${ICON.plan} ${p.plans.length}</span></span>
+  <span class="meta"><span class="av" title="Verkoop: ${esc(p.rep)}">${initials(p.rep)}</span>${p.drawer?`<span class="av" style="background:var(--accent-soft);color:var(--accent)" title="Tekenaar: ${esc(p.drawer)}">${initials(p.drawer)}</span>`:''}</span></div>
+ </button>`;
+}
+
+function vDraw(){
+ const ps=projects.filter(p=>p.stage===S.drawFilter);
+ const rows=ps.map(p=>{const s=stats(p),oq=openQ(p).length;return `<tr data-act="open" data-id="${p.id}" data-tab="overzicht">
+  <td class="mono">${ref(p)}</td><td><b>${esc(p.name)}</b></td><td>${esc(p.customer)}</td><td>${esc(p.a.type||'—')}</td>
+  <td class="num"><span class="meta"><span class="bar" style="width:70px;flex:none"><i style="width:${s.pct}%"></i></span>${s.pct}%</span></td>
+  <td>${oq?`<span class="badge warn">${oq}</span>`:'<span class="badge ok">0</span>'}</td>
+  <td class="num">${fmtDate(p.a.deadline)}</td><td>${esc(p.drawer||'—')}</td></tr>`}).join('');
+ const filt=['Tekening','Klantvalidatie'].map(f=>`<button class="chip" data-act="drawfilter" data-v="${f}" aria-pressed="${S.drawFilter===f}">${f}</button>`).join('');
+ return cp('<span>Tekenwerk</span>',`<div class="chips">${filt}</div>`)+`<main class="gut"><div class="tablewrap"><table>
+  <thead><tr><th>Ref</th><th>Project</th><th>Klant</th><th>Type</th><th>Intake</th><th>Open vragen</th><th>Plaatsing</th><th>Tekenaar</th></tr></thead>
+  <tbody>${rows||`<tr><td colspan="8" class="empty">Geen projecten in fase ${S.drawFilter}.</td></tr>`}</tbody></table></div>
+  <p class="hint" style="margin-top:12px">De tekenaar opent een project en start in TopSolid met de projectreferentie. Open vragen staan in de tab Overzicht.</p></main>`;
+}
+
+function vConfig(){
+ const list=SECTIONS.map(s=>`<div class="box"><b>${s.title}</b>${s.showIf?' <span class="badge info">enkel bij keuken</span>':''}<p class="hint" style="margin:6px 0 0">${s.fields.map(f=>esc(f.label)).join(' · ')}</p></div>`).join('');
+ const map=Object.entries(MAP).map(([k,v])=>`<tr class="static ${v?'':'bad'}"><td>${esc(k)}</td><td class="mono">${v||'— niet gekoppeld'}</td><td>${v?esc(matBy(v).name):`<button class="btn small" data-act="newmat" data-v="${esc(k)}">+ Nieuw materiaal aanmaken</button>`}</td></tr>`).join('');
+ return cp('<span>Configuratie</span>')+`<main class="gut" style="max-width:900px">
+  <h4>Intakevragen</h4><p class="hint">In het echte systeem beheert een beheerder deze vragen zelf: toevoegen, volgorde wijzigen, tonen per projecttype. Geen enkele vraag is verplicht.</p>${list}
+  <h4>Materiaalkoppeling TopSolid → Ardis</h4><p class="hint">Vertaalt materiaalnamen uit TopSolid naar de materiaalcodes van Ardis en het voorraadartikel in Odoo. Ontbrekende koppelingen los je op in Werkvoorbereiding.</p>
+  <div class="tablewrap"><table style="min-width:520px"><thead><tr><th>Materiaal in TopSolid</th><th>Ardis-code</th><th>Voorraadartikel</th></tr></thead><tbody>${map}</tbody></table></div></main>`;
+}
+
+function vForm(){
+ const p=P(); if(!p){S.view='kanban';return vKanban()}
+ const s=stats(p),oq=openQ(p).length,secs=visSections(p);
+ if(![...secs.map(x=>x.id),'media','notities','overzicht','offerte'].includes(S.tab))S.tab='algemeen';
+ const status=STAGES.map(st=>`<button data-act="stage" data-v="${st}" ${p.stage===st?'aria-current="step"':''}>${st}</button>`).join('');
+ const actions=p.stage==='Intake'
+  ?`<button class="btn primary" data-act="handoff">${ICON.pen} Doorsturen naar tekenaar</button><button class="btn" data-act="toast" data-v="Opmeting ingepland: taak aangemaakt in de agenda van ${esc(p.rep)}.">${ICON.cal} Opmeting plannen</button>`
+  :p.stage==='Tekening'
+  ?`<button class="btn primary" data-act="sendcustomer">${ICON.doc} Tekening + offerte naar klant</button><button class="btn" data-act="tab" data-v="offerte">Offerte</button><button class="btn" data-act="toast" data-v="In de echte module opent dit de TopSolid-projectmap.">${ICON.pen} Open in TopSolid</button>`
+  :p.stage==='Klantvalidatie'
+  ?`<button class="btn primary" data-act="viewportal" data-id="${p.id}">Bekijk als klant</button><button class="btn" data-act="toast" data-v="Herinnering verstuurd naar ${esc(p.customer)}.">Herinnering sturen</button>`
+  :p.stage==='Montage & plaatsing'||p.stage==='Opgeleverd'
+  ?`<button class="btn primary" data-act="opensite" data-v="${p.id}">Naar montage & plaatsing</button>`
+  :p.stage==='Werkvoorbereiding'
+  ?`<button class="btn primary" data-act="nav" data-v="wv">Naar werkvoorbereiding</button>`
+  :`<button class="btn" data-act="toast" data-v="In de echte module opent dit de TopSolid-projectmap.">${ICON.pen} Open in TopSolid</button>`;
+ const tabs=secs.map(x=>{const r=secStats(p,x);return `<button role="tab" data-act="tab" data-v="${x.id}" aria-selected="${S.tab===x.id}">${x.title}<span class="c ${r.done===r.tot?'full':''}" id="tc-${x.id}">${r.done}/${r.tot}</span></button>`}).join('')
+  +`<button role="tab" data-act="tab" data-v="media" aria-selected="${S.tab==='media'}">Foto’s & plannen<span class="c">${p.photos.length+p.plans.length}</span></button>`
+  +`<button role="tab" data-act="tab" data-v="notities" aria-selected="${S.tab==='notities'}">Notities & vragen<span class="c">${oq}</span></button>`
+  +`<button role="tab" data-act="tab" data-v="overzicht" aria-selected="${S.tab==='overzicht'}">Overzicht tekenaar</button>`
+  +`<button role="tab" data-act="tab" data-v="offerte" aria-selected="${S.tab==='offerte'}">Offerte<span class="c">${p.quotes.length||(PARTS[p.id]?'nieuw':'—')}</span></button>`;
+ const opt=(arr,v)=>`<option value="">—</option>`+arr.map(x=>`<option ${x===v?'selected':''}>${esc(x)}</option>`).join('');
+ return cp(`<a data-act="nav" data-v="kanban">Pijplijn</a><span class="muted">/</span><span>${esc(p.name)}</span>`,`<button class="btn" data-act="new">+ Nieuw</button>`)+
+ `<main class="gut"><div class="fhead"><div class="row">${actions}</div><div class="status" aria-label="Fase">${status}</div></div>
+ <div class="fgrid"><div class="sheet">
+  <div class="smart">
+   <button data-act="tab" data-v="media">${ICON.cam}<div><b>${p.photos.length}</b><span>Foto’s</span></div></button>
+   <button data-act="tab" data-v="media">${ICON.plan}<div><b>${p.plans.length}</b><span>Plannen</span></div></button>
+   <button data-act="tab" data-v="notities">${ICON.q}<div><b id="sm-q">${oq}</b><span>Open vragen</span></div></button>
+   <button data-act="tab" data-v="offerte">${ICON.doc}<div><b>${p.quotes.length}</b><span>Offertes</span></div></button>
+  </div>
+  <div class="sheet-in">
+   <div class="ref">${ref(p)}</div>
+   <input class="title" id="p-name" data-p="name" value="${esc(p.name)}" aria-label="Projectnaam" placeholder="Projectnaam">
+   <div class="hgrid">
+    <div class="field ${p.customer?'is-filled':''}"><label for="p-customer">Klant</label><input class="inp" id="p-customer" data-p="customer" value="${esc(p.customer)}" placeholder="Naam klant"></div>
+    <div class="field ${p.rep?'is-filled':''}"><label for="p-rep">Verkoper</label><select class="inp" id="p-rep" data-p="rep">${opt(SALES,p.rep)}</select></div>
+    <div class="field ${p.city?'is-filled':''}"><label for="p-city">Gemeente</label><input class="inp" id="p-city" data-p="city" value="${esc(p.city)}" placeholder="Gemeente werf"></div>
+    <div class="field ${p.drawer?'is-filled':''}"><label for="p-drawer">Tekenaar</label><select class="inp" id="p-drawer" data-p="drawer">${opt(DRAWERS,p.drawer)}</select></div>
+   </div>
+   <div class="intake" id="meter">${meter(p)}</div>
+   <div class="tabs" role="tablist">${tabs}</div>
+   <div class="panel" role="tabpanel">${panel(p)}</div>
+  </div></div>
+  ${chatter(p)}
+ </div></main>`;
+}
+
+function meter(p){
+ const s=stats(p),oq=openQ(p).length;
+ return `<div class="bar"><i style="width:${s.pct}%"></i></div><strong>${s.pct}%</strong>
+  <p><strong>${s.done} van ${s.tot}</strong> intakevragen beantwoord${oq?`, <strong>${oq}</strong> open ${oq===1?'vraag':'vragen'}`:''}. Niets is verplicht: wat ontbreekt, blokkeert het doorsturen niet en wordt een open vraag voor de tekenaar.</p>`;
+}
+
+function panel(p){
+ if(S.tab==='media')return pMedia(p);
+ if(S.tab==='notities')return pNotes(p);
+ if(S.tab==='overzicht')return pOverview(p);
+ if(S.tab==='offerte')return pQuote(p);
+ const sec=SECTIONS.find(x=>x.id===S.tab);
+ return `<p class="hint">Klik op <b>?</b> naast een vraag om ze te markeren als “nog te bevestigen door klant”.</p><div class="pgrid">${visFields(p,sec).map(f=>field(p,f)).join('')}</div>`;
+}
+
+function field(p,f){
+ const v=p.a[f.id],id='f-'+f.id,flag=p.q.some(q=>q.field===f.id&&!q.done);
+ let c;
+ if(f.type==='chips'||f.type==='multi'){
+  const act=f.type==='multi'?'multi':'chip',sel=x=>f.type==='multi'?(v||[]).includes(x):v===x;
+  c=`<div class="chips" role="group" aria-labelledby="l-${f.id}">${f.options.map(o=>`<button class="chip" data-act="${act}" data-f="${f.id}" data-v="${esc(o)}" aria-pressed="${sel(o)}">${esc(o)}</button>`).join('')}</div>`;
+ }else if(f.type==='select'){
+  c=`<select class="inp" id="${id}" data-f="${f.id}"><option value="">—</option>${f.options.map(o=>`<option ${o===v?'selected':''}>${esc(o)}</option>`).join('')}</select>`;
+ }else if(f.type==='dims'){
+  const d=v||{};c=`<div class="dims">${[['b','B'],['h','H'],['d','D']].map(([k,l],i)=>`${i?'<span>×</span>':''}<input class="inp" id="${i?id+'-'+k:id}" inputmode="numeric" data-f="${f.id}" data-k="${k}" value="${esc(d[k]||'')}" placeholder="${l}" aria-label="${l} in mm">`).join('')}</div>`;
+ }else if(f.type==='textarea'){
+  c=`<textarea class="inp" id="${id}" data-f="${f.id}" placeholder="${esc(f.ph||'')}">${esc(v||'')}</textarea>`;
+ }else{
+  c=`<input class="inp" id="${id}" type="${f.type==='number'?'text':f.type}" ${f.type==='number'?'inputmode="numeric"':''} data-f="${f.id}" value="${esc(v||'')}" placeholder="${esc(f.ph||'')}">`;
+ }
+ const lab=(f.type==='chips'||f.type==='multi')?`<label id="l-${f.id}">${esc(f.label)}</label>`:`<label id="l-${f.id}" for="${id}">${esc(f.label)}</label>`;
+ return `<div class="field ${filled(v)?'is-filled':''}">${lab}<div class="ctl">${c}<button class="flag ${flag?'on':''}" data-act="flag" data-f="${f.id}" aria-pressed="${flag}" title="Nog te bevestigen door klant" aria-label="${esc(f.label)}: markeer als vraag voor de klant">?</button></div></div>`;
+}
+
+function tile(x,i,kind){
+ const img=x.url?`<img src="${x.url}" alt="${esc(x.cap||'')}">`:x.name?`<div class="file">${ICON.doc}<br>${esc(x.name)}</div>`:sample(x.cap,x.s||0);
+ return `<div class="ph"><div class="img">${img}</div><input id="cap-${kind}-${i}" data-cap="${kind}" data-i="${i}" value="${esc(x.cap||x.name||'')}" aria-label="Bijschrift" placeholder="Bijschrift"></div>`;
+}
+function pMedia(p){
+ return `<h4>Foto’s van de ruimte</h4><p class="hint">Op tablet of gsm opent “Foto toevoegen” meteen de camera.</p>
+  <div class="photos">${p.photos.map((x,i)=>tile(x,i,'photos')).join('')}
+   <label class="upl">${ICON.cam}<span>Foto toevoegen</span><input type="file" id="up-photos" accept="image/*" capture="environment" multiple data-up="photos"></label></div>
+  <h4>Plannen & schetsen</h4><p class="hint">Schets op papier: foto nemen. Digitaal plan of architectenplan: bestand opladen.</p>
+  <div class="photos">${p.plans.map((x,i)=>tile(x,i,'plans')).join('')}
+   <label class="upl">${ICON.plan}<span>Plan toevoegen</span><input type="file" id="up-plans" accept="image/*,.pdf,.dwg,.dxf" multiple data-up="plans"></label></div>`;
+}
+function qlist(p){
+ if(!p.q.length)return '<p class="hint">Nog geen open vragen.</p>';
+ return `<ul class="qlist">${p.q.map(q=>{const f=q.field&&fieldById(q.field);return `<li class="${q.done?'done':''}"><input type="checkbox" id="q-${q.id}" data-act="qdone" data-id="${q.id}" ${q.done?'checked':''}><label for="q-${q.id}"><span>${esc(q.text)}</span>${f?`<small>Gekoppeld aan: ${esc(f.label)}</small>`:''}${q.toCustomer?`<small>Zichtbaar in klantportaal${q.answer?' · antwoord klant: '+esc(q.answer):''}</small>`:''}</label>${q.done?'':`<button class="btn small" style="margin-left:auto" data-act="qcust" data-id="${q.id}">${q.toCustomer?'Intern maken':'Naar klantportaal'}</button>`}</li>`}).join('')}</ul>`;
+}
+function pNotes(p){
+ return `<h4>Open vragen</h4><p class="hint">Vragen die de verkoper of tekenaar nog bij de klant moet nagaan. Een gekoppelde vraag sluit vanzelf zodra de vraag in de intake beantwoord is.</p>
+  ${qlist(p)}<div class="addq"><input class="inp" id="newq" placeholder="Nieuwe vraag, bv. Moet de dampkap op de bestaande afvoer?"><button class="btn" data-act="addq">Toevoegen</button></div>
+  <div class="chk" style="margin:8px 0 0"><input type="checkbox" id="newq-cust" checked><label for="newq-cust">Stel deze vraag aan de klant in het klantportaal</label></div>
+  <h4>Notities intakegesprek</h4><textarea class="inp" id="notes" data-notes style="min-height:120px" placeholder="Wensen, gewoontes, wat de klant belangrijk vindt">${esc(p.notes)}</textarea>`;
+}
+function pOverview(p){
+ const path='\\\\server\\TopSolid\\Projecten\\'+ref(p)+'_'+(p.customer||'klant').replace(/^Fam\.\s*/,'').replace(/\s+/g,'');
+ const sums=visSections(p).map(s=>{const rows=visFields(p,s).filter(f=>filled(p.a[f.id]));const miss=visFields(p,s).length-rows.length;
+  return `<div><h4>${s.title}${miss?` <span class="badge warn">${miss} leeg</span>`:' <span class="badge ok">volledig</span>'}</h4>${rows.length?`<dl class="sum">${rows.map(f=>`<dt>${esc(f.label)}</dt><dd>${esc(fmt(p.a[f.id]))}</dd>`).join('')}</dl>`:'<p class="hint">Nog niets ingevuld.</p>'}</div>`}).join('');
+ return `<div class="box"><b>Start in TopSolid</b><p class="hint" style="margin:4px 0 8px">Gebruik de projectreferentie als naam van het TopSolid-project, dan kan de onderdelenlijst later automatisch aan dit project gekoppeld worden (en via Odoo naar Ardis).</p>
+  <div class="path"><code id="tspath">${esc(path)}</code><button class="btn small" data-act="copy" data-v="${esc(path)}">Kopieer pad</button><button class="btn small" data-act="copy" data-v="${ref(p)}">Kopieer referentie</button></div></div>
+  <div class="box"><b>Open vragen (${openQ(p).length})</b><div style="margin-top:8px">${qlist(p)}</div></div>
+  ${p.notes?`<div class="box"><b>Notities verkoper</b><p style="margin:6px 0 0;white-space:pre-wrap">${esc(p.notes)}</p></div>`:''}
+  <div class="sumgrid">${sums}</div>`;
+}
+
+function chatter(p){
+ return `<aside class="chatter" aria-label="Communicatie"><h3>Communicatie</h3>
+  <textarea id="chat" placeholder="Notitie loggen of bericht aan collega’s"></textarea>
+  <div class="row" style="margin-top:8px"><button class="btn small primary" data-act="log">Log notitie</button><button class="btn small" data-act="toast" data-v="In de echte module gaat dit bericht naar de klant via het portaal.">Bericht aan klant</button></div>
+  <div class="msgs">${p.chatter.map(m=>`<div class="msg ${m.log?'log':''}"><span class="av">${m.log?'•':initials(m.who)}</span><div><div class="who">${esc(m.who)}<small>${esc(m.t)}</small></div><p>${esc(m.msg)}</p></div></div>`).join('')}</div></aside>`;
+}
+
+/* ---------- work preparation ---------- */
+const SHEET_M2=2.8*2.07,YIELD=0.82;
+function matBy(code){return MATS.find(m=>m.code===code)||EDGES.find(m=>m.code===code)}
+function isEdge(m){return EDGES.includes(m)}
+function unit(m,n){return isEdge(m)?n+' m':n+(n===1?' plaat':' platen')}
+function avail(m){return m.onHand-m.reserved}
+function wvProjects(){return projects.filter(p=>p.stage==='Werkvoorbereiding')}
+function exported(){return S.batch.status==='Geëxporteerd'}
+function batchProjects(){return exported()?projects.filter(p=>S.batch.ids.includes(p.id)):wvProjects().filter(p=>!S.unsel.has(p.id))}
+function partsOf(p){
+ return (PARTS[p.id]||[]).map((r,i)=>{const [name,cab,mat,l,w,t,qty,grain,eb,cnc]=r,[ec,sides]=(eb||':').split(':'),n=String(i+1).padStart(3,'0');
+  return {pid:ref(p)+'-'+n,p,name,cab,mat,code:MAP[mat]||'',l,w,t,qty,grain:!!grain,eb:{L1:sides.includes('L1')?ec:'',L2:sides.includes('L2')?ec:'',B1:sides.includes('B1')?ec:'',B2:sides.includes('B2')?ec:''},cnc:cnc?ref(p)+'_'+n+'.tsw':''}});
+}
+function needs(parts){
+ const pl={},ed={};
+ parts.forEach(pt=>{if(!pt.code)return;pl[pt.code]=(pl[pt.code]||0)+pt.l*pt.w*pt.qty/1e6;
+  Object.entries(pt.eb).forEach(([s,c])=>{if(c)ed[c]=(ed[c]||0)+(s[0]==='L'?pt.l:pt.w)*pt.qty/1000})});
+ return {plates:Object.entries(pl).map(([code,area])=>({code,area,need:Math.ceil(area/(SHEET_M2*YIELD)),m:matBy(code)})),
+  edges:Object.entries(ed).map(([code,len])=>({code,area:0,need:Math.ceil(len*1.1),m:matBy(code)}))};
+}
+function shortOf(x){return exported()||!x.m?0:Math.max(0,x.need-avail(x.m)-x.m.incoming)}
+function stockPill(x){
+ if(exported())return '<span class="badge info">Gereserveerd</span>';
+ const a=avail(x.m);
+ if(x.need<=a)return '<span class="badge ok">Op voorraad</span>';
+ if(x.need<=a+x.m.incoming)return '<span class="badge info">Besteld, dekt nood</span>';
+ return `<span class="badge warn">Tekort ${unit(x.m,shortOf(x))}</span>`;
+}
+function ebTxt(eb){const g={};Object.entries(eb).forEach(([s,c])=>{if(c)(g[c]=g[c]||[]).push(s)});const k=Object.keys(g);return k.length?k.map(c=>c+': '+g[c].join(' ')).join('<br>'):'—'}
+function csv(parts){
+ return ['PartID;Project;Klant;Kast;Onderdeel;Materiaal;Lengte;Breedte;Dikte;Aantal;Nerf;Kant_L1;Kant_L2;Kant_B1;Kant_B2;CNC_programma',
+  ...parts.map(pt=>[pt.pid,ref(pt.p),pt.p.customer,pt.cab,pt.name,pt.code||'??',pt.l,pt.w,pt.t,pt.qty,pt.grain?1:0,pt.eb.L1,pt.eb.L2,pt.eb.B1,pt.eb.B2,pt.cnc].join(';'))].join('\n');
+}
+function sumQty(parts){return parts.reduce((a,x)=>a+x.qty,0)}
+
+function vWV(){
+ const exp=exported(),bp=batchProjects(),parts=bp.flatMap(partsOf),errs=parts.filter(x=>!x.code),n=needs(parts),all=[...n.plates,...n.edges],short=all.filter(x=>shortOf(x)>0);
+ const list=exp?projects.filter(p=>S.batch.ids.includes(p.id)):wvProjects();
+ const rows=list.map(p=>{const pp=partsOf(p),sel=exp||!S.unsel.has(p.id);
+  return `<tr class="static"><td><input type="checkbox" id="sel-${p.id}" data-act="selproj" data-id="${p.id}" ${sel?'checked':''} ${exp?'disabled':''} aria-label="${esc(p.name)} opnemen in zaagbatch"></td>
+   <td class="mono">${ref(p)}</td><td><b>${esc(p.name)}</b><div class="muted" style="font-size:12px">${esc(p.customer)}</div></td><td>${esc(p.a.type||'—')}</td>
+   <td class="num">${pp.length?pp.length+' lijnen · '+sumQty(pp)+' st.':'<span class="badge warn">Geen onderdelenlijst</span>'}</td><td class="num">${fmtDate(p.a.deadline)}</td>
+   <td><span class="muted" style="font-size:12px">TopSolid-export · 19 nov 10:42</span> <button class="btn small" data-act="toast" data-v="In de echte module leest dit de onderdelenlijst opnieuw uit de TopSolid-exportmap.">Opnieuw inlezen</button></td></tr>`}).join('');
+ const tabs=[['parts','Onderdelen',parts.length+(errs.length?' · '+errs.length+' fout':'')],['mat','Materiaal & voorraad',short.length?short.length+' tekort':'ok'],['ardis','Ardis-export',S.batch.status]]
+  .map(([k,l,c])=>`<button role="tab" data-act="wvtab" data-v="${k}" aria-selected="${S.wvTab===k}">${l}<span class="c">${c}</span></button>`).join('');
+ const body=S.wvTab==='mat'?wvMat(n,short):S.wvTab==='ardis'?wvArdis(parts,errs,short):wvParts(bp);
+ return cp(`<span>Werkvoorbereiding</span> <span class="muted">/ zaagbatch <span class="mono">${S.batch.id}</span></span>`,
+  `<span class="badge ${exp?'info':''}">${S.batch.status}</span>${short.length?`<button class="btn" data-act="orderprep" data-v="short">Bestellen voor tekorten</button>`:''}<button class="btn primary" data-act="wvtab" data-v="ardis">Naar Ardis-export</button>`)+
+ `<main class="gut"><section class="section"><h2>Projecten klaar voor productie</h2><p class="hint">Goedgekeurd door de klant. Vink aan wat samen in één zaagbatch gaat: Ardis optimaliseert dan over de projecten heen.</p>
+  <div class="tablewrap"><table><thead><tr><th></th><th>Ref</th><th>Project</th><th>Type</th><th>Onderdelen</th><th>Plaatsing</th><th>Bron</th></tr></thead>
+  <tbody>${rows||'<tr class="static"><td colspan="7" class="empty">Geen projecten in werkvoorbereiding. Keur een tekening goed in het klantportaal.</td></tr>'}</tbody></table></div></section>
+  <section class="sheet" style="padding:0 16px 16px"><div class="tabs" role="tablist">${tabs}</div><div class="panel">${body}</div></section></main>`;
+}
+function wvParts(bp){
+ if(!bp.length)return '<p class="empty">Geen projecten geselecteerd.</p>';
+ const opts=MATS.map(m=>`<option value="${m.code}">${m.code} · ${esc(m.name)}</option>`).join('');
+ const rows=bp.map(p=>`<tr class="grp static"><td colspan="9">${ref(p)} · ${esc(p.name)}</td></tr>`+partsOf(p).map(pt=>`<tr class="static ${pt.code?'':'bad'}">
+  <td class="mono">${pt.pid}</td><td>${esc(pt.cab)}</td><td>${esc(pt.name)}</td>
+  <td>${esc(pt.mat)}<div>${pt.code?`<span class="mono muted">→ ${pt.code}</span>`:`<select class="inp" data-map="${esc(pt.mat)}" aria-label="Ardis-materiaal voor ${esc(pt.mat)}"><option value="">Koppel Ardis-code…</option>${opts}<option value="__new">+ Nieuw materiaal aanmaken…</option></select>`}</div></td>
+  <td class="mono num">${pt.l} × ${pt.w} × ${pt.t}</td><td class="num">${pt.qty}</td><td>${pt.grain?'Ja':'—'}</td><td class="mono" style="font-size:11.5px">${ebTxt(pt.eb)}</td><td class="mono" style="font-size:11.5px">${pt.cnc||'—'}</td></tr>`).join('')).join('');
+ return `<p class="hint">Ingelezen uit de TopSolid-onderdelenlijst. Elk onderdeel krijgt een barcode; Ardis drukt die op het etiket en de CNC zoekt er het programma mee op.</p>
+  <div class="tablewrap"><table><thead><tr><th>Barcode</th><th>Kast</th><th>Onderdeel</th><th>Materiaal</th><th>L × B × D (mm)</th><th>Aantal</th><th>Nerf</th><th>Kantenband</th><th>CNC-programma</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function wvMat(n,short){
+ if(!n.plates.length)return '<p class="empty">Geen materiaal nodig: selecteer projecten of koppel materialen.</p>';
+ const pr=n.plates.map(x=>`<tr class="static"><td class="mono">${x.code}</td><td>${esc(x.m.name)}</td><td class="num">${x.area.toFixed(1)} m²</td><td class="num"><b>${x.need}</b></td><td class="num">${x.m.onHand}</td><td class="num">${x.m.reserved}</td><td class="num">${avail(x.m)}</td><td class="num">${x.m.incoming||'—'}</td><td class="num">${OFFCUTS.filter(o=>o.code===x.code).length||'—'}</td><td>${stockPill(x)}</td></tr>`).join('');
+ const er=n.edges.map(x=>`<tr class="static"><td class="mono">${x.code}</td><td>${esc(x.m.name)}</td><td class="num"><b>${x.need} m</b></td><td class="num">${x.m.onHand} m</td><td class="num">${x.m.reserved} m</td><td class="num">${avail(x.m)} m</td><td class="num">${x.m.incoming?x.m.incoming+' m':'—'}</td><td>${stockPill(x)}</td></tr>`).join('');
+ return `<p class="hint">Platen nodig = oppervlakte ÷ plaat ${SHEET_M2.toFixed(2)} m² bij ${Math.round(YIELD*100)} % verwacht rendement. Ardis berekent het exacte aantal. Kantenband + 10 % snijverlies.</p>
+  ${short.length?`<div class="intake" style="background:var(--warn-soft);border-color:var(--warn)"><p><b>${short.length} ${short.length===1?'materiaal is':'materialen zijn'} niet voldoende op voorraad.</b> Een tekort blokkeert de export niet, maar zagen kan pas na levering.</p><button class="btn primary" data-act="orderprep" data-v="short">Bestellen bij leverancier</button></div>`:''}
+  <h4>Plaatmateriaal</h4><div class="tablewrap"><table><thead><tr><th>Code</th><th>Materiaal</th><th>Oppervlakte</th><th>Platen nodig</th><th>Voorraad</th><th>Gereserveerd</th><th>Beschikbaar</th><th>Besteld</th><th>Resten</th><th>Status</th></tr></thead><tbody>${pr}</tbody></table></div>
+  <h4>Kantenband</h4><div class="tablewrap"><table><thead><tr><th>Code</th><th>Kantenband</th><th>Nodig</th><th>Voorraad</th><th>Gereserveerd</th><th>Beschikbaar</th><th>Besteld</th><th>Status</th></tr></thead><tbody>${er}</tbody></table></div>`;
+}
+function wvArdis(parts,errs,short){
+ const exp=exported(),file='\\\\server\\Ardis\\Import\\'+S.batch.id+'.csv',lines=csv(parts).split('\n');
+ const pre=lines.slice(0,14).join('\n')+(lines.length>14?`\n… nog ${lines.length-14} lijnen`:'');
+ const r=S.lastResult;
+ return `<div class="wv-steps">
+  <div class="stepc ${errs.length?'':'ok'}"><h4>1. Controle</h4>${errs.length?`<span class="badge warn">${errs.length} ${errs.length===1?'lijn':'lijnen'} zonder Ardis-materiaal</span><p class="hint" style="margin:6px 0 0">Koppel het materiaal in de tab Onderdelen.</p>`:'<span class="badge ok">Alle lijnen gekoppeld</span>'}${short.length?`<p class="hint" style="margin:6px 0 0">${short.length} materiaaltekort: export kan, zagen wacht op levering.</p>`:''}</div>
+  <div class="stepc ${exp?'ok':''}"><h4>2. Exporteren</h4><div class="path"><code>${esc(file)}</code></div><div style="margin-top:8px">${exp?`<span class="badge info">Geëxporteerd ${esc(S.batch.at)}</span>`:`<button class="btn primary" data-act="exportardis" ${parts.length?'':'disabled'}>Exporteer naar Ardis</button>`}</div></div>
+  <div class="stepc"><h4>3. Resultaat Ardis</h4><p class="hint" style="margin:0 0 8px">Ardis schrijft zaagplannen, plaatverbruik en nieuwe resten terug. Odoo boekt die op de voorraad.</p><button class="btn ${exp?'primary':''}" data-act="readardis" ${exp?'':'disabled'}>Resultaat inlezen</button></div>
+ </div>
+ ${r?`<div class="box"><b>Resultaat ${r.id}</b> <span class="badge ${r.status==='Klaar om te zagen'?'ok':'warn'}">${r.status}</span><p class="hint" style="margin:6px 0 8px">Rendement ${r.yield} %, ${r.labels} etiketten met barcode, ${r.offUsed} ${r.offUsed===1?'rest':'resten'} hergebruikt, ${r.newOff.length} nieuwe resten op voorraad.</p>
+  <dl class="sum">${r.rows.map(x=>`<dt class="mono">${x.code}</dt><dd>${unit(x.m,x.used)} verbruikt${x.planned!==x.used?` (gepland ${x.planned})`:''}</dd>`).join('')}</dl></div>`:''}
+ <h4>Voorbeeld exportbestand (${parts.length} lijnen)</h4><pre class="csv">${esc(pre)}</pre>
+ <div class="row" style="margin-top:8px"><button class="btn small" data-act="copy" data-v="${esc(file)}">Kopieer pad</button></div>
+ <h4>Vorige zaagbatches</h4><div class="tablewrap"><table><thead><tr><th>Batch</th><th>Datum</th><th>Projecten</th><th>Platen</th><th>Rendement</th><th>Status</th></tr></thead>
+ <tbody>${BATCHES.map(b=>`<tr class="static"><td class="mono">${b.id}</td><td>${b.date}</td><td class="mono">${b.proj}</td><td class="num">${b.sheets}</td><td class="num">${b.yield}</td><td><span class="badge ${b.status==='Gezaagd'?'ok':b.status==='Wacht op levering'?'warn':'info'}">${b.status}</span></td></tr>`).join('')}</tbody></table></div>`;
+}
+
+/* ---------- stock & purchasing ---------- */
+function vStock(){
+ const tabs=[['plates','Platen'],['edges','Kantenband'],['off','Resten'],['po','Bestellingen'],['moves','Bewegingen']]
+  .map(([k,l])=>`<button role="tab" data-act="sttab" data-v="${k}" aria-selected="${S.stTab===k}">${l}${k==='po'?`<span class="c">${POS.filter(p=>p.status==='Besteld').length} open</span>`:''}</button>`).join('');
+ const low=[...MATS,...EDGES].filter(m=>avail(m)+m.incoming<m.min);
+ const mrow=m=>{const a=avail(m),e=isEdge(m),u=e?' m':'';const st=a+m.incoming<m.min?'<span class="badge warn">Onder minimum</span>':m.incoming?'<span class="badge info">Besteld</span>':'<span class="badge ok">OK</span>';
+  return `<tr class="static"><td class="mono">${m.code}</td><td>${esc(m.name)}</td>${e?'':`<td class="mono">${m.fmt}</td>`}<td class="num">${m.onHand}${u}</td><td class="num">${m.reserved}${u}</td><td class="num"><b>${a}${u}</b></td><td class="num">${m.incoming?m.incoming+u:'—'}</td><td class="num">${m.min}${u}</td><td>${esc(m.sup)}</td><td>${st}</td><td><button class="btn small" data-act="orderprep" data-v="one" data-code="${m.code}">Bestellen</button></td></tr>`};
+ let body;
+ if(S.stTab==='edges')body=`<div class="tablewrap"><table><thead><tr><th>Code</th><th>Kantenband</th><th>Voorraad</th><th>Gereserveerd</th><th>Beschikbaar</th><th>Besteld</th><th>Minimum</th><th>Leverancier</th><th>Status</th><th></th></tr></thead><tbody>${EDGES.map(mrow).join('')}</tbody></table></div>`;
+ else if(S.stTab==='off')body=`<p class="hint">Resten krijgen een eigen barcode. Ardis haalt bruikbare resten op bij het optimaliseren en meldt nieuwe resten terug.</p><div class="tablewrap"><table><thead><tr><th>Barcode</th><th>Materiaal</th><th>Afmeting (mm)</th><th>Oppervlakte</th><th>Locatie</th></tr></thead><tbody>${OFFCUTS.map(o=>`<tr class="static"><td class="mono">${o.id}</td><td class="mono">${o.code}</td><td class="mono num">${o.l} × ${o.w}</td><td class="num">${(o.l*o.w/1e6).toFixed(2)} m²</td><td>${o.loc}</td></tr>`).join('')}</tbody></table></div>`;
+ else if(S.stTab==='po')body=`<p class="hint">Bestelbonnen gaan per e-mail naar de leverancier. Bij levering boek je de ontvangst: de voorraad stijgt en wachtende zaagbatches kunnen verder.</p><div class="tablewrap"><table><thead><tr><th>Bestelling</th><th>Leverancier</th><th>Lijnen</th><th>Besteld op</th><th>Verwacht</th><th>Status</th><th></th></tr></thead>
+  <tbody>${POS.map(po=>`<tr class="static"><td class="mono">${po.id}</td><td>${esc(po.sup)}</td><td>${po.lines.map(l=>`<span class="mono">${l.code}</span> × ${unit(matBy(l.code),l.qty)}`).join('<br>')}</td><td>${po.date}</td><td>${po.exp}</td>
+  <td><span class="badge ${po.status==='Ontvangen'?'ok':'info'}">${po.status}</span></td><td>${po.status==='Besteld'?`<button class="btn small primary" data-act="receive" data-id="${po.id}">Ontvangst boeken</button>`:''}</td></tr>`).join('')}</tbody></table></div>`;
+ else if(S.stTab==='moves')body=`<div class="tablewrap"><table><thead><tr><th>Datum</th><th>Referentie</th><th>Omschrijving</th><th>Hoeveelheid</th></tr></thead><tbody>${MOVES.map(m=>`<tr class="static"><td>${m.d}</td><td class="mono">${m.ref}</td><td>${esc(m.desc)}</td><td class="num">${m.q}</td></tr>`).join('')}</tbody></table></div>`;
+ else body=`<div class="tablewrap"><table><thead><tr><th>Code</th><th>Plaat</th><th>Formaat</th><th>Voorraad</th><th>Gereserveerd</th><th>Beschikbaar</th><th>Besteld</th><th>Minimum</th><th>Leverancier</th><th>Status</th><th></th></tr></thead><tbody>${MATS.map(mrow).join('')}</tbody></table></div>`;
+ return cp('<span>Voorraad</span> <span class="muted">/ plaatmateriaal en kantenband</span>',`<button class="btn" data-act="newmat">+ Nieuw materiaal</button>`+(low.length?`<button class="btn primary" data-act="orderprep" data-v="min">Bijbestellen onder minimum (${low.length})</button>`:''))+
+  `<main class="gut"><section class="sheet" style="padding:0 16px 16px"><div class="tabs" role="tablist">${tabs}</div><div class="panel">${body}</div></section></main>`;
+}
+function openOrder(kind,code){
+ let lines=[];
+ if(kind==='short'){const n=needs(batchProjects().flatMap(partsOf));[...n.plates,...n.edges].forEach(x=>{const s=shortOf(x);if(s>0)lines.push({code:x.code,qty:isEdge(x.m)?Math.ceil(s/50)*50:s})})}
+ else if(kind==='min'){[...MATS,...EDGES].forEach(m=>{const gap=m.min-avail(m)-m.incoming;if(gap>0)lines.push({code:m.code,qty:isEdge(m)?Math.ceil((gap+m.min)/50)*50:gap+Math.ceil(m.min/2)})})}
+ else lines.push({code,qty:isEdge(matBy(code))?100:5});
+ if(!lines.length){toast('Niets te bestellen: alles is op voorraad of al besteld.');return}
+ S.order=lines;renderOrder();
+}
+function renderOrder(){
+ const by={};S.order.forEach((l,i)=>{const m=matBy(l.code);(by[m.sup]=by[m.sup]||[]).push({...l,i,m})});
+ document.getElementById('overlay').innerHTML=`<div class="modal-bg" data-act="close"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="oh">
+  <header><h2 id="oh">Bestelling bij leverancier</h2></header><div class="body">
+  <p class="hint">Eén bestelbon per leverancier. Platen per stuk, kantenband per rol van 50 m.</p>
+  ${Object.entries(by).map(([sup,ls])=>`<h4>${esc(sup)}</h4>${ls.map(l=>`<div class="field is-filled" style="grid-template-columns:minmax(0,1fr) 120px 30px;align-items:center"><label for="ol-${l.i}"><span class="mono">${l.code}</span> · ${esc(l.m.name)}</label>
+   <div class="dims"><input class="inp" id="ol-${l.i}" inputmode="numeric" data-ol="${l.i}" value="${l.qty}"><span>${isEdge(l.m)?'m':'st.'}</span></div><button class="xbtn" data-act="olrm" data-i="${l.i}" aria-label="Lijn verwijderen">×</button></div>`).join('')}`).join('')}
+  </div><footer><button class="btn" data-act="close">Annuleren</button><button class="btn primary" data-act="placeorder">Bestelling plaatsen</button></footer></div></div>`;
+}
+
+/* ---------- new material (Ardis code) ---------- */
+function suggestCode(n){const w=(n||'').toLowerCase(),t=(w.match(/\d+/)||[''])[0];
+ const a=w.includes('fineer')?'FIN':w.includes('melamine')?'MEL':w.includes('hdf')?'HDF':w.includes('mdf')?'MDF':w.includes('multiplex')?'MUL':'MAT';
+ const c=w.includes('eik')?'EIK':w.includes('wit')?'WIT':w.includes('antr')?'ANT':w.includes('noten')?'NOT':'XXX';return a+'-'+c+(t?'-'+t:'')}
+function openNewMat(mat){
+ const t=((mat||'').match(/\d+/)||[''])[0];
+ S.nm={mat:mat||'',code:mat?suggestCode(mat):'',name:mat?mat.replace(/\s*\d+$/,'')+(t?' '+t+' mm':''):'',l:'2800',w:'2070',t:t||'18',sup:'Houthandel B',min:'1',price:'145',err:{}};renderNewMat();
+}
+function renderNewMat(){
+ const n=S.nm,sups=[...new Set([...MATS,...EDGES].map(m=>m.sup))];
+ const f=(id,label,val,extra='')=>`<div class="field is-filled"><label for="nm-${id}">${label}</label><div><input class="inp" id="nm-${id}" data-nm="${id}" value="${esc(val)}" ${extra}>${n.err[id]?`<p class="err">${n.err[id]}</p>`:''}</div></div>`;
+ document.getElementById('overlay').innerHTML=`<div class="modal-bg" data-act="close"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="nmh">
+  <header><h2 id="nmh">Nieuw plaatmateriaal</h2></header><div class="body">
+  <p class="hint">Maakt het voorraadartikel aan in Odoo met de Ardis-code als interne referentie. ${n.mat?`Het TopSolid-materiaal <b>${esc(n.mat)}</b> wordt er meteen aan gekoppeld.`:''}</p>
+  ${f('code','Ardis-code',n.code,'style="font-family:var(--mono)" autocomplete="off"')}${f('name','Omschrijving',n.name)}
+  ${f('l','Plaatlengte (mm)',n.l,'inputmode="numeric"')}${f('w','Plaatbreedte (mm)',n.w,'inputmode="numeric"')}${f('t','Dikte (mm)',n.t,'inputmode="numeric"')}
+  <div class="field is-filled"><label for="nm-sup">Leverancier</label><select class="inp" id="nm-sup" data-nm="sup">${sups.map(s=>`<option ${s===n.sup?'selected':''}>${esc(s)}</option>`).join('')}</select></div>
+  ${f('min','Minimum voorraad (platen)',n.min,'inputmode="numeric"')}${f('price','Aankoopprijs per plaat (€)',n.price,'inputmode="decimal"')}
+  <div class="chk"><input type="checkbox" id="nm-sync" checked><label for="nm-sync">Ook doorsturen naar de materiaaldatabase van Ardis (synchronisatie)</label></div>
+  </div><footer><button class="btn" data-act="close">Annuleren</button><button class="btn primary" data-act="createmat">Materiaal aanmaken</button></footer></div></div>`;
+ document.getElementById('nm-code').focus();
+}
+
+/* ---------- shop floor ---------- */
+function pieces(p){return partsOf(p).flatMap(pt=>Array.from({length:pt.qty},(_,k)=>Object.assign({},pt,{piece:pt.pid+'.'+(k+1)})))}
+function allPieces(){return projects.filter(p=>PARTS[p.id]).flatMap(pieces)}
+function st(pc){return DONE[pc.piece]||(DONE[pc.piece]={saw:false,cnc:false})}
+function openBatches(){return BATCHES.filter(b=>b.ids&&['Klaar om te zagen','Wacht op levering','In productie'].includes(b.status))}
+function plans(b){
+ const L=2800,W=2070,T=10,K=4,out=[],by={};
+ projects.filter(p=>b.ids.includes(p.id)).flatMap(pieces).filter(x=>x.code).forEach(x=>(by[x.code]=by[x.code]||[]).push(x));
+ Object.entries(by).forEach(([code,arr])=>{
+  arr.sort((a,c)=>c.w-a.w||c.l-a.l);let sh,x,y,h;
+  const nw=()=>{sh={code,parts:[]};out.push(sh);x=T;y=T;h=0};nw();
+  arr.forEach(pc=>{if(x+pc.l>L-T){x=T;y+=h+K;h=0}if(y+pc.w>W-T)nw();sh.parts.push({pc,x,y});x+=pc.l+K;h=Math.max(h,pc.w)});
+ });
+ return out;
+}
+function sheetSvg(sh){
+ return `<svg viewBox="0 0 2800 2070" role="img" aria-label="Zaagplan ${sh.code}"><rect width="2800" height="2070" fill="var(--surface-2)" stroke="var(--line-strong)" stroke-width="8"/>
+ ${sh.parts.map(({pc,x,y})=>{const d=st(pc).saw,fs=Math.min(90,pc.w/3.2,pc.l/7);
+  return `<g data-act="scanpiece" data-v="${pc.piece}" style="cursor:pointer"><rect x="${x}" y="${y}" width="${pc.l}" height="${pc.w}" fill="${d?'var(--green-soft)':'var(--surface)'}" stroke="${d?'var(--green-strong)':'var(--ink)'}" stroke-width="6"/>
+  <text x="${x+pc.l/2}" y="${y+pc.w/2}" font-size="${fs}" font-family="var(--mono)" fill="var(--ink)" text-anchor="middle" dominant-baseline="central">${pc.piece.slice(-5)}</text></g>`}).join('')}</svg>`;
+}
+function scanBox(){
+ const m=S.sf.msg;
+ return `<form class="scan" data-scan><label for="scan"><b>Scan barcode</b></label><div class="row" style="margin-top:6px;flex-wrap:nowrap"><input id="scan" class="scaninp" autocomplete="off" spellcheck="false" placeholder="Etiket scannen"><button class="btn primary">OK</button></div>
+  <div class="row" style="margin-top:8px"><button type="button" class="btn small" data-act="simscan">Scan volgend etiket (demo)</button><span class="hint" style="margin:0">${S.sf.station==='saw'?'Of klik een onderdeel op het zaagplan.':'Of klik een lijn in de wachtrij.'}</span></div></form>
+  ${m?`<div class="fb ${m.kind}" role="status"><b>${esc(m.title)}</b>${m.sub?`<span>${esc(m.sub)}</span>`:''}</div>`:''}`;
+}
+function vFloor(){
+ const s=S.sf.station;
+ return cp(`<span>Werkvloer</span> <span class="muted">/ ${s==='saw'?'Paneelzaag':'CNC'}</span>`,
+  `<div class="chips" role="group" aria-label="Werkpost"><button class="chip" data-act="station" data-v="saw" aria-pressed="${s==='saw'}">Paneelzaag</button><button class="chip" data-act="station" data-v="cnc" aria-pressed="${s==='cnc'}">CNC</button></div>`)
+  +`<main class="gut">${s==='saw'?vSaw():vCnc()}</main>`;
+}
+function vSaw(){
+ const bs=openBatches();
+ if(!bs.length)return `<div class="floor"><div class="pcard">Geen zaagbatches klaar. Exporteer een batch naar Ardis en lees het resultaat in.</div>${scanBox()}</div>`;
+ const b=bs.find(x=>x.id===S.sf.batch)||bs[0];S.sf.batch=b.id;
+ const pl=plans(b);if(S.sf.sheet>=pl.length)S.sf.sheet=0;const sh=pl[S.sf.sheet];
+ const bsel=bs.map(x=>`<button class="chip" data-act="sfbatch" data-v="${x.id}" aria-pressed="${x.id===b.id}">${x.id}</button>`).join('');
+ const list=pl.map((p,i)=>{const d=p.parts.filter(q=>st(q.pc).saw).length;return `<button class="sheetbtn ${d===p.parts.length?'done':''}" data-act="sheet" data-v="${i}" aria-current="${i===S.sf.sheet}"><b>Plaat ${i+1}/${pl.length}</b><span class="mono">${p.code}</span><span>${d}/${p.parts.length} gezaagd</span></button>`}).join('');
+ const rows=sh.parts.map(({pc})=>{const d=st(pc).saw;return `<tr class="static"><td class="mono">${pc.piece}</td><td>${esc(pc.name)}<div class="muted" style="font-size:12px">${esc(pc.p.name)} · ${esc(pc.cab)}</div></td><td class="mono num">${pc.l} × ${pc.w}</td><td>${d?'<span class="badge ok">Gezaagd</span>':'<span class="badge">Open</span>'}</td><td>${pc.cnc?'CNC':'Montage'}</td></tr>`}).join('');
+ return `${b.status==='Wacht op levering'?'<div class="intake" style="background:var(--warn-soft);border-color:var(--warn)"><p><b>Deze batch wacht op materiaal.</b> Zaag enkel platen die al geleverd zijn.</p></div>':''}
+ <div class="row" style="margin-bottom:12px"><span class="muted">Zaagbatch</span>${bsel}</div>
+ <div class="floor"><div class="sheets">${list}</div>
+  <div class="pcard layout" style="margin:0"><div class="row" style="justify-content:space-between;margin-bottom:8px"><b>Plaat ${S.sf.sheet+1} · <span class="mono">${sh.code}</span></b><span class="hint" style="margin:0">2800 × 2070 mm · zaagplan uit Ardis</span></div>${sheetSvg(sh)}
+   <div class="tablewrap" style="margin-top:12px"><table style="min-width:560px"><thead><tr><th>Etiket</th><th>Onderdeel</th><th>Maat</th><th>Status</th><th>Volgende</th></tr></thead><tbody>${rows}</tbody></table></div></div>
+  <div>${scanBox()}</div></div>`;
+}
+function cncOps(pc){const n=pc.name.toLowerCase();return n.includes('zijwand')?'Boorpatroon plankdragers en scharnierplaten, groef voor rug':n.includes('front')||n.includes('deur')?'Scharnierpotten Ø 35 mm, greepuitfrezing':n.includes('bodem')||n.includes('top')?'Deuvel- en excenterboringen':n.includes('wandpaneel')||n.includes('afdek')?'Contour frezen, boringen bevestiging':'Contour frezen'}
+function vCnc(){
+ const q=allPieces().filter(pc=>pc.cnc&&st(pc).saw&&!st(pc).cnc);
+ const doneToday=allPieces().filter(pc=>pc.cnc&&st(pc).cnc).length;
+ const cur=S.sf.cnc&&allPieces().find(pc=>pc.piece===S.sf.cnc);
+ const card=cur?`<div class="pcard" style="border:2px solid var(--green-strong)"><div class="ref">${cur.piece}</div><h2 style="margin:2px 0 6px">${esc(cur.name)}</h2>
+  <p class="hint" style="margin:0 0 10px">${esc(cur.p.name)} · ${esc(cur.cab)} · <span class="mono">${cur.l} × ${cur.w} × ${cur.t}</span> · ${esc(cur.code)}</p>
+  <dl class="sum"><dt>Programma</dt><dd class="mono">${cur.cnc}</dd><dt>Bron</dt><dd>TopSolid CNC-plugin</dd><dt>Bewerkingen</dt><dd>${cncOps(cur)}</dd><dt>Kantenband</dt><dd class="mono" style="font-size:12px">${ebTxt(cur.eb)}</dd></dl>
+  <div class="row" style="margin-top:14px">${S.sf.run?'<span class="badge info">Bewerking loopt</span><button class="btn go" style="width:auto" data-act="cncdone">Bewerking klaar</button>':'<button class="btn primary" data-act="cncstart">Programma starten</button><button class="btn" data-act="cncclear">Annuleren</button>'}</div></div>`
+  :`<div class="pcard"><h2>Geen onderdeel geladen</h2><p class="hint" style="margin:0">Scan het etiket op een gezaagd onderdeel. Het juiste programma uit TopSolid wordt dan geladen.</p></div>`;
+ const rows=q.map(pc=>`<tr data-act="scanpiece" data-v="${pc.piece}"><td class="mono">${pc.piece}</td><td>${esc(pc.name)}<div class="muted" style="font-size:12px">${esc(pc.p.name)}</div></td><td class="mono" style="font-size:12px">${pc.cnc}</td></tr>`).join('');
+ return `<div class="floor cnc"><div>${scanBox()}${card}</div>
+  <div class="pcard" style="margin:0"><h2>Wachtrij CNC</h2><p class="hint">${q.length} gezaagde onderdelen wachten · ${doneToday} klaar</p>
+  <div class="tablewrap"><table style="min-width:420px"><thead><tr><th>Etiket</th><th>Onderdeel</th><th>Programma</th></tr></thead><tbody>${rows||'<tr class="static"><td colspan="3" class="empty">Niets in de wachtrij.</td></tr>'}</tbody></table></div></div></div>`;
+}
+function checkProgress(p){
+ const pcs=pieces(p).filter(x=>x.code);if(!pcs.length)return;
+ if(p.stage==='Zagen'&&pcs.every(x=>st(x).saw)){p.stage='CNC';log(p,'Alle onderdelen gezaagd. Project staat nu in CNC.');toast(p.name+': alles gezaagd, door naar CNC.')}
+ if(p.stage==='CNC'&&pcs.every(x=>st(x).saw)&&pcs.filter(x=>x.cnc).every(x=>st(x).cnc)){p.stage='Montage & plaatsing';log(p,'Alle CNC-bewerkingen klaar. Project staat nu in Montage & plaatsing.');toast(p.name+': klaar voor montage.')}
+ BATCHES.forEach(b=>{if(b.ids&&b.ids.includes(p.id)&&b.status!=='Gezaagd'&&projects.filter(x=>b.ids.includes(x.id)).flatMap(pieces).filter(x=>x.code).every(x=>st(x).saw)){b.status='Gezaagd'}
+  else if(b.ids&&b.ids.includes(p.id)&&b.status==='Klaar om te zagen'&&pcs.some(x=>st(x).saw))b.status='In productie'});
+}
+function doScan(code){
+ code=(code||'').trim().toUpperCase();if(!code)return;
+ const s=S.sf.station,pc=allPieces().find(x=>x.piece===code),off=OFFCUTS.find(o=>o.id===code);
+ if(off){S.sf.msg={kind:'info',title:'Rest '+off.id+' ('+off.code+', '+off.l+' × '+off.w+')',sub:'Gebruikt in deze batch: afgeboekt van voorraad.'};OFFCUTS.splice(OFFCUTS.indexOf(off),1);MOVES.unshift({d:new Date().toLocaleDateString('nl-BE',{day:'numeric',month:'short'}),ref:off.id,desc:'Rest verbruikt aan de zaag',q:'−1 rest'});return}
+ if(!pc){S.sf.msg={kind:'warn',title:'Onbekende barcode: '+code,sub:'Controleer het etiket of scan opnieuw.'};return}
+ const d=st(pc);
+ if(s==='saw'){
+  const b=openBatches().find(x=>x.ids.includes(pc.p.id));
+  if(!b){S.sf.msg={kind:'warn',title:pc.piece+' zit in geen open zaagbatch',sub:pc.p.name+' staat in '+pc.p.stage+'.'};return}
+  if(d.saw){S.sf.msg={kind:'warn',title:'Al gezaagd: '+pc.name,sub:pc.piece};return}
+  d.saw=true;S.sf.batch=b.id;const pl=plans(b),i=pl.findIndex(x=>x.parts.some(q=>q.pc.piece===pc.piece));if(i>=0)S.sf.sheet=i;
+  S.sf.msg={kind:'ok',title:'Gezaagd: '+pc.name,sub:pc.p.name+' · '+pc.cab+' · '+pc.l+' × '+pc.w+' mm. Volgende stap: '+(pc.cnc?'CNC':'rechtstreeks naar montage')+'.'};
+  checkProgress(pc.p);return;
+ }
+ if(!d.saw){S.sf.msg={kind:'warn',title:'Nog niet gezaagd: '+pc.name,sub:'Dit onderdeel moet eerst langs de paneelzaag.'};return}
+ if(!pc.cnc){S.sf.msg={kind:'info',title:'Geen CNC-bewerking: '+pc.name,sub:'Rechtstreeks naar montage.'};return}
+ if(d.cnc){S.sf.msg={kind:'warn',title:'Al bewerkt: '+pc.name,sub:pc.cnc};return}
+ S.sf.cnc=pc.piece;S.sf.run=false;S.sf.msg={kind:'ok',title:'Programma geladen: '+pc.cnc,sub:pc.name+' · '+pc.p.name};
+}
+
+/* ---------- quotes from TopSolid material lists ---------- */
+function eur(n){return (Math.round(n*100)/100).toLocaleString('nl-BE',{style:'currency',currency:'EUR'})}
+function qs(p){return p.qs||(p.qs={margin:35,ext:10,vat:p.a.situatie==='Nieuwbouw'?21:6,korting:0,days:p.a.type==='Keuken'?3:p.a.type==='Dressing'?2:1,
+ werkblad:(p.a.werkblad||'').includes('extern')?2400:0,toestellen:p.a.type==='Keuken'&&p.a.toestelLev==='Via ons'?4800:0,voorschot:30})}
+function hwPrice(k){const r=HW_PRICE.find(([n])=>k.startsWith(n));return r?r[1]:0}
+function calcQuote(p){
+ const s=qs(p),parts=partsOf(p),perM2=c=>PLATE_PRICE[c]/(SHEET_M2*YIELD),cab={},miss=new Set();
+ let mat=0,lak=0,edge=0,mach=0,machMin=0,lakM2=0,edgeM=0,asm=0,asmH=0;
+ parts.forEach(pt=>{const area=pt.l*pt.w*pt.qty/1e6;let c=0;
+  if(!pt.code||PLATE_PRICE[pt.code]==null)miss.add(pt.mat);else{const v=area*perM2(pt.code);mat+=v;c+=v}
+  if(pt.code==='MDF-LAK-19'){const v=area*2*RATE.lak;lak+=v;lakM2+=area*2;c+=v}
+  Object.entries(pt.eb).forEach(([sd,ec])=>{if(ec){const m=(sd[0]==='L'?pt.l:pt.w)*pt.qty/1000*1.1,v=m*(EDGE_PRICE[ec]||0);edge+=v;edgeM+=m;c+=v}});
+  const mins=(RATE.sawMin+(pt.cnc?RATE.cncMin:0))*pt.qty,v=mins/60*RATE.machine;mach+=v;machMin+=mins;c+=v;
+  cab[pt.cab]=(cab[pt.cab]||{cost:0,names:new Set(),zw:0});cab[pt.cab].cost+=c;cab[pt.cab].names.add(pt.name);if(pt.name.toLowerCase().includes('zijwand'))cab[pt.cab].zw+=pt.qty;
+ });
+ Object.values(cab).forEach(x=>{const h=Math.max(1,Math.round(x.zw/2))*RATE.asmH;x.cost+=h*RATE.labour;asm+=h*RATE.labour;asmH+=h});
+ const hw=hardware(p).map(h=>({...h,price:hwPrice(h.k)})),hwCost=hw.reduce((a,h)=>a+h.n*h.price,0);
+ const inst=s.days*RATE.day,m=1+s.margin/100,e=1+s.ext/100;
+ const PREFIX={O:'Onderkasten',B:'Bovenkasten',H:'Kolomkast',E:'Eiland',K:'Kasten',D:'Dressing'};
+ const label=k=>{const w=k.match(/^[A-Z]\d+\s+([a-z].*)$/i);return w?w[1].charAt(0).toUpperCase()+w[1].slice(1):(PREFIX[k[0]]||'Meubel '+k)};
+ const grp={};Object.entries(cab).forEach(([k,x])=>{const l=label(k),g=grp[l]=grp[l]||{amount:0,names:new Set()};g.amount+=x.cost*m;x.names.forEach(n=>g.names.add(n.toLowerCase()))});
+ const sections=Object.entries(grp).map(([l,g])=>({name:l,sub:[...g.names].slice(0,5).join(', '),amount:g.amount}));
+ if(hwCost)sections.push({name:'Beslag en verlichting',sub:hw.slice(0,3).map(h=>h.k.toLowerCase()).join(', '),amount:hwCost*m});
+ sections.push({name:'Levering en plaatsing',sub:s.days+(s.days===1?' dag':' dagen')+', ploeg van 2',amount:inst*m});
+ if(+s.werkblad)sections.push({name:'Werkblad',sub:'via steenhouwer, raming op basis van plan',amount:+s.werkblad*e});
+ if(+s.toestellen)sections.push({name:'Inbouwtoestellen',sub:'budget volgens gekozen toestellen',amount:+s.toestellen*e});
+ const subtotal=sections.reduce((a,x)=>a+x.amount,0),discount=subtotal*s.korting/100,net=subtotal-discount,vat=net*s.vat/100,total=net+vat;
+ const n=needs(parts);
+ const internal=[
+  ...n.plates.map(x=>['Plaatmateriaal',x.code+' (≈ '+x.need+' platen)',x.area.toFixed(1)+' m²',x.area*perM2(x.code)]),
+  ...(lak?[['Lakwerk','Fronten 2 zijden',lakM2.toFixed(1)+' m²',lak]]:[]),['Kantenband','ABS, incl. 10 % snijverlies',Math.round(edgeM)+' m',edge],
+  ['Machinetijd','Zagen + CNC',(machMin/60).toFixed(1)+' u',mach],['Montage werkplaats',Object.keys(cab).length+' meubelgroepen',asmH.toFixed(1)+' u',asm],
+  ...hw.map(h=>['Beslag',h.k,h.n+' st.',h.n*h.price]),['Plaatsing',s.days+' × dagtarief ploeg',s.days+' d',inst],
+  ...(+s.werkblad?[['Extern','Werkblad steenhouwer','1',+s.werkblad]]:[]),...(+s.toestellen?[['Extern','Toestellen','1',+s.toestellen]]:[])];
+ const cost=internal.reduce((a,x)=>a+x[3],0);
+ return {sections,internal,cost,subtotal,discount,net,vat,total,vatPct:s.vat,korting:s.korting,voorschot:s.voorschot,miss:[...miss]};
+}
+function quoteTable(c){
+ return `<table class="qt"><tbody>${c.sections.map(x=>`<tr><td><b>${esc(x.name)}</b><div class="muted" style="font-size:12px">${esc(x.sub)}</div></td><td class="num">${eur(x.amount)}</td></tr>`).join('')}</tbody>
+ <tfoot><tr><td>Subtotaal excl. btw</td><td class="num">${eur(c.subtotal)}</td></tr>${c.discount?`<tr><td>Korting ${c.korting} %</td><td class="num">− ${eur(c.discount)}</td></tr>`:''}
+ <tr><td>Btw ${c.vatPct} %</td><td class="num">${eur(c.vat)}</td></tr><tr class="tot"><td>Totaal incl. btw</td><td class="num">${eur(c.total)}</td></tr>
+ <tr><td class="muted">Voorschot ${c.voorschot} % bij goedkeuring</td><td class="num muted">${eur(c.total*c.voorschot/100)}</td></tr></tfoot></table>`;
+}
+function qpill(q){const k={Concept:'',Verstuurd:'info','Goedgekeurd':'ok','Wijzigingen gevraagd':'warn',Vervangen:''}[q.status];return `<span class="badge ${k}">${q.status}</span>`}
+function pQuote(p){
+ if(!PARTS[p.id])return `<div class="box"><b>Nog geen TopSolid-materiaallijst</b><p class="hint" style="margin:6px 0 0">Zodra de tekenaar de materiaallijst uit TopSolid exporteert, kan je hier met één klik de offerte genereren. Prijzen komen uit de voorraadartikels (platen, kantenband, beslag) en de uurtarieven.</p></div>`;
+ const s=qs(p),c=calcQuote(p),cur=p.quotes.find(q=>q.status==='Concept');
+ const inp=(k,l,suf)=>`<div class="field is-filled"><label for="qs-${k}">${l}</label><div class="dims"><input class="inp" id="qs-${k}" data-qs="${k}" inputmode="decimal" value="${s[k]}"><span>${suf}</span></div></div>`;
+ const opts=MATS.map(m=>`<option value="${m.code}">${m.code} · ${esc(m.name)}</option>`).join('');
+ return `<div class="box"><div class="row" style="justify-content:space-between"><div><b>Bron: TopSolid-materiaallijst</b> <span class="muted">· ${partsOf(p).length} lijnen · ingelezen 19 nov 10:42</span></div>
+  <button class="btn primary" data-act="genquote">${cur?'Concept bijwerken':'Offerte genereren'}</button></div>
+  <p class="hint" style="margin:6px 0 0">Materiaal, kantenband en beslag komen uit de lijst; arbeid uit machinetijd per onderdeel en montage per meubel. ${cur?`Concept <b class="mono">${cur.id}</b> gaat mee met de volgende tekeningversie naar de klant.`:'Na genereren gaat de offerte samen met de tekening naar het klantportaal.'}</p></div>
+ ${c.miss.length?`<div class="intake" style="background:var(--warn-soft);border-color:var(--warn)"><p><b>Geen prijs voor: ${c.miss.map(esc).join(', ')}.</b> Koppel het materiaal aan een voorraadartikel, of maak het aan.</p>
+  ${c.miss.map(mt=>`<select class="inp" style="max-width:280px" data-map="${esc(mt)}" aria-label="Materiaal voor ${esc(mt)}"><option value="">Koppel ${esc(mt)}…</option>${opts}<option value="__new">+ Nieuw materiaal aanmaken…</option></select>`).join('')}</div>`:''}
+ <div class="pgrid" style="margin-bottom:14px">${inp('margin','Marge eigen productie','%')}${inp('ext','Marge extern','%')}${inp('korting','Korting','%')}${inp('days','Plaatsing','dagen')}
+  ${p.a.type==='Keuken'||+s.werkblad?inp('werkblad','Werkblad (raming)','€'):''}${p.a.type==='Keuken'?inp('toestellen','Toestellen (budget)','€'):''}
+  <div class="field is-filled"><label for="qs-vat">Btw</label><select class="inp" id="qs-vat" data-qs="vat"><option value="6" ${s.vat==6?'selected':''}>6 % (renovatie woning ouder dan 10 jaar)</option><option value="21" ${s.vat==21?'selected':''}>21 %</option></select></div>
+  ${inp('voorschot','Voorschot','%')}</div>
+ <p class="hint">Btw voorgesteld op basis van de intake (${esc(p.a.situatie||'situatie onbekend')}). Controleer de voorwaarden voor 6 %.</p>
+ <div class="sumgrid"><div><h4>Zo ziet de klant het</h4>${quoteTable(c)}</div>
+  <div><h4>Calculatie (intern)</h4><div class="tablewrap"><table class="qt"><thead><tr><th>Post</th><th>Omschrijving</th><th>Hoeveelheid</th><th class="num">Kost</th></tr></thead>
+  <tbody>${c.internal.map(x=>`<tr><td>${x[0]}</td><td>${esc(x[1])}</td><td class="num">${x[2]}</td><td class="num">${eur(x[3])}</td></tr>`).join('')}</tbody>
+  <tfoot><tr><td colspan="3">Totale kost</td><td class="num">${eur(c.cost)}</td></tr><tr class="tot"><td colspan="3">Brutomarge</td><td class="num">${eur(c.net-c.cost)} (${c.net?Math.round((c.net-c.cost)/c.net*100):0} %)</td></tr></tfoot></table></div></div></div>
+ ${p.quotes.length?`<h4>Offertes van dit project</h4><div class="tablewrap"><table class="qt"><thead><tr><th>Offerte</th><th>Tekening</th><th>Datum</th><th class="num">Totaal incl. btw</th><th>Status</th></tr></thead>
+  <tbody>${p.quotes.slice().reverse().map(q=>`<tr><td class="mono">${q.id}</td><td>${q.v?'versie '+q.v:'nog niet verstuurd'}</td><td>${esc(q.created)}</td><td class="num">${eur(q.calc.total)}</td><td>${qpill(q)}</td></tr>`).join('')}</tbody></table></div>`:''}`;
+}
+
+/* ---------- assembly & installation ---------- */
+function mpProjects(){return projects.filter(p=>p.stage==='Montage & plaatsing')}
+function mpProject(list){return list.find(p=>p.id===S.mp.pid)||list[0]}
+function cabsOf(p){const m={};pieces(p).forEach(pc=>(m[pc.cab]=m[pc.cab]||[]).push(pc));return m}
+function hardware(p){
+ const L={},add=(k,n)=>{L[k]=(L[k]||0)+n},grip=['Grepen','Knoppen'].includes(p.a.greep)?(p.a.greep==='Knoppen'?'Knop ':'Greep ')+(p.a.greepModel||'volgens keuze'):'';
+ partsOf(p).forEach(pt=>{const n=pt.name.toLowerCase();
+  if(/deur|klep|front kolom|front boven/.test(n)){add('Scharnier softclose 110°',(pt.l>1800?4:pt.l>900?3:2)*pt.qty);if(grip)add(grip,pt.qty)}
+  if(n.includes('front lade')){add('Ladeset '+(p.a.lades||'standaard').toLowerCase(),pt.qty);if(grip)add(grip,pt.qty)}
+  if(n.includes('legplank'))add('Plankdrager 5 mm',4*pt.qty);
+  if(n.includes('bodem onderkast')||n==='bodem')add('Stelpoot 100–150 mm',4*pt.qty);
+  if(n.includes('zijwand bovenkast'))add('Ophangbeslag (paar)',pt.qty/2);
+  if(n.includes('zijwand'))add('Excenterverbinder + deuvel',4*pt.qty);
+ });
+ if(p.a.licht&&p.a.licht!=='Geen')add('LED-strip + driver ('+p.a.licht.toLowerCase()+')',1);
+ return Object.entries(L).map(([k,n])=>({k,n:Math.ceil(n)}));
+}
+function asmReady(p){const c=cabsOf(p);return Object.keys(c).length>0&&Object.keys(c).every(k=>p.asm[k])}
+function instChecks(p){const a=p.a;return [['geleverd','Alle kasten geleverd en gecontroleerd'],...(a.demontage==='Ja'?[['demontage','Oude meubels gedemonteerd']]:[]),
+ ['geplaatst','Kasten geplaatst, waterpas en verankerd'],['afgesteld','Deuren en lades afgesteld'],...(a.type==='Keuken'?[['toestellen','Toestellen ingebouwd en getest']]:[]),
+ ...(a.werkblad&&a.werkblad.includes('extern')?[['werkblad','Werkblad opgemeten voor steenhouwer']]:[]),...(a.licht&&a.licht!=='Geen'?[['licht','Verlichting aangesloten en getest']]:[]),
+ ['proper','Werf proper achtergelaten'],...(a.afvoer==='Ja'?[['afvoer','Oud meubilair afgevoerd']]:[])]}
+function vMP(){
+ const tabs=[['asm','Montage werkplaats'],['plan','Planning plaatsing'],['site','Plaatsing ter plaatse']].map(([k,l])=>`<button role="tab" data-act="mptab" data-v="${k}" aria-selected="${S.mp.tab===k}">${l}</button>`).join('');
+ const body=S.mp.tab==='plan'?mpPlan():S.mp.tab==='site'?mpSite():mpAsm();
+ return cp('<span>Montage & plaatsing</span>')+`<main class="gut"><div class="tabs" role="tablist" style="margin-bottom:14px">${tabs}</div>${body}</main>`;
+}
+function projChips(list){return `<div class="row" style="margin-bottom:12px"><span class="muted">Project</span>${list.map(p=>`<button class="chip" data-act="mpproj" data-v="${p.id}" aria-pressed="${p.id===S.mp.pid}">${esc(p.name)}</button>`).join('')}</div>`}
+function mpAsm(){
+ const list=mpProjects();
+ if(!list.length)return '<div class="pcard">Geen projecten in montage. Projecten komen hier zodra alle CNC-bewerkingen klaar zijn.</div>';
+ const p=mpProject(list);S.mp.pid=p.id;S.cur=p.id;
+ const cabs=cabsOf(p),hw=hardware(p),picked=hw.filter(h=>p.pick[h.k]).length,m=S.mp.msg;
+ const cards=Object.entries(cabs).map(([cab,pcs])=>{const k=pcs.filter(pc=>st(pc).kit).length,done=p.asm[cab];
+  return `<div class="cab ${done?'done':''}"><div class="row" style="justify-content:space-between"><b>${esc(cab)}</b>${done?'<span class="badge ok">Gemonteerd</span>':k===pcs.length?'<span class="badge info">Compleet</span>':'<span class="badge">Verzamelen</span>'}</div>
+   <div class="meta"><div class="bar"><i style="width:${Math.round(k/pcs.length*100)}%"></i></div><span class="mono">${k}/${pcs.length}</span></div>
+   <ul class="plist">${pcs.map(pc=>`<li class="${st(pc).kit?'ok':''}"><span class="mono">${pc.piece.slice(-5)}</span> ${esc(pc.name)}</li>`).join('')}</ul>
+   ${done?'':`<button class="btn small ${k===pcs.length?'primary':''}" data-act="asmdone" data-v="${esc(cab)}" ${k<pcs.length?'disabled':''}>Kast gemonteerd</button>`}</div>`}).join('');
+ return projChips(list)+`${asmReady(p)&&picked===hw.length?`<div class="fb ok"><b>Klaar voor plaatsing</b><span>Alle kasten zijn gemonteerd en het beslag is gepickt.${p.inst.plan?' Plaatsing gepland op '+DAYS[p.inst.plan.day]+'.':' Plan de plaatsing in.'}</span></div>`:''}
+ <div class="floor cnc"><div>
+  <form class="scan" data-scan="asm"><label for="scan"><b>Scan onderdeel</b></label><div class="row" style="margin-top:6px;flex-wrap:nowrap"><input id="scan" class="scaninp" autocomplete="off" spellcheck="false" placeholder="Etiket scannen"><button class="btn primary">OK</button></div>
+   <div class="row" style="margin-top:8px"><button type="button" class="btn small" data-act="asmsim">Scan volgend etiket (demo)</button><span class="hint" style="margin:0">Elk gescand onderdeel wordt bij zijn kast gelegd.</span></div></form>
+  ${m?`<div class="fb ${m.kind}" role="status"><b>${esc(m.title)}</b>${m.sub?`<span>${esc(m.sub)}</span>`:''}</div>`:''}
+  <div class="pcard"><h2>Picklijst beslag</h2><p class="hint">Berekend uit de onderdelen en de intake (grepen, lades, verlichting). ${picked}/${hw.length} gepickt.</p>
+   <ul class="qlist">${hw.map((h,i)=>`<li class="${p.pick[h.k]?'done':''}"><input type="checkbox" id="pk-${i}" data-act="pick" data-v="${esc(h.k)}" ${p.pick[h.k]?'checked':''}><label for="pk-${i}"><span>${h.n} × ${esc(h.k)}</span></label></li>`).join('')}</ul></div>
+ </div><div><div class="cabs">${cards}</div></div></div>`;
+}
+function doAsmScan(code){
+ code=(code||'').trim().toUpperCase();if(!code)return;
+ const pc=allPieces().find(x=>x.piece===code);
+ if(!pc){S.mp.msg={kind:'warn',title:'Onbekende barcode: '+code,sub:'Controleer het etiket.'};return}
+ if(pc.p.stage!=='Montage & plaatsing'){S.mp.msg={kind:'warn',title:pc.name+' is nog niet klaar voor montage',sub:pc.p.name+' staat in '+pc.p.stage+'.'};return}
+ const d=st(pc);S.mp.pid=pc.p.id;
+ if(d.kit){S.mp.msg={kind:'info',title:'Al verzameld: '+pc.name,sub:pc.cab};return}
+ d.kit=true;const pcs=cabsOf(pc.p)[pc.cab],k=pcs.filter(x=>st(x).kit).length;
+ S.mp.msg={kind:'ok',title:'Leg bij '+pc.cab+': '+pc.name,sub:k+'/'+pcs.length+' onderdelen voor deze kast'+(k===pcs.length?'. Kast is compleet: monteren.':'.')};
+}
+function mpPlan(){
+ const blocks=[...DEMO_PLAN.map(b=>({...b,demo:true})),...projects.filter(p=>p.inst.plan).map(p=>({...p.inst.plan,label:p.name,pid:p.id,signed:!!p.inst.signed}))];
+ const open=projects.filter(p=>['Zagen','CNC','Montage & plaatsing'].includes(p.stage)&&!p.inst.plan);
+ const grid=`<div class="tablewrap"><div class="wk"><div class="wk-h"></div>${DAYS.map(d=>`<div class="wk-h">${d}</div>`).join('')}
+  ${TEAMS.map((t,ti)=>`<div class="wk-t" style="grid-row:${ti+2}">${t}</div>`).join('')}
+  ${TEAMS.map((t,ti)=>DAYS.map((d,di)=>`<div class="wk-c" style="grid-row:${ti+2};grid-column:${di+2}"></div>`).join('')).join('')}
+  ${blocks.map(b=>`<${b.pid?'button':'div'} class="wk-b ${b.demo?'demo':''} ${b.signed?'signed':''}" style="grid-row:${b.team+2};grid-column:${b.day+2} / span ${b.len}" ${b.pid?`data-act="opensite" data-v="${b.pid}"`:''}><b>${esc(b.label)}</b><span>${b.len} ${b.len===1?'dag':'dagen'}${b.signed?' · opgeleverd':''}</span></${b.pid?'button':'div'}>`).join('')}</div></div>`;
+ const rows=open.map(p=>`<tr class="static"><td class="mono">${ref(p)}</td><td><b>${esc(p.name)}</b><div class="muted" style="font-size:12px">${esc(p.customer)} · ${esc(p.city)}</div></td><td>${p.stage}</td><td class="num">${fmtDate(p.a.deadline)}</td><td><button class="btn small primary" data-act="planopen" data-v="${p.id}">Inplannen</button></td></tr>`).join('');
+ return `<p class="hint">Week 48 · 23 – 27 november 2026. Klik een geplande plaatsing om de werfgegevens te openen.</p>${grid}
+  <h4>Nog in te plannen</h4><p class="hint">Projecten in productie zonder plaatsingsdatum. De gewenste datum komt uit de intake.</p>
+  <div class="tablewrap"><table><thead><tr><th>Ref</th><th>Project</th><th>Fase</th><th>Gewenste plaatsing</th><th></th></tr></thead><tbody>${rows||'<tr class="static"><td colspan="5" class="empty">Alles is ingepland.</td></tr>'}</tbody></table></div>`;
+}
+function openPlan(pid){
+ const p=projects.find(x=>x.id===pid),pl=p.inst.plan||{team:0,day:0,len:p.a.type==='Keuken'?3:1};
+ document.getElementById('overlay').innerHTML=`<div class="modal-bg" data-act="close"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="plh">
+  <header><h2 id="plh">Plaatsing inplannen: ${esc(p.name)}</h2></header><div class="body">
+  <p class="hint">Gewenste plaatsing volgens intake: <b>${fmtDate(p.a.deadline)}</b>. ${p.a.toegang?'Toegang: '+esc(p.a.toegang)+'.':''}</p>
+  <div class="field is-filled"><label for="pl-team">Ploeg</label><select class="inp" id="pl-team">${TEAMS.map((t,i)=>`<option value="${i}" ${i===pl.team?'selected':''}>${t}</option>`).join('')}</select></div>
+  <div class="field is-filled"><label for="pl-day">Startdag</label><select class="inp" id="pl-day">${DAYS.map((d,i)=>`<option value="${i}" ${i===pl.day?'selected':''}>${d}</option>`).join('')}</select></div>
+  <div class="field is-filled"><label for="pl-len">Duur</label><select class="inp" id="pl-len">${[1,2,3,4,5].map(n=>`<option value="${n}" ${n===pl.len?'selected':''}>${n} ${n===1?'dag':'dagen'}</option>`).join('')}</select></div>
+  <p class="err" id="pl-err" hidden></p>
+  <div class="chk"><input type="checkbox" id="pl-notify" checked><label for="pl-notify">Klant verwittigen via het klantportaal</label></div>
+  </div><footer><button class="btn" data-act="close">Annuleren</button><button class="btn primary" data-act="saveplan" data-v="${p.id}">Inplannen</button></footer></div></div>`;
+}
+function mpSite(){
+ const list=projects.filter(p=>p.stage==='Montage & plaatsing'||p.stage==='Opgeleverd');
+ if(!list.length)return '<div class="pcard">Geen plaatsingen.</div>';
+ const p=mpProject(list);S.mp.pid=p.id;S.cur=p.id;
+ const a=p.a,checks=instChecks(p),openC=checks.filter(([k])=>!p.inst.checks[k]).length,signed=p.inst.signed,openPunch=p.inst.punch.filter(x=>!x.done);
+ const info=[['Adres',p.city],['Klant',p.customer],['Planning',p.inst.plan?DAYS[p.inst.plan.day]+' · '+TEAMS[p.inst.plan.team]+' · '+p.inst.plan.len+(p.inst.plan.len===1?' dag':' dagen'):'Nog niet ingepland'],
+  ['Toegang',a.toegang],['Parkeren',a.parking],['Demontage',a.demontage],['Afvoer oud meubilair',a.afvoer],['Nutsvoorzieningen',a.nuts&&a.nuts.join(', ')],['Notities verkoop',p.notes]].filter(x=>x[1]);
+ const sign=signed
+  ?`<div class="done-card"><div class="big">✓</div><h2>Opgeleverd</h2><p class="hint">Ondertekend door ${esc(signed.name)} op ${esc(signed.at)}${signed.punch?', met '+signed.punch+' nazorgpunt'+(signed.punch===1?'':'en'):''}.</p></div>`
+  :openC?`<h2>Oplevering</h2><div class="fb warn"><b>Nog ${openC} controlepunt${openC===1?'':'en'} open</b><span>Vink alle punten af voordat de klant tekent.</span></div>`
+  :`<h2>Oplevering</h2><p class="hint">Laat de klant op de tablet tekenen. ${openPunch.length?`<b>${openPunch.length} nazorgpunt${openPunch.length===1?'':'en'}</b> worden mee opgenomen en ingepland als servicetaak.`:'Geen nazorgpunten.'}</p>
+   <div class="sig"><label for="ins-name">Naam klant</label><input class="inp" id="ins-name" value="${esc(S.mp.name)}" autocomplete="off">
+   <div class="chk"><input type="checkbox" id="ins-chk" ${S.mp.chk?'checked':''}><label for="ins-chk">Ik bevestig dat de werken zijn uitgevoerd${openPunch.length?', met de genoteerde nazorgpunten':''}.</label></div>
+   ${S.mp.err?`<p class="err">${esc(S.mp.err)}</p>`:''}<button class="btn go" data-act="signoff">Oplevering ondertekenen</button></div>`;
+ return projChips(list)+`<div class="pt-grid"><div style="min-width:0">
+  <section class="pcard"><h2>Werfgegevens</h2><p class="hint">Uit de intake. Zo weet de ploeg vooraf wat ze ter plaatse vinden.</p><dl class="sum">${info.map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl></section>
+  <section class="pcard"><h2>Controlelijst</h2><p class="hint">${checks.length-openC}/${checks.length} afgevinkt${asmReady(p)?'':' · let op: nog niet alle kasten zijn gemonteerd'}</p>
+   <ul class="qlist">${checks.map(([k,l])=>`<li class="${p.inst.checks[k]?'done':''}"><input type="checkbox" id="ck-${k}" data-act="instcheck" data-v="${k}" ${p.inst.checks[k]?'checked':''} ${signed?'disabled':''}><label for="ck-${k}"><span>${l}</span></label></li>`).join('')}</ul></section>
+  <section class="pcard"><h2>Nazorgpunten</h2><p class="hint">Wat nog moet gebeuren na de plaatsing, bv. een beschadigd front of een ontbrekende plint.</p>
+   ${p.inst.punch.length?`<ul class="qlist">${p.inst.punch.map(x=>`<li class="${x.done?'done':''}"><input type="checkbox" id="pu-${x.id}" data-act="punchdone" data-v="${x.id}" ${x.done?'checked':''}><label for="pu-${x.id}"><span>${esc(x.text)}</span></label></li>`).join('')}</ul>`:''}
+   ${signed?'':`<div class="addq"><input class="inp" id="punch" placeholder="bv. Front lade K1 kras, vervangen"><button class="btn" data-act="addpunch">Toevoegen</button></div>`}</section>
+  <section class="pcard"><h2>Foto’s van het resultaat</h2><div class="photos">${p.instPhotos.map((x,i)=>tile(x,i,'instPhotos')).join('')}
+   <label class="upl">${ICON.cam}<span>Foto toevoegen</span><input type="file" id="up-inst" accept="image/*" capture="environment" multiple data-up="instPhotos"></label></div></section>
+ </div><aside class="side"><section class="pcard">${sign}</section></aside></div>`;
+}
+
+/* ---------- customer portal ---------- */
+function pinsFor(p,view){return p.remarks.map((r,i)=>r.view===view?`<g class="pin"><circle cx="${r.x}" cy="${r.y}" r="11"/><text x="${r.x}" y="${r.y}" dy=".35em">${i+1}</text></g>`:'').join('')}
+function drawFront(p){
+ const L='stroke="var(--ink)" stroke-width="1.2"',F='fill="var(--surface-2)"',T='font-family="var(--mono)" font-size="11" fill="var(--muted)" text-anchor="middle"';
+ return `<svg viewBox="0 0 640 320" data-pin="front" role="img" aria-label="Vooraanzicht keukenwand">
+ <rect width="640" height="320" fill="var(--surface)"/>
+ <line x1="20" y1="28" x2="620" y2="28" stroke="var(--muted)" stroke-dasharray="4 4"/>
+ <line x1="20" y1="280" x2="620" y2="280" stroke="var(--ink)" stroke-width="2"/>
+ <line x1="40" y1="14" x2="470" y2="14" stroke="var(--muted)"/><line x1="40" y1="9" x2="40" y2="19" stroke="var(--muted)"/><line x1="470" y1="9" x2="470" y2="19" stroke="var(--muted)"/>
+ <rect x="230" y="5" width="50" height="16" fill="var(--surface)"/><text x="255" y="17" ${T}>3240</text>
+ <rect x="40" y="40" width="110" height="240" ${F} ${L}/><line x1="40" y1="150" x2="150" y2="150" ${L}/><line x1="40" y1="222" x2="150" y2="222" ${L}/>
+ <rect x="50" y="160" width="90" height="54" fill="var(--line)" ${L}/><rect x="60" y="170" width="70" height="32" fill="var(--surface)" ${L}/>
+ <rect x="150" y="268" width="320" height="12" fill="var(--line)"/>
+ <rect x="150" y="182" width="320" height="86" ${F} ${L}/>
+ <line x1="230" y1="182" x2="230" y2="268" ${L}/><line x1="330" y1="182" x2="330" y2="268" ${L}/><line x1="400" y1="182" x2="400" y2="268" ${L}/>
+ <line x1="150" y1="210" x2="230" y2="210" ${L}/><line x1="150" y1="240" x2="230" y2="240" ${L}/><line x1="230" y1="216" x2="330" y2="216" ${L}/>
+ <rect x="146" y="172" width="330" height="10" fill="var(--accent-soft)" ${L}/>
+ <rect x="150" y="56" width="180" height="74" ${F} ${L}/><line x1="240" y1="56" x2="240" y2="130" ${L}/>
+ <line x1="150" y1="132" x2="330" y2="132" stroke="var(--green)" stroke-width="3"/>
+ <rect x="250" y="28" width="60" height="8" fill="var(--line)" ${L}/>
+ <rect x="360" y="60" width="90" height="88" fill="var(--info-soft)" ${L}/><line x1="405" y1="60" x2="405" y2="148" ${L}/>
+ <line x1="490" y1="172" x2="490" y2="280" stroke="var(--muted)"/><line x1="485" y1="172" x2="495" y2="172" stroke="var(--muted)"/><text x="512" y="230" ${T}>900</text>
+ <text x="95" y="298" ${T}>Kolomkast</text><text x="190" y="298" ${T}>Lades</text><text x="280" y="298" ${T}>Kookplaat</text><text x="365" y="298" ${T}>Vaatwas</text><text x="435" y="298" ${T}>Spoelbak</text>
+ ${pinsFor(p,'front')}</svg>`;
+}
+function drawPlan(p){
+ const L='stroke="var(--ink)" stroke-width="1.2"',F='fill="var(--surface-2)"',T='font-family="var(--mono)" font-size="11" fill="var(--muted)" text-anchor="middle"';
+ return `<svg viewBox="0 0 640 320" data-pin="plan" role="img" aria-label="Grondplan keuken met eiland">
+ <rect width="640" height="320" fill="var(--surface)"/>
+ <path d="M40 300 L40 40 L600 40" fill="none" stroke="var(--ink)" stroke-width="6"/>
+ <rect x="360" y="36" width="90" height="8" fill="var(--info-soft)" ${L}/>
+ <rect x="46" y="46" width="424" height="56" ${F} ${L}/><rect x="46" y="46" width="104" height="56" fill="var(--line)" ${L}/>
+ <rect x="250" y="54" width="60" height="40" fill="none" stroke="var(--muted)"/><circle cx="265" cy="66" r="7" fill="none" stroke="var(--muted)"/><circle cx="295" cy="82" r="7" fill="none" stroke="var(--muted)"/>
+ <rect x="410" y="56" width="48" height="36" rx="5" fill="none" stroke="var(--muted)"/>
+ <rect x="200" y="170" width="240" height="90" ${F} ${L}/><text x="320" y="219" ${T}>Eiland 2400 × 900</text>
+ <line x1="330" y1="104" x2="330" y2="168" stroke="var(--muted)" stroke-dasharray="3 3"/><text x="356" y="140" ${T}>1100</text>
+ <text x="98" y="122" ${T}>Kolomkast</text>
+ <line x1="40" y1="20" x2="470" y2="20" stroke="var(--muted)"/><rect x="230" y="11" width="50" height="16" fill="var(--surface)"/><text x="255" y="23" ${T}>3240</text>
+ ${pinsFor(p,'plan')}</svg>`;
+}
+const CHOICE_KEYS=['type','afm','korpus','korpusKleur','front','frontKleur','glans','kant','greep','werkblad','werkbladDikte','toestel','koelNis','dampkap','spoelbak','licht'];
+function portalProject(){return projects.find(x=>x.id===S.portalId)||projects.find(x=>x.stage==='Klantvalidatie')}
+function vPortal(){
+ const p=portalProject();
+ const note=`<div class="pt-note gut"><span>Voorbeeld: zo ziet de klant het portaal. Logo en bedrijfsnaam zijn plaatshouders.</span><button class="btn small" data-act="nav" data-v="form">Terug naar backoffice</button></div>`;
+ if(!p)return note+`<div class="pt-wrap gut"><div class="pcard">Er wacht geen tekening op goedkeuring.</div></div>`;
+ S.cur=p.id;
+ const ver=p.versions[p.versions.length-1]||{v:1,date:'vandaag',status:'Ter goedkeuring'};
+ const open=ver.status==='Ter goedkeuring',quote=p.quotes.find(q=>q.v===ver.v);
+ const pill=ver.status==='Goedgekeurd'?'<span class="pill ok">Goedgekeurd</span>':ver.status==='Wijzigingen gevraagd'?'<span class="pill chg">Wijzigingen doorgegeven</span>':'<span class="pill wait">Wacht op uw goedkeuring</span>';
+ const idx={'Intake':0,'Tekening':1,'Klantvalidatie':2,'Werkvoorbereiding':3,'Zagen':3,'CNC':3,'Montage & plaatsing':4,'Opgeleverd':5}[p.stage];
+ const steps=['Intake','Ontwerp','Uw goedkeuring','Productie','Plaatsing'].map((l,i)=>`<li class="${i<idx?'done':i===idx?'cur':''}"><span class="dot">${i<idx?'✓':i+1}</span>${l}</li>`).join('');
+ const vt=[['front','Vooraanzicht'],['plan','Grondplan']].map(([k,l])=>`<button class="chip" data-act="pview" data-v="${k}" aria-pressed="${S.pview===k}">${l}</button>`).join('')
+  +`<span style="flex:1"></span><button class="btn small" data-act="toast" data-v="In het echte portaal downloadt dit de PDF uit TopSolid.">${ICON.doc} PDF versie ${ver.v}</button>`;
+ const rem=p.remarks.length?`<ol class="rlist">${p.remarks.map((r,i)=>`<li><span class="rnum">${i+1}</span><textarea id="rm-${r.id}" data-remark="${r.id}" placeholder="Wat wilt u hier aangepast zien?" ${open?'':'disabled'}>${esc(r.text)}</textarea>${open?`<button class="xbtn" data-act="rmremark" data-id="${r.id}" aria-label="Opmerking ${i+1} verwijderen">×</button>`:'<span></span>'}</li>`).join('')}</ol>`:'';
+ const choices=CHOICE_KEYS.filter(k=>filled(p.a[k])).map(k=>`<div><dt>${esc(fieldById(k).label.replace(/ \(mm\)$/,''))}</dt><dd>${esc(fmt(p.a[k]))}</dd></div>`).join('');
+ const cq=p.q.filter(q=>q.toCustomer);
+ const qa=cq.length?`<div class="qa">${cq.map(q=>q.done
+   ?`<div class="q answered"><p>${esc(q.text)}</p><span>Uw antwoord: <b>${esc(q.answer||'beantwoord')}</b></span></div>`
+   :`<div class="q"><p>${esc(q.text)}</p><div class="row"><input class="inp" id="qa-${q.id}" placeholder="Uw antwoord"><button class="btn small" data-act="answerq" data-id="${q.id}">Antwoorden</button></div></div>`).join('')}</div>`:'<p class="hint">Geen openstaande vragen.</p>';
+ const e=S.err,openCQ=cq.filter(q=>!q.done).length;
+ let decide;
+ if(open){
+  decide=`<h2>Uw beslissing</h2><p class="hint">Versie ${ver.v}, gedeeld op ${esc(ver.date)}</p>
+  <label class="opt"><input type="radio" name="dec" value="ok" data-act="decide" ${S.decision==='ok'?'checked':''}><div><b>${quote?'Ik keur tekening en offerte goed':'Ik keur de tekening goed'}</b><span>${openCQ?`Kan pas nadat u ${openCQ===1?'de open vraag':'de '+openCQ+' open vragen'} beantwoord hebt.`:'Daarna plannen wij de productie in.'}</span></div></label>
+  <label class="opt"><input type="radio" name="dec" value="chg" data-act="decide" ${S.decision==='chg'?'checked':''}><div><b>Ik wil iets laten aanpassen</b><span>Uw opmerkingen gaan naar de tekenaar.</span></div></label>`;
+  if(S.decision==='ok'&&openCQ)decide+=`<div class="fb warn" role="status" style="margin-top:10px"><b>Nog ${openCQ} ${openCQ===1?'vraag':'vragen'} open</b><span>Beantwoord eerst de vragen onder “Vragen van ons”. Daarna kunt u de tekening goedkeuren.</span></div>
+   <button class="btn go" data-act="toq">Naar de vragen</button>`;
+  else if(S.decision==='ok')decide+=`<div class="sig"><label for="pt-name">Uw volledige naam</label><input class="inp" id="pt-name" value="${esc(S.sigName||'')}" autocomplete="name">${e.name?`<p class="err">${e.name}</p>`:''}
+   <div class="chk"><input type="checkbox" id="pt-chk" ${S.sigChk?'checked':''}><label for="pt-chk">Ik heb maten, materialen, kleuren en toestellen nagekeken${quote?` en ga akkoord met offerte ${quote.id} van ${eur(quote.calc.total)} incl. btw. Het voorschot van ${quote.calc.voorschot} % (${eur(quote.calc.total*quote.calc.voorschot/100)}) wordt gefactureerd na goedkeuring`:''}. Na goedkeuring start de productie; latere wijzigingen kunnen extra kosten geven.</label></div>${e.chk?`<p class="err">${e.chk}</p>`:''}
+   ${p.remarks.length?`<p class="err">U plaatste ${p.remarks.length} ${p.remarks.length===1?'opmerking':'opmerkingen'} op de tekening. Kies “aanpassen” om ze door te sturen.</p>`:''}
+   <button class="btn go" data-act="approve">${quote?'Tekening en offerte goedkeuren':'Tekening goedkeuren'}</button></div>`;
+  if(S.decision==='chg')decide+=`<p class="hint" style="margin:10px 0 6px">${p.remarks.length?`<b>${p.remarks.length}</b> ${p.remarks.length===1?'opmerking':'opmerkingen'} op de tekening.`:'Klik op de tekening om een opmerking op een plek te zetten,'} ${p.remarks.length?'Algemene opmerking (optioneel):':'of schrijf hieronder wat u anders wilt.'}</p>
+   <textarea class="inp" id="pt-general" placeholder="bv. liever greeplijst in zwart">${esc(S.general||'')}</textarea>${e.chg?`<p class="err">${e.chg}</p>`:''}
+   <div style="margin-top:10px"><button class="btn go" data-act="requestchanges">Wijzigingen versturen</button></div>`;
+ }else{
+  decide=ver.status==='Goedgekeurd'
+   ?`<div class="done-card"><div class="big">✓</div><h2>Bedankt voor uw goedkeuring</h2><p class="hint">Versie ${ver.v} goedgekeurd door ${esc(ver.by)} op ${esc(ver.at)}. We nemen contact op om de plaatsing in te plannen.</p></div>`
+   :`<div class="done-card"><div class="big">↻</div><h2>Opmerkingen ontvangen</h2><p class="hint">De tekenaar verwerkt uw opmerkingen. U krijgt een bericht zodra de nieuwe versie klaarstaat.</p></div>`;
+ }
+ const hist=p.versions.slice().reverse().map(v=>`<li><b>Versie ${v.v}</b> · ${esc(v.date)} · ${esc(v.status)}${v.note?`<br><span class="muted">${esc(v.note)}</span>`:''}</li>`).join('');
+ return note+`<header class="pt-head"><div class="in gut"><div class="pt-logo"><span class="mark">Logo</span><div><b>Uw interieurbouwer</b><span>Klantportaal</span></div></div>
+  <div class="pt-user"><span class="av">${initials(p.customer)}</span>${esc(p.customer)}</div></div></header>
+ <div class="pt-wrap gut">
+  <div class="pt-title"><div><div class="ref">${ref(p)} · ${esc(p.city)}</div><h1>${esc(p.name)}: tekening versie ${ver.v}</h1></div>${pill}</div>
+  <ol class="steps">${steps}</ol>
+  <div class="pt-grid"><div style="min-width:0">
+   <section class="pcard"><h2>Tekening</h2><p class="hint">${open?'Klik op de tekening om een opmerking op die plek te zetten.':'Deze versie is afgesloten.'}</p>
+    <div class="vtabs">${vt}</div><div class="viewer">${S.pview==='plan'?drawPlan(p):drawFront(p)}</div>${rem}</section>
+   ${quote?`<section class="pcard" id="offerte"><div class="row" style="justify-content:space-between"><h2>Offerte ${quote.id}</h2>${qpill(quote)}</div>
+    <p class="hint">Hoort bij tekening versie ${ver.v}. U keurt tekening en offerte samen goed. Klopt er iets niet in de prijs, zet dan een opmerking bij “Ik wil iets laten aanpassen”.</p>
+    ${quoteTable(quote.calc)}<div class="row" style="margin-top:10px"><button class="btn small" data-act="toast" data-v="In het echte portaal downloadt dit de offerte als PDF.">${ICON.doc} Offerte als PDF</button></div></section>`:''}
+   <section class="pcard"><h2>Uw keuzes</h2><p class="hint">Kijk na of dit klopt. Zo niet, zet een opmerking op de tekening.</p><dl class="choices" style="margin:0">${choices}</dl></section>
+   <section class="pcard" id="vragen"><h2>Vragen van ons${openCQ?` <span class="pill wait" style="font-size:12px;vertical-align:middle">${openCQ} open</span>`:''}</h2><p class="hint">Uw antwoorden komen meteen bij de tekenaar terecht.${openCQ&&open?' Goedkeuren kan pas als alle vragen beantwoord zijn.':''}</p>${qa}</section>
+  </div>
+  <aside class="side"><section class="pcard">${decide}</section>
+   <section class="pcard"><h2>Versies</h2><ul class="vhist">${hist}</ul></section>
+   <section class="pcard"><h2>Contact</h2><p class="hint" style="margin:0">Vragen over de tekening? Uw contactpersoon is ${esc(p.rep)}.</p></section></aside>
+  </div></div>`;
+}
+
+/* ---------- state changes ---------- */
+function now(){const d=new Date();return d.toLocaleDateString('nl-BE',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'})}
+function log(p,msg,who){p.chatter.unshift({who:who||'Systeem',t:now(),msg,log:!who})}
+function autoClose(p,fid){if(filled(p.a[fid]))p.q.forEach(q=>{if(q.field===fid)q.done=true})}
+function setA(p,fid,v){p.a[fid]=v;autoClose(p,fid)}
+function refreshMeters(p){
+ const m=document.getElementById('meter');if(m)m.innerHTML=meter(p);
+ visSections(p).forEach(s=>{const el=document.getElementById('tc-'+s.id);if(el){const r=secStats(p,s);el.textContent=r.done+'/'+r.tot;el.classList.toggle('full',r.done===r.tot)}});
+ const q=document.getElementById('sm-q');if(q)q.textContent=openQ(p).length;
+}
+function toast(msg){const o=document.createElement('div');o.className='toast';o.setAttribute('role','status');o.textContent=msg;document.body.appendChild(o);setTimeout(()=>o.remove(),3200)}
+
+function openHandoff(){
+ const p=P(),secs=visSections(p);
+ const miss=secs.map(s=>{const m=visFields(p,s).filter(f=>!filled(p.a[f.id]));return m.length?`<li><b>${s.title}:</b> ${m.map(f=>esc(f.label)).join(', ')}</li>`:''}).join('');
+ const n=secs.reduce((a,s)=>a+visFields(p,s).filter(f=>!filled(p.a[f.id])).length,0);
+ document.getElementById('overlay').innerHTML=`<div class="modal-bg" data-act="close"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mh">
+  <header><h2 id="mh">Doorsturen naar tekenaar</h2></header>
+  <div class="body">
+   <div class="field is-filled" style="border:0"><label for="m-drawer">Tekenaar</label><select class="inp" id="m-drawer">${DRAWERS.map(d=>`<option ${d===p.drawer?'selected':''}>${d}</option>`).join('')}</select></div>
+   <p style="margin:12px 0 4px">${n?`<b>${n} intakevragen</b> zijn nog leeg. Dat is geen probleem: de tekenaar kan al starten.`:'Alle intakevragen zijn ingevuld.'}</p>
+   ${n?`<ul class="miss">${miss}</ul><label style="display:flex;gap:8px;margin-top:12px;align-items:flex-start"><input type="checkbox" id="m-addq" checked> Lege vragen toevoegen als open vragen voor de tekenaar</label>`:''}
+  </div>
+  <footer><button class="btn" data-act="close">Annuleren</button><button class="btn primary" data-act="dohandoff">Doorsturen</button></footer></div></div>`;
+ document.getElementById('m-drawer').focus();
+}
+function closeModal(){document.getElementById('overlay').innerHTML=''}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+ const svgEl=e.target.closest('svg[data-pin]');
+ if(svgEl&&S.view==='portal'){
+  const pp=portalProject(),ver=pp.versions[pp.versions.length-1];
+  if(e.target.closest('.pin')||!ver||ver.status!=='Ter goedkeuring')return;
+  const pt=svgEl.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const loc=pt.matrixTransform(svgEl.getScreenCTM().inverse());
+  const r={id:Date.now(),view:svgEl.dataset.pin,x:Math.round(loc.x),y:Math.round(loc.y),text:''};
+  pp.remarks.push(r);S.decision='chg';S.err={};render();document.getElementById('rm-'+r.id)?.focus();return;
+ }
+ const el=e.target.closest('[data-act]');if(!el)return;
+ const act=el.dataset.act,p=P();
+ if(act==='close'){if(e.target===el||el.tagName==='BUTTON')closeModal();return}
+ if(act==='qdone'){const q=p.q.find(x=>x.id==el.dataset.id);q.done=el.checked;render();return}
+ switch(act){
+  case 'nav':S.view=el.dataset.v;if(S.view==='form'&&!P())S.cur=projects[0].id;break;
+  case 'open':S.cur=+el.dataset.id;S.view='form';S.tab=el.dataset.tab||(projects.find(x=>x.id===S.cur).stage==='Intake'?'algemeen':'overzicht');window.scrollTo(0,0);break;
+  case 'new':{const np=proj({id:seq++,name:'Nieuw project',customer:'',city:'',stage:'Intake',rep:SALES[0]});log(np,'Project aangemaakt door '+SALES[0]+'.');projects.unshift(np);S.cur=np.id;S.view='form';S.tab='algemeen';render();const t=document.getElementById('p-name');t.focus();t.select();return}
+  case 'tab':S.tab=el.dataset.v;break;
+  case 'stage':if(p.stage!==el.dataset.v){log(p,'Fase gewijzigd: '+p.stage+' → '+el.dataset.v+'.');p.stage=el.dataset.v}break;
+  case 'chip':{const f=el.dataset.f,v=el.dataset.v;setA(p,f,p.a[f]===v?'':v);break}
+  case 'multi':{const f=el.dataset.f,v=el.dataset.v,cur=p.a[f]||[];setA(p,f,cur.includes(v)?cur.filter(x=>x!==v):[...cur,v]);break}
+  case 'flag':{const f=el.dataset.f,ex=p.q.find(q=>q.field===f&&!q.done);if(ex)p.q=p.q.filter(q=>q!==ex);else p.q.push({id:Date.now(),text:fieldById(f).label+': te bevestigen door klant',field:f,done:false,toCustomer:true});break}
+  case 'addq':{const i=document.getElementById('newq');if(!i.value.trim()){i.focus();return}const cust=document.getElementById('newq-cust').checked;p.q.push({id:Date.now(),text:i.value.trim(),done:false,toCustomer:cust});
+   if(cust)log(p,'Vraag in klantportaal gezet: '+i.value.trim());toast(cust?'Vraag staat in het klantportaal. De klant krijgt een melding.':'Interne vraag toegevoegd.');break}
+  case 'qcust':{const q=p.q.find(x=>x.id==el.dataset.id);q.toCustomer=!q.toCustomer;toast(q.toCustomer?'Vraag zichtbaar in het klantportaal.':'Vraag is weer intern.');break}
+  case 'log':{const t=document.getElementById('chat');if(!t.value.trim()){t.focus();return}p.chatter.unshift({who:p.rep||SALES[0],t:now(),msg:t.value.trim()});break}
+  case 'handoff':openHandoff();return;
+  case 'dohandoff':{const d=document.getElementById('m-drawer').value,add=document.getElementById('m-addq');let n=0;
+   if(add&&add.checked)visSections(p).forEach(s=>visFields(p,s).forEach(f=>{if(!filled(p.a[f.id])&&!p.q.some(q=>q.field===f.id&&!q.done)){p.q.push({id:Date.now()+n,text:f.label+'?',field:f.id,done:false});n++}}));
+   p.drawer=d;p.stage='Tekening';log(p,'Intake doorgestuurd naar '+d+'.'+(n?' '+n+' open vragen toegevoegd.':''));closeModal();S.tab='overzicht';render();toast('Doorgestuurd naar '+d+'. Project staat nu in Tekening.');return}
+  case 'drawfilter':S.drawFilter=el.dataset.v;break;
+  case 'genquote':{const c=calcQuote(p),cur=p.quotes.find(q=>q.status==='Concept');
+   if(cur){cur.calc=c;cur.created=now();log(p,'Offerte '+cur.id+' herberekend: '+eur(c.total)+' incl. btw.')}
+   else{const q={id:'OF-2026-0'+(quoteSeq++),v:null,status:'Concept',created:now(),calc:c};p.quotes.push(q);log(p,'Offerte '+q.id+' gegenereerd uit de TopSolid-materiaallijst: '+eur(c.total)+' incl. btw.')}
+   toast(c.miss.length?'Offerte gegenereerd, maar '+c.miss.length+' materiaal zonder prijs.':'Offerte klaar. Ze gaat mee met de volgende tekeningversie.');break}
+  case 'sendcustomer':{const cq=p.quotes.find(q=>q.status==='Concept');
+   if(!cq){S.tab='offerte';render();toast(PARTS[p.id]?'Genereer eerst de offerte: tekening en offerte gaan samen naar de klant.':'Er is nog geen TopSolid-materiaallijst om een offerte van te maken.');return}
+   if(cq.calc.miss.length){S.tab='offerte';render();toast('De offerte bevat materiaal zonder prijs. Koppel het eerst.');return}
+   const n=p.versions.length+1;p.quotes.forEach(q=>{if(q.status==='Verstuurd'||q.status==='Wijzigingen gevraagd')q.status='Vervangen'});cq.status='Verstuurd';cq.v=n;p.versions.push({v:n,date:new Date().toLocaleDateString('nl-BE',{day:'numeric',month:'short',year:'numeric'}),status:'Ter goedkeuring',note:n>1?'Opmerkingen van versie '+(n-1)+' verwerkt.':'Eerste ontwerp.'});
+   p.remarks=[];p.stage='Klantvalidatie';log(p,'Tekening versie '+n+' en offerte '+cq.id+' ('+eur(cq.calc.total)+') gedeeld met de klant via het portaal.');toast('Tekening versie '+n+' en offerte '+cq.id+' staan in het klantportaal. '+(p.customer||'De klant')+' krijgt een e-mail.');break}
+  case 'viewportal':S.portalId=+el.dataset.id;S.view='portal';S.decision='';S.err={};window.scrollTo(0,0);break;
+  case 'pview':S.pview=el.dataset.v;break;
+  case 'mptab':S.mp.tab=el.dataset.v;S.mp.msg=null;break;
+  case 'mpproj':S.mp.pid=+el.dataset.v;S.mp.msg=null;S.mp.err='';break;
+  case 'opensite':{const pp=projects.find(x=>x.id===+el.dataset.v);S.view='mp';S.mp.pid=pp.id;S.mp.tab=pp.stage==='Montage & plaatsing'&&!asmReady(pp)?'asm':'site';S.mp.msg=null;window.scrollTo(0,0);break}
+  case 'asmsim':{const pp=mpProject(mpProjects());const nx=pp&&pieces(pp).find(pc=>!st(pc).kit);if(!nx){toast('Alle onderdelen van dit project zijn verzameld.');return}doAsmScan(nx.piece);break}
+  case 'asmdone':{const pp=mpProject(mpProjects()),cab=el.dataset.v;pp.asm[cab]=true;log(pp,'Kast '+cab+' gemonteerd.');S.mp.msg={kind:'ok',title:cab+' gemonteerd',sub:asmReady(pp)?'Alle kasten van dit project zijn klaar.':'Scan de onderdelen van de volgende kast.'};break}
+  case 'pick':{const pp=mpProject(mpProjects());pp.pick[el.dataset.v]=el.checked;break}
+  case 'planopen':openPlan(+el.dataset.v);return;
+  case 'saveplan':{const pp=projects.find(x=>x.id===+el.dataset.v),team=+document.getElementById('pl-team').value,day=+document.getElementById('pl-day').value,len=+document.getElementById('pl-len').value;
+   if(day+len>DAYS.length){const er=document.getElementById('pl-err');er.textContent='Valt buiten deze week: kies een vroegere startdag of een kortere duur.';er.hidden=false;return}
+   const busy=[...DEMO_PLAN,...projects.filter(x=>x!==pp&&x.inst.plan).map(x=>x.inst.plan)].some(b=>b.team===team&&day<b.day+b.len&&b.day<day+len);
+   if(busy){const er=document.getElementById('pl-err');er.textContent=TEAMS[team]+' is dan al ingepland. Kies een andere ploeg of dag.';er.hidden=false;return}
+   const notify=document.getElementById('pl-notify').checked;pp.inst.plan={team,day,len};log(pp,'Plaatsing ingepland op '+DAYS[day]+' ('+len+(len===1?' dag':' dagen')+') met '+TEAMS[team]+'.'+(notify?' Klant verwittigd via portaal.':''));
+   closeModal();toast('Ingepland op '+DAYS[day]+'.'+(notify?' De klant ziet de datum in het portaal.':''));break}
+  case 'instcheck':{const pp=projects.find(x=>x.id===S.mp.pid);pp.inst.checks[el.dataset.v]=el.checked;S.mp.err='';break}
+  case 'addpunch':{const i=document.getElementById('punch');if(!i.value.trim()){i.focus();return}const pp=projects.find(x=>x.id===S.mp.pid);pp.inst.punch.push({id:Date.now(),text:i.value.trim(),done:false});break}
+  case 'punchdone':{const pp=projects.find(x=>x.id===S.mp.pid),x=pp.inst.punch.find(y=>y.id==el.dataset.v);x.done=el.checked;break}
+  case 'signoff':{const pp=projects.find(x=>x.id===S.mp.pid),name=S.mp.name.trim();
+   if(!name){S.mp.err='Laat de klant de naam invullen.';break}if(!S.mp.chk){S.mp.err='De klant moet de oplevering bevestigen.';break}
+   const np=pp.inst.punch.filter(x=>!x.done).length;pp.inst.signed={name,at:now(),punch:np};pp.stage='Opgeleverd';S.mp.name='';S.mp.chk=false;S.mp.err='';
+   log(pp,'Oplevering ondertekend door '+name+'.'+(np?' '+np+' nazorgpunt(en) ingepland als servicetaak.':''));
+   toast('Opgeleverd. Eindfactuur kan opgemaakt worden'+(np?'; nazorgpunten staan als servicetaak klaar.':'.'));break}
+  case 'station':S.sf.station=el.dataset.v;S.sf.msg=null;break;
+  case 'sfbatch':S.sf.batch=el.dataset.v;S.sf.sheet=0;break;
+  case 'sheet':S.sf.sheet=+el.dataset.v;break;
+  case 'scanpiece':doScan(el.dataset.v);break;
+  case 'simscan':{let next;
+   if(S.sf.station==='saw'){const b=openBatches().find(x=>x.id===S.sf.batch)||openBatches()[0];if(b){const pl=plans(b);next=(pl[S.sf.sheet]||pl[0]).parts.map(q=>q.pc).find(pc=>!st(pc).saw)||pl.flatMap(x=>x.parts.map(q=>q.pc)).find(pc=>!st(pc).saw)}}
+   else next=allPieces().find(pc=>pc.cnc&&st(pc).saw&&!st(pc).cnc);
+   if(!next){toast('Geen etiketten meer om te scannen op deze post.');return}doScan(next.piece);break}
+  case 'cncstart':S.sf.run=true;break;
+  case 'cncclear':S.sf.cnc='';S.sf.run=false;S.sf.msg=null;break;
+  case 'cncdone':{const pc=allPieces().find(x=>x.piece===S.sf.cnc);if(pc){st(pc).cnc=true;S.sf.msg={kind:'ok',title:'Klaar: '+pc.name,sub:'Volgende stap: montage. Scan het volgende onderdeel.'};S.sf.cnc='';S.sf.run=false;checkProgress(pc.p)}break}
+  case 'newmat':openNewMat(el.dataset.v||'');return;
+  case 'createmat':{const n=S.nm;n.err={};const code=(n.code||'').trim().toUpperCase();
+   if(!code)n.err.code='Geef een Ardis-code op.';else if(matBy(code))n.err.code='Deze code bestaat al.';
+   if(!(n.name||'').trim())n.err.name='Geef een omschrijving op.';
+   if(!(+n.t>0))n.err.t='Geef een dikte in mm op.';
+   if(Object.keys(n.err).length){renderNewMat();return}
+   const sync=document.getElementById('nm-sync').checked;
+   MATS.push({code,name:n.name.trim(),fmt:(+n.l||2800)+' × '+(+n.w||2070),onHand:0,reserved:0,incoming:0,min:+n.min||0,sup:n.sup});
+   PLATE_PRICE[code]=+String(n.price).replace(',','.')||0;
+   if(n.mat)MAP[n.mat]=code;S.nm=null;closeModal();
+   toast('Materiaal '+code+' aangemaakt'+(n.mat?' en gekoppeld aan '+n.mat:'')+(sync?'. Klaargezet voor de Ardis-materiaaldatabase.':'.'));break}
+  case 'selproj':{const id=+el.dataset.id;if(el.checked)S.unsel.delete(id);else S.unsel.add(id);break}
+  case 'wvtab':S.wvTab=el.dataset.v;break;
+  case 'sttab':S.stTab=el.dataset.v;break;
+  case 'orderprep':openOrder(el.dataset.v,el.dataset.code);return;
+  case 'olrm':S.order.splice(+el.dataset.i,1);if(S.order.length)renderOrder();else closeModal();return;
+  case 'placeorder':{const today=new Date(),d=today.toLocaleDateString('nl-BE',{day:'numeric',month:'short'}),ex=new Date(today.getTime()+3*864e5).toLocaleDateString('nl-BE',{day:'numeric',month:'short'});
+   const by={};S.order.filter(l=>+l.qty>0).forEach(l=>{const m=matBy(l.code);(by[m.sup]=by[m.sup]||[]).push({code:l.code,qty:+l.qty})});
+   const ids=Object.entries(by).map(([sup,lines])=>{const id='AA-00'+(rfqSeq++);POS.unshift({id,sup,date:d,exp:ex,status:'Besteld',lines});
+    lines.forEach(l=>{const m=matBy(l.code);m.incoming+=l.qty;MOVES.unshift({d,ref:id,desc:'Besteld bij '+sup+': '+l.code,q:'+'+unit(m,l.qty)+' verwacht'})});return id});
+   closeModal();if(!ids.length){toast('Geen lijnen met een hoeveelheid.');return}
+   toast(ids.length+(ids.length===1?' bestelling':' bestellingen')+' geplaatst ('+ids.join(', ')+'). Bestelbon per e-mail naar de leverancier.');break}
+  case 'receive':{const po=POS.find(x=>x.id===el.dataset.id),d=new Date().toLocaleDateString('nl-BE',{day:'numeric',month:'short'});po.status='Ontvangen';
+   po.lines.forEach(l=>{const m=matBy(l.code);m.onHand+=l.qty;m.incoming=Math.max(0,m.incoming-l.qty);MOVES.unshift({d,ref:po.id,desc:'Ontvangst '+l.code+' van '+po.sup,q:'+'+unit(m,l.qty)})});
+   toast('Ontvangst geboekt: voorraad bijgewerkt.');break}
+  case 'exportardis':{const parts=batchProjects().flatMap(partsOf),errs=parts.filter(x=>!x.code);
+   if(!parts.length){toast('Selecteer eerst projecten voor de zaagbatch.');return}
+   if(errs.length){S.wvTab='parts';render();toast(errs.length+' lijnen hebben nog geen Ardis-materiaal. Koppel ze eerst.');return}
+   const n=needs(parts);n.plates.concat(n.edges).forEach(x=>{x.m.reserved+=x.need});
+   S.batch={id:S.batch.id,status:'Geëxporteerd',ids:batchProjects().map(p=>p.id),need:n,at:now()};
+   S.batch.ids.forEach(id=>log(projects.find(p=>p.id===id),'Onderdelen geëxporteerd naar Ardis in zaagbatch '+S.batch.id+'.'));
+   MOVES.unshift({d:new Date().toLocaleDateString('nl-BE',{day:'numeric',month:'short'}),ref:S.batch.id,desc:'Reservatie materiaal voor zaagbatch',q:n.plates.reduce((a,x)=>a+x.need,0)+' platen'});
+   toast('Exportbestand '+S.batch.id+'.csv klaargezet voor Ardis. Materiaal gereserveerd.');break}
+  case 'readardis':{if(!exported())return;const b=S.batch,n=b.need,parts=projects.filter(p=>b.ids.includes(p.id)).flatMap(partsOf),d=new Date().toLocaleDateString('nl-BE',{day:'numeric',month:'short'});
+   let offUsed=0,usedTot=0,area=0,wait=false;const newOff=[];
+   n.plates.concat(n.edges).forEach(x=>{if(x.m.onHand<x.need-(OFFCUTS.some(o=>o.code===x.code)&&x.need>=2?1:0))wait=true});
+   const rows=n.plates.map((x,i)=>{let used=x.need;const oi=OFFCUTS.findIndex(o=>o.code===x.code);if(oi>=0&&x.need>=2){OFFCUTS.splice(oi,1);offUsed++;used--}
+    x.m.onHand=Math.max(0,x.m.onHand-used);x.m.reserved=Math.max(0,x.m.reserved-x.need);usedTot+=used;area+=x.area;
+    if(i<2){const o={id:'R-0'+(offSeq++),code:x.code,l:600+((i*370)%900),w:300+((i*210)%400),loc:'Rek nieuw'};OFFCUTS.push(o);newOff.push(o)}
+    MOVES.unshift({d,ref:b.id,desc:'Verbruik '+x.code,q:'−'+unit(x.m,used)});return {code:x.code,used,planned:x.need,m:x.m}});
+   n.edges.forEach(x=>{x.m.onHand=Math.max(0,x.m.onHand-x.need);x.m.reserved=Math.max(0,x.m.reserved-x.need);rows.push({code:x.code,used:x.need,planned:x.need,m:x.m});MOVES.unshift({d,ref:b.id,desc:'Verbruik '+x.code,q:'−'+x.need+' m'})});
+   const yld=usedTot?Math.min(95,Math.round(area/(usedTot*SHEET_M2)*100)):0;
+   const bst=wait?'Wacht op levering':'Klaar om te zagen';
+   S.lastResult={id:b.id,rows,offUsed,newOff,yield:yld,labels:sumQty(parts),status:bst};
+   BATCHES.unshift({id:b.id,ids:b.ids.slice(),date:d,proj:b.ids.map(id=>'PRJ-2026-'+String(id).padStart(4,'0')).join(', '),sheets:usedTot,yield:yld+' %',status:bst});
+   b.ids.forEach(id=>{const p=projects.find(x=>x.id===id);p.stage='Zagen';log(p,'Ardis-resultaat ingelezen ('+b.id+'): '+bst.toLowerCase()+'.')});
+   S.batch={id:'ZB-2026-0'+(++batchSeq),status:'Concept'};S.unsel.clear();toast(wait?'Zaagplannen klaar. Een deel van het materiaal is nog besteld: de batch wacht op levering.':'Resultaat ingelezen: voorraad bijgewerkt, projecten staan in Zagen.');break}
+  case 'decide':S.decision=el.value;S.err={};break;
+  case 'rmremark':{const pp=portalProject();pp.remarks=pp.remarks.filter(r=>r.id!=el.dataset.id);break}
+  case 'answerq':{const pp=portalProject(),q=pp.q.find(x=>x.id==el.dataset.id),i=document.getElementById('qa-'+q.id);if(!i.value.trim()){i.focus();return}
+   q.answer=i.value.trim();q.done=true;if(q.field)pp.a[q.field]=q.answer;log(pp,'Klant beantwoordde “'+q.text+'”: '+q.answer);toast('Antwoord verstuurd.');break}
+  case 'toq':{const v=document.getElementById('vragen');v.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});v.querySelector('input')?.focus({preventScroll:true});return}
+  case 'approve':{const pp=portalProject(),ver=pp.versions[pp.versions.length-1],name=(S.sigName||'').trim();S.err={};
+   if(pp.q.some(q=>q.toCustomer&&!q.done)){toast('Beantwoord eerst alle open vragen.');break}
+   if(!name)S.err.name='Vul uw naam in om te ondertekenen.';if(!S.sigChk)S.err.chk='Bevestig dat u de tekening hebt nagekeken.';
+   if(S.err.name||S.err.chk)break;
+   ver.status='Goedgekeurd';ver.by=name;ver.at=now();pp.remarks=[];pp.stage='Werkvoorbereiding';S.decision='';
+   const aq=pp.quotes.find(q=>q.v===ver.v);if(aq)aq.status='Goedgekeurd';
+   log(pp,name+' keurde tekening versie '+ver.v+(aq?' en offerte '+aq.id+' ('+eur(aq.calc.total)+')':'')+' goed via het portaal. Project gaat naar werkvoorbereiding.');
+   if(aq)log(pp,'Verkooporder aangemaakt uit offerte '+aq.id+'. Voorschotfactuur '+aq.calc.voorschot+' % ('+eur(aq.calc.total*aq.calc.voorschot/100)+') verstuurd.');
+   toast(aq?'Tekening en offerte goedgekeurd. Voorschotfactuur volgt per e-mail.':'Tekening goedgekeurd.');break}
+  case 'requestchanges':{const pp=portalProject(),ver=pp.versions[pp.versions.length-1],rs=pp.remarks.filter(r=>r.text.trim()),g=(S.general||'').trim();S.err={};
+   if(!rs.length&&!g){S.err.chg=pp.remarks.length?'Schrijf bij minstens één opmerking wat u wilt aanpassen.':'Zet een opmerking op de tekening of beschrijf de wijziging.';break}
+   pp.remarks.forEach((r,i)=>{if(r.text.trim())pp.q.push({id:Date.now()+i,text:'Klant V'+ver.v+' #'+(i+1)+' ('+(r.view==='plan'?'grondplan':'vooraanzicht')+'): '+r.text.trim(),done:false})});
+   if(g)pp.q.push({id:Date.now()+99,text:'Klant V'+ver.v+' algemeen: '+g,done:false});
+   const cq2=pp.quotes.find(q=>q.v===ver.v);if(cq2)cq2.status='Wijzigingen gevraagd';
+   ver.status='Wijzigingen gevraagd';ver.note=(rs.length+(g?1:0))+' opmerking(en) doorgestuurd.';pp.remarks=[];pp.stage='Tekening';S.general='';S.decision='';
+   log(pp,'Klant vroeg wijzigingen op versie '+ver.v+'. Opmerkingen staan als open vragen bij de tekenaar.');toast('Opmerkingen doorgestuurd naar de tekenaar.');break}
+  case 'copy':{const v=el.dataset.v;Promise.resolve().then(()=>navigator.clipboard.writeText(v)).then(()=>toast('Gekopieerd: '+v),()=>{const c=document.getElementById('tspath');if(c){const r=document.createRange();r.selectNodeContents(c);const s=getSelection();s.removeAllRanges();s.addRange(r)}toast('Kopiëren niet toegelaten: tekst is geselecteerd.')});return}
+  case 'toast':toast(el.dataset.v);return;
+  default:return;
+ }
+ render();
+});
+document.addEventListener('input',e=>{
+ const el=e.target;
+ if(el.dataset.nm&&S.nm){S.nm[el.dataset.nm]=el.value;return}
+ if(el.dataset.ol!==undefined){S.order[+el.dataset.ol].qty=el.value.replace(/\D/g,'');return}
+ if(el.dataset.remark){const r=portalProject().remarks.find(x=>x.id==el.dataset.remark);if(r)r.text=el.value;return}
+ if(el.id==='pt-name'){S.sigName=el.value;return}
+ if(el.id==='ins-name'){S.mp.name=el.value;return}
+ if(el.id==='ins-chk'){S.mp.chk=el.checked;return}
+ if(el.id==='pt-general'){S.general=el.value;return}
+ if(el.id==='pt-chk'){S.sigChk=el.checked;return}
+ const p=P();if(!p)return;
+ if(el.dataset.f&&el.tagName!=='SELECT'){
+  const f=el.dataset.f;
+  if(el.dataset.k){const d=Object.assign({},p.a[f]||{});d[el.dataset.k]=el.value;setA(p,f,d)}else setA(p,f,el.value);
+  el.closest('.field').classList.toggle('is-filled',filled(p.a[f]));refreshMeters(p);
+ }else if(el.dataset.p&&el.tagName!=='SELECT'){p[el.dataset.p]=el.value;el.closest('.field')?.classList.toggle('is-filled',!!el.value)}
+ else if(el.dataset.cap){const arr=p[el.dataset.cap][+el.dataset.i];arr.cap=el.value}
+ else if(el.id==='notes'){p.notes=el.value}
+});
+document.addEventListener('change',e=>{
+ const el=e.target;
+ if(el.dataset.nm){S.nm[el.dataset.nm]=el.value;return}
+ if(el.dataset.qs){const pp=P(),v=+String(el.value).replace(',','.');qs(pp)[el.dataset.qs]=isFinite(v)&&v>=0?v:0;render();return}
+ if(el.dataset.map!==undefined){if(el.value==='__new'){el.value='';openNewMat(el.dataset.map);return}if(el.value){MAP[el.dataset.map]=el.value;render();toast('Gekoppeld: '+el.dataset.map+' → '+el.value+'. Geldt voortaan voor alle projecten.')}return}
+ const p=P();if(!p)return;
+ if(el.tagName==='SELECT'&&el.dataset.f){setA(p,el.dataset.f,el.value);render()}
+ else if(el.tagName==='SELECT'&&el.dataset.p){p[el.dataset.p]=el.value;render()}
+ else if(el.dataset.up){const kind=el.dataset.up;[...el.files].forEach(file=>{
+   if(file.type.startsWith('image/'))p[kind].push({url:URL.createObjectURL(file),cap:file.name.replace(/\.[^.]+$/,'')});else p[kind].push({name:file.name});
+  });log(p,el.files.length+(kind==='plans'?' plan(nen)':kind==='instPhotos'?' foto(’s) van de plaatsing':' foto(’s)')+' toegevoegd.');render()}
+});
+document.addEventListener('submit',e=>{
+ if(!e.target.matches('[data-scan]'))return;e.preventDefault();
+ const i=document.getElementById('scan');if(e.target.dataset.scan==='asm')doAsmScan(i.value);else doScan(i.value);render();
+});
+{const pm=projects.find(x=>x.id===150);pm.quotes=[{id:'OF-2026-0141',v:1,status:'Vervangen',created:'4 nov 2026',calc:calcQuote(pm)},{id:'OF-2026-0148',v:2,status:'Verstuurd',created:'17 nov 2026',calc:calcQuote(pm)}];
+ pm.quotes[0].calc=Object.assign({},pm.quotes[0].calc,{total:pm.quotes[0].calc.total*1.04})}
+allPieces().forEach(pc=>{const d=st(pc);if(pc.p.id===138){d.saw=true;d.cnc=true;d.kit=pc.cab==='K1 bureau'||!/-00[56]\./.test(pc.piece)}if(pc.p.id===149){d.saw=true;d.cnc=/\.1$/.test(pc.piece)&&pc.name!=='Front lade'}if(pc.p.id===140&&/-00[12]\./.test(pc.piece))d.saw=true});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape')closeModal();
+ if(e.key==='Enter'&&e.target.id==='newq'){e.preventDefault();document.querySelector('[data-act="addq"]').click()}
+});
+render();
+</script>

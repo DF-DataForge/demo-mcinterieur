@@ -1,0 +1,75 @@
+name: Odoo 20.0 install test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  install:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - name: Check out this repository
+        uses: actions/checkout@v4
+        with:
+          path: addons
+
+      - name: Check out Odoo 20.0
+        uses: actions/checkout@v4
+        with:
+          repository: odoo/odoo
+          ref: '20.0'
+          path: odoo
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: odoo/requirements.txt
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libldap2-dev libsasl2-dev libpq-dev postgresql-client
+
+      - name: Install Odoo requirements
+        run: |
+          python -m pip install --upgrade pip wheel
+          pip install -r odoo/requirements.txt
+
+      - name: Install mc_interieur with demo data and run its tests
+        env:
+          PGPASSWORD: odoo
+        run: |
+          python odoo/odoo-bin \
+            --addons-path=odoo/addons,odoo/odoo/addons,addons \
+            --db_host=localhost --db_user=odoo --db_password=odoo \
+            -d mc_demo -i mc_interieur --with-demo \
+            --test-tags=/mc_interieur \
+            --stop-after-init --log-level=info 2>&1 | tee install.log
+          if grep -E "ERROR|CRITICAL|Traceback" install.log | grep -v "INFO" ; then
+            echo "::error::Errors found in the Odoo log"
+            exit 1
+          fi
+
+      - name: Upload log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: odoo-install-log
+          path: install.log
