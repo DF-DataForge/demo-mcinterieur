@@ -235,9 +235,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <t t-call="portal.message_thread">
-                        <t t-set="object" t-value="project"/>
-                    </t>
+                    <t t-call="portal.message_thread" token="project.access_token"/>
                 </div>
             </div>
         </t>

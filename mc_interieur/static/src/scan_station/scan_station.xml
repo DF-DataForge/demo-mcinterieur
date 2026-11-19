@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="col-lg-7">
-                    <div t-if="this.station === 'assembly' and this.cabinets().length" class="card card-body mb-3">
+                    <div t-if="this.station === 'assembly' &amp;&amp; this.cabinets().length" class="card card-body mb-3">
                         <h5>Kasten</h5>
                         <div class="o_mc_cabinets">
                             <div t-foreach="this.cabinets()" t-as="cabinet" t-key="cabinet.project_id + '-' + cabinet.cabinet"

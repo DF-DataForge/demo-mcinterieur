@@ -326,6 +326,7 @@ class McProject(models.Model):
                 subtype_xmlid='mail.mt_comment',
             )
 
+    @api.depends('ref', 'name')
     def _compute_display_name(self):
         for project in self:
             project.display_name = f"{project.ref} {project.name}" if project.ref and project.ref != '/' else project.name

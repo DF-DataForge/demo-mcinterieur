@@ -6,7 +6,6 @@ class McDrawingVersion(models.Model):
     _name = 'mc.drawing.version'
     _description = "Tekeningversie"
     _order = 'project_id, number desc, id desc'
-    _rec_name = 'number'
 
     project_id = fields.Many2one('mc.project', required=True, ondelete='cascade', index=True)
     number = fields.Integer(string="Versie", required=True, default=1)
@@ -30,6 +29,7 @@ class McDrawingVersion(models.Model):
     _project_number_uniq = models.Constraint(
         'UNIQUE(project_id, number)', "Elk versienummer bestaat maar een keer per project.")
 
+    @api.depends('number')
     def _compute_display_name(self):
         for version in self:
             version.display_name = self.env._("Versie %s", version.number)

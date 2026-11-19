@@ -41,7 +41,7 @@ class McInstallation(models.Model):
     signed_on = fields.Datetime(string="Ondertekend op", readonly=True)
     signature = fields.Image(string="Handtekening klant", max_width=1024, max_height=1024)
 
-    @api.depends('project_id.display_name', 'date_start')
+    @api.depends('project_id.name', 'project_id.ref')
     def _compute_name(self):
         for installation in self:
             installation.name = installation.project_id.display_name or self.env._("Plaatsing")
