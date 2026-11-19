@@ -71,9 +71,9 @@ jobs:
         env:
           PGPASSWORD: odoo
         run: |
-          ODOO="python odoo/odoo-bin --addons-path=odoo/addons,odoo/odoo/addons,addons --db_host=localhost --db_user=odoo --db_password=odoo"
-          $ODOO -d mc_late -i mc_interieur --stop-after-init --log-level=warn
-          $ODOO shell -d mc_late --log-level=warn > late.log 2>&1 <<'EOF'
+          OPTS="--addons-path=odoo/addons,odoo/odoo/addons,addons --db_host=localhost --db_user=odoo --db_password=odoo"
+          python odoo/odoo-bin $OPTS -d mc_late -i mc_interieur --stop-after-init --log-level=warn
+          python odoo/odoo-bin shell $OPTS -d mc_late --log-level=warn > late.log 2>&1 <<'EOF' || (cat late.log; exit 1)
           import odoo.modules.loading
           odoo.modules.loading.force_demo(env)
           env.cr.commit()
