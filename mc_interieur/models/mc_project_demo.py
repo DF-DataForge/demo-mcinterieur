@@ -81,6 +81,8 @@ class McProject(models.Model):
         maes_keuken = ref('mc_interieur.project_maes_keuken', raise_if_not_found=False)
         if not maes_keuken or maes_keuken.part_ids:
             return True  # demo records missing, or the setup already ran
+        if self.env['ir.config_parameter'].sudo().get_bool('mc_interieur.skip_demo_setup'):
+            return True  # used by CI to reproduce a database where the setup was skipped
         Product = self.env['product.product']
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         for code, qty in DEMO_STOCK.items():

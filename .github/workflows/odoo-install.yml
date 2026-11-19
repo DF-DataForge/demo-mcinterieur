@@ -83,6 +83,29 @@ jobs:
           cat late.log | tail -20
           grep -q "LATE_DEMO validation 12 3" late.log
 
+      - name: Demo records present but setup skipped, then upgrade
+        env:
+          PGPASSWORD: odoo
+        run: |
+          OPTS="--addons-path=odoo/addons,odoo/odoo/addons,addons --db_host=localhost --db_user=odoo --db_password=odoo"
+          python odoo/odoo-bin $OPTS -d mc_upg -i mc_interieur --stop-after-init --log-level=warn
+          python odoo/odoo-bin shell $OPTS -d mc_upg --log-level=warn > upg1.log 2>&1 <<'EOF' || (cat upg1.log; exit 1)
+          import odoo.modules.loading
+          env['ir.config_parameter'].set_bool('mc_interieur.skip_demo_setup', True)
+          odoo.modules.loading.force_demo(env)
+          env['ir.config_parameter'].set_bool('mc_interieur.skip_demo_setup', False)
+          env.cr.commit()
+          print('BEFORE_UPGRADE', env.ref('mc_interieur.project_maes_keuken').stage)
+          EOF
+          cat upg1.log | tail -5
+          grep -q "BEFORE_UPGRADE drawing" upg1.log
+          python odoo/odoo-bin $OPTS -d mc_upg -u mc_interieur --stop-after-init --log-level=warn
+          python odoo/odoo-bin shell $OPTS -d mc_upg --log-level=warn > upg2.log 2>&1 <<'EOF' || (cat upg2.log; exit 1)
+          print('AFTER_UPGRADE', env.ref('mc_interieur.project_maes_keuken').stage, env.ref('mc_interieur.project_desmet_bureau').stage)
+          EOF
+          cat upg2.log | tail -5
+          grep -q "AFTER_UPGRADE validation assembly" upg2.log
+
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v4

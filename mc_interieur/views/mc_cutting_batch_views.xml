@@ -37,7 +37,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_purchases" type="object" class="oe_stat_button"
-                                icon="fa-shopping-cart" invisible="not purchase_count">
+                                icon="shopping_cart" invisible="not purchase_count">
                             <field name="purchase_count" widget="statinfo" string="Bestellingen"/>
                         </button>
                     </div>

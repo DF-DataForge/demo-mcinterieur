@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Odoo only reads demo files when a module is installed, not on upgrade. This regular data file runs on
+         every upgrade and finishes the demo setup in databases where the demo records exist but the setup never
+         ran (for example demo data loaded after installation). Without demo data, or once done, it does nothing. -->
+    <function model="mc.project" name="_mc_demo_setup"/>
+</odoo>

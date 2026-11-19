@@ -46,10 +46,10 @@
                         <field name="intake_progress" widget="progressbar" decoration-success="True" class="mt-2 o_mc_progress"/>
                         <footer class="pt-2 small text-muted">
                             <span class="me-2" title="Foto's en plannen">
-                                <i class="fa fa-camera me-1" role="img" aria-label="Foto's en plannen"/><t t-out="record.attachment_count.raw_value"/>
+                                <i class="oi me-1" data-icon="photo_camera" role="img" aria-label="Foto's en plannen"/><t t-out="record.attachment_count.raw_value"/>
                             </span>
                             <span t-if="record.quote_count.raw_value" title="Offertes">
-                                <i class="fa fa-file-text-o me-1" role="img" aria-label="Offertes"/><t t-out="record.quote_count.raw_value"/>
+                                <i class="oi me-1" data-icon="description" role="img" aria-label="Offertes"/><t t-out="record.quote_count.raw_value"/>
                             </span>
                             <div class="ms-auto d-flex gap-1">
                                 <field name="user_id" widget="many2one_avatar_user"/>
@@ -97,26 +97,26 @@
             <form string="Interieurproject" class="o_mc_project_form">
                 <header>
                     <button name="action_handoff_drawer" type="object" string="Doorsturen naar tekenaar"
-                            class="btn-primary" icon="fa-pencil" invisible="stage != 'intake'"
+                            class="btn-primary" icon="edit" invisible="stage != 'intake'"
                             confirm="Lege intakevragen worden open vragen voor de tekenaar. Doorsturen?"/>
                     <button name="action_open_topsolid_import" type="object" string="TopSolid-materiaallijst inlezen"
-                            icon="fa-upload" invisible="stage not in ('drawing', 'validation') or piece_ids"/>
+                            icon="upload" invisible="stage not in ('drawing', 'validation') or piece_ids"/>
                     <button name="action_generate_quote" type="object" string="Offerte genereren"
-                            icon="fa-calculator" invisible="stage not in ('drawing', 'validation') or not part_ids"/>
+                            icon="calculate" invisible="stage not in ('drawing', 'validation') or not part_ids"/>
                     <button name="action_send_to_customer" type="object" string="Tekening + offerte naar klant"
-                            class="btn-primary" icon="fa-paper-plane" invisible="stage != 'drawing'"/>
-                    <button name="action_view_portal" type="object" string="Bekijk als klant" icon="fa-eye"
+                            class="btn-primary" icon="send" invisible="stage != 'drawing'"/>
+                    <button name="action_view_portal" type="object" string="Bekijk als klant" icon="visibility"
                             invisible="stage == 'intake'"/>
-                    <button name="action_plan_installation" type="object" string="Plaatsing plannen" icon="fa-calendar"
+                    <button name="action_plan_installation" type="object" string="Plaatsing plannen" icon="calendar_today"
                             invisible="stage not in ('prep', 'sawing', 'cnc', 'assembly')"/>
                     <field name="stage" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_questions" type="object" class="oe_stat_button" icon="fa-question-circle">
+                        <button name="action_view_questions" type="object" class="oe_stat_button" icon="help">
                             <field name="open_question_count" widget="statinfo" string="Open vragen"/>
                         </button>
-                        <button name="action_view_quotes" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                        <button name="action_view_quotes" type="object" class="oe_stat_button" icon="description">
                             <field name="quote_count" widget="statinfo" string="Offertes"/>
                         </button>
                     </div>
