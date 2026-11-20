@@ -187,4 +187,5 @@ Extra lade onder de kookplaat.</field>
          Outside the noupdate block so it also runs when demo data is loaded later or on an upgrade;
          the method itself skips when it already ran. -->
     <function model="mc.project" name="_mc_demo_setup"/>
+    <function model="mc.project" name="_mc_demo_extras"/>
 </odoo>

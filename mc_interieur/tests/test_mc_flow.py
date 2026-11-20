@@ -119,6 +119,17 @@ class TestMcFlow(TransactionCase):
         project.write({'intake_general': {'third_party': 'contractor'}})
         self.assertFalse(question.done, "Shown again and still empty: the question is open again")
 
+    def test_demo_invoices_per_project(self):
+        self.assertFalse(self.env.ref('base.main_company').uses_default_logo, "MC Interieur logo on the company")
+        bathroom = self.env.ref('mc_interieur.project_maes_badkamer')
+        invoices = bathroom._mc_portal_invoices()
+        self.assertEqual(len(invoices), 1)
+        self.assertIn(invoices.payment_state, ('paid', 'in_payment'))
+        desk = self.env.ref('mc_interieur.project_desmet_bureau')
+        self.assertEqual(desk.invoice_count, 2)
+        self.assertEqual(len(desk._mc_portal_invoices().filtered(lambda m: m.payment_state == 'not_paid')), 1)
+        self.assertFalse(self.env.ref('mc_interieur.project_maes_keuken').invoice_ids, "Not approved yet: no invoice")
+
     def test_label_reports_render(self):
         pieces = self.env.ref('mc_interieur.project_vandamme_dressing').piece_ids[:15]
         Report = self.env['ir.actions.report']
@@ -213,6 +224,18 @@ class TestMcPortal(HttpCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Vragen van ons', response.text)
         self.assertIn('Offerte', response.text)
+
+    def test_portal_invoices_per_project(self):
+        self.authenticate('karen.maes@example.com', 'demo')
+        bathroom = self.env.ref('mc_interieur.project_maes_badkamer')
+        invoice = bathroom._mc_portal_invoices()
+        response = self.url_open(f'/my/interieur/{bathroom.id}')
+        self.assertIn('Facturen', response.text)
+        self.assertIn(invoice.name, response.text)
+        self.assertIn('Betaald', response.text)
+        response = self.url_open(invoice.get_portal_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(invoice.name, response.text)
 
     def test_portal_in_house_colours(self):
         self.assertEqual(self.env.company.email_secondary_color.upper(), '#574A36')

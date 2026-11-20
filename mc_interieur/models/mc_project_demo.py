@@ -1,6 +1,11 @@
+import logging
 from datetime import datetime, time, timedelta
 
 from odoo import api, fields, models
+from odoo.tools import file_open
+from odoo.tools.binary import BinaryBytes
+
+_logger = logging.getLogger(__name__)
 
 # Demo parts lists as they would come out of TopSolid:
 # (cabinet, part, TopSolid material, length, width, thickness, quantity, grain, edge code, edge sides, CNC)
@@ -69,6 +74,16 @@ DEMO_STOCK = {
     'HW-SCHARNIER': 200, 'HW-LADE-STD': 40, 'HW-LADE-PREM': 20, 'HW-GREEP': 60, 'HW-KNOP': 40,
     'HW-PLANKDRAGER': 1000, 'HW-STELPOOT': 200, 'HW-OPHANG': 30, 'HW-EXCENTER': 1000, 'HW-LED': 6,
 }
+
+
+# Demo invoices: (project, down payment %, days ago, paid)
+DEMO_INVOICES = [
+    ('project_desmet_bureau', 40, 30, True),
+    ('project_desmet_bureau', 50, 3, False),
+    ('project_maes_badkamer', 40, 21, True),
+    ('project_vandamme_dressing', 40, 14, False),
+    ('project_vandamme_tv', 40, 5, False),
+]
 
 
 DEMO_LOGINS = {
@@ -204,3 +219,59 @@ class McProject(models.Model):
         })
         Installation.create({'project_id': maes_badkamer.id})
         return True
+
+    # ------------------------------------------------------------------
+    # Company logo and invoices (also added to databases that already had the demo data)
+    # ------------------------------------------------------------------
+    @api.model
+    def _mc_demo_extras(self):
+        if not self.env.ref('mc_interieur.project_desmet_bureau', raise_if_not_found=False):
+            return True  # no demo data
+        if self.env['ir.config_parameter'].sudo().get_bool('mc_interieur.skip_demo_setup'):
+            return True
+        self._mc_demo_company_logo()
+        self._mc_demo_invoices()
+        return True
+
+    @api.model
+    def _mc_demo_company_logo(self):
+        company = self.env.ref('base.main_company')
+        if company.uses_default_logo:
+            with file_open('mc_interieur/static/demo/mc_logo.png', 'rb') as logo:
+                company.sudo().logo = BinaryBytes(logo.read(), filename='mc_logo.png')
+
+    @api.model
+    def _mc_demo_invoices(self):
+        """Down payment invoices on the approved demo projects, some of them paid. Runs once."""
+        params = self.env['ir.config_parameter'].sudo()
+        if params.get_bool('mc_interieur.demo_invoices_done'):
+            return
+        orders = {}
+        for xmlid, _percent, _days, _paid in DEMO_INVOICES:
+            project = self.env.ref(f'mc_interieur.{xmlid}')
+            order = project.sale_order_ids.filtered(lambda o: o.state == 'sale')[:1]
+            if not order:
+                return  # demo setup not finished yet: try again on the next run
+            orders[xmlid] = order
+        today = fields.Date.context_today(self)
+        for xmlid, percent, days, paid in DEMO_INVOICES:
+            order = orders[xmlid]
+            try:
+                with self.env.cr.savepoint():
+                    wizard = self.env['sale.advance.payment.inv'].with_context(
+                        active_model='sale.order', active_ids=order.ids).create({
+                            'sale_order_ids': [(6, 0, order.ids)],
+                            'advance_payment_method': 'percentage',
+                            'amount': percent,
+                        })
+                    invoice = wizard._create_invoices(order)
+                    invoice_date = today - timedelta(days=days)
+                    invoice.write({'invoice_date': invoice_date})
+                    invoice.action_post()
+                    if paid:
+                        self.env['account.payment.register'].with_context(
+                            active_model='account.move', active_ids=invoice.ids,
+                        ).create({'payment_date': invoice_date + timedelta(days=7)}).action_create_payments()
+            except Exception:
+                _logger.warning("MC Interieur demo: no invoice for %s (is accounting set up?)", order.name, exc_info=True)
+        params.set_bool('mc_interieur.demo_invoices_done', True)

@@ -143,6 +143,39 @@
                             </div>
                         </section>
 
+                        <t t-set="invoices" t-value="project._mc_portal_invoices()"/>
+                        <section t-if="invoices" class="card mb-4" id="facturen">
+                            <div class="card-body">
+                                <h4 class="card-title">Facturen</h4>
+                                <p class="text-muted small">De facturen van dit project. Klik op een factuur om ze te bekijken, te downloaden of te betalen.</p>
+                                <table class="table table-sm align-middle mb-0 o_mc_portal_invoices">
+                                    <thead>
+                                        <tr><th>Factuur</th><th>Datum</th><th class="d-none d-sm-table-cell">Vervaldatum</th><th class="text-end">Bedrag</th><th class="text-end">Status</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="invoices" t-as="invoice">
+                                            <td>
+                                                <a t-att-href="invoice.get_portal_url()" t-out="invoice.name"/>
+                                                <div class="small text-muted">
+                                                    <t t-if="invoice.move_type == 'out_refund'">Creditnota</t>
+                                                    <t t-elif="invoice.line_ids.filtered(lambda l: l.is_downpayment)">Voorschotfactuur</t>
+                                                    <t t-else="">Factuur</t>
+                                                </div>
+                                            </td>
+                                            <td class="text-nowrap"><span t-field="invoice.invoice_date"/></td>
+                                            <td class="text-nowrap d-none d-sm-table-cell"><span t-field="invoice.invoice_date_due"/></td>
+                                            <td class="text-end text-nowrap"><span t-field="invoice.amount_total"/></td>
+                                            <td class="text-end">
+                                                <span t-if="invoice.payment_state in ('paid', 'in_payment', 'reversed')" class="badge rounded-pill text-bg-success">Betaald</span>
+                                                <span t-elif="invoice.payment_state == 'partial'" class="badge rounded-pill text-bg-warning">Deels betaald</span>
+                                                <span t-else="" class="badge rounded-pill text-bg-warning">Te betalen</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
                         <section t-if="questions" class="card mb-4" id="vragen">
                             <div class="card-body">
                                 <h4 class="card-title">Vragen van ons

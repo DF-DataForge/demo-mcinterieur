@@ -4,6 +4,8 @@
          every upgrade and finishes the demo setup in databases where the demo records exist but the setup never
          ran (for example demo data loaded after installation). Without demo data, or once done, it does nothing. -->
     <function model="mc.project" name="_mc_demo_setup"/>
+    <!-- MC Interieur logo and demo invoices, also for databases that already had the demo data -->
+    <function model="mc.project" name="_mc_demo_extras"/>
     <!-- Demo users log in with their e-mail address (databases created with an earlier version). -->
     <function model="mc.project" name="_mc_demo_email_logins"/>
 </odoo>

@@ -46,7 +46,8 @@ database manager).
 
 ## Demo logins
 
-Demo users log in with their e-mail address; all demo passwords are `demo`. Change or remove these users on a real database.
+Demo users log in with their e-mail address; all demo passwords are `demo`. The demo data also sets the
+MC Interieur logo as company logo (only when the company still has Odoo's default logo). Change or remove these users on a real database.
 
 ### Employees (backend, `/odoo`)
 
@@ -82,6 +83,8 @@ Demo users log in with their e-mail address; all demo passwords are `demo`. Chan
    questions are answered. Answer them, type a name, tick the box, approve: the drawing is approved, the
    quote becomes a sales order and the project goes to work preparation. Or send change requests: each
    line becomes an open question for the drawer.
+   The approved projects show their invoices (down payments, paid or to pay) in a *Facturen* block on the
+   project page, e.g. *Badkamermeubel Maes* for Karen, *Bureau-kast De Smet* for An.
 4. **Work preparation** (`lien@interieur-demo.example.com`): *Werkvoorbereiding → Zaagbatches*. The draft batch for TV-wand Van Damme
    is short of MDF; *Bestellen voor tekorten* creates and confirms a purchase order per supplier. Then
    *Exporteer naar Ardis* (CSV download) and *Resultaat Ardis inlezen* (simulate, or upload Ardis' CSV with

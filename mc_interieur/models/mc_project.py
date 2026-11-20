@@ -99,6 +99,10 @@ class McProject(models.Model):
     current_version_id = fields.Many2one('mc.drawing.version', compute='_compute_current_version', string="Huidige versie")
     sale_order_ids = fields.One2many('sale.order', 'mc_project_id', string="Offertes")
     quote_count = fields.Integer(compute='_compute_quote_count')
+    invoice_ids = fields.Many2many(
+        'account.move', compute='_compute_invoice_ids', string="Facturen",
+        help="Customer invoices and credit notes of the project's sales orders (down payments included).")
+    invoice_count = fields.Integer(compute='_compute_invoice_ids', string="Facturen ")
 
     quote_margin = fields.Float(string="Marge eigen productie (%)", default=35.0)
     quote_margin_external = fields.Float(string="Marge extern (%)", default=10.0)
@@ -205,6 +209,20 @@ class McProject(models.Model):
     def _compute_quote_count(self):
         for project in self:
             project.quote_count = len(project.sale_order_ids)
+
+    @api.depends('sale_order_ids.invoice_ids')
+    def _compute_invoice_ids(self):
+        for project in self:
+            invoices = project.sale_order_ids.invoice_ids.filtered(
+                lambda m: m.move_type in ('out_invoice', 'out_refund'))
+            project.invoice_ids = invoices
+            project.invoice_count = len(invoices)
+
+    def _mc_portal_invoices(self):
+        """Invoices the customer sees in the portal: posted ones, newest first."""
+        self.ensure_one()
+        return self.invoice_ids.filtered(lambda m: m.state == 'posted').sorted(
+            lambda m: (m.invoice_date or fields.Date.today(), m.id), reverse=True)
 
     @api.depends('part_ids')
     def _compute_part_count(self):
@@ -466,6 +484,13 @@ class McProject(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('sale.action_quotations_with_onboarding')
         action['domain'] = [('mc_project_id', '=', self.id)]
         action['context'] = {'default_mc_project_id': self.id, 'default_partner_id': self.partner_id.id}
+        return action
+
+    def action_view_invoices(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('account.action_move_out_invoice_type')
+        action['domain'] = [('id', 'in', self.invoice_ids.ids)]
+        action['context'] = {'default_move_type': 'out_invoice', 'default_partner_id': self.partner_id.id}
         return action
 
     # ------------------------------------------------------------------
