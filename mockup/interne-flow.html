@@ -420,6 +420,8 @@ const DECISIONS=[
   ['Welke etiketprinter en welk etiketformaat?','Bepaalt het sjabloon in Ardis en het PDF-formaat in Odoo.','Voorstel: thermische printer, 100 x 50 mm.'],
   ['Waar komt het etiket op het stuk?','Het mag niet op een kant die kantenband krijgt, en niet op een zichtzijde.','Voorstel: binnenzijde, vaste hoek.'],
   ['Moet het etiket blijven zitten na de montage?','Handig voor service later, maar mag niet zichtbaar zijn bij de klant.',''],
+  ['Wanneer wordt een stuk geëtiketteerd: meteen bij het afnemen aan de zaag, of pas als de hele plaat gezaagd is?','De zaag zaagt tot 4 platen tegelijk: identieke stukken komen samen van de zaag. Wie later etiketteert, riskeert verwisselingen.','Voorstel: meteen bij het afnemen, per zaagplan.'],
+  ['Scannen per stuk, of één scan per plaat (zaagplan)?','Eén scan per plaat spaart tijd aan de zaag, maar Odoo moet dan weten welke stukken op welke plaat zitten.','Voorstel: eerst per stuk; per plaat zodra Ardis het plaatnummer per stuk levert.'],
   ['Wordt er ook gescand aan de kantenlijmmachine?','Geeft meer zicht op waar een stuk ligt, maar is een extra handeling.','Voorstel: niet in de eerste fase.'],
   ['Welke scanners: vaste scanner per machine of draadloze handscanner?','Bepaalt aankoop en hoe de operator werkt.','']]},
  {title:'Intake',items:[
@@ -435,10 +437,12 @@ const DECISIONS=[
  {title:'Ardis',items:[
   ['Welk importprofiel gebruikt Ardis voor de onderdelen?','Odoo moet exact dat formaat schrijven.','Voorbeeldbestand en profiel opvragen.'],
   ['Kan Ardis het verbruik terug exporteren (platen, kantenband, resten)?','Daarmee boekt Odoo de voorraad af.',''],
+  ['Kan Ardis per stuk het plaatnummer (zaagplan) en de zaagvolgorde exporteren?','Nodig om de wachtrij aan de paneelzaag per plaat te tonen en om per plaat te scannen. Nu weet Odoo niet welke stukken uit dezelfde plaat komen.','Vragen aan de Ardis-verdeler.'],
   ['Wie beheert de restplaten: Ardis of Odoo?','Voorkomt dubbele voorraad.','Voorstel: Ardis voor resten, Odoo voor volle platen.'],
   ['Hoe vaak wordt een zaagbatch gemaakt?','Meer projecten per batch geeft minder afval, maar later zagen.','Bijvoorbeeld dagelijks of per halve week.']]},
  {title:'Werkvloer',items:[
   ['Kan een scan het CNC-programma op de machine laden?','Anders toont Odoo enkel het programma en houdt het de status bij.','Afhankelijk van de CNC-besturing.'],
+  ['Gaan stukken met kantenband eerst langs de kantenlijmmachine, vóór de CNC?','Dan wordt de kantenlijmmachine een aparte stap in de flow (met of zonder scan); nu gaat een stuk van de zaag rechtstreeks naar CNC of montage.',''],
   ['Monteren jullie in het atelier, op de werf, of beide?','Bepaalt waar het verzamelen per kast gebeurt.',''],
   ['Wanneer wordt het verbruik geboekt: bij het Ardis-resultaat of bij het zagen?','Bepaalt hoe actueel de voorraad is.','Voorstel: bij het Ardis-resultaat.'],
   ['Welke toestellen op de werkvloer: tablet, pc of beide?','Bepaalt aankoop en schermgrootte.','']]},
