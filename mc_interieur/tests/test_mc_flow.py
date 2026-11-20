@@ -108,6 +108,16 @@ class TestMcFlow(TransactionCase):
         project.write({'intake_general': {'third_party': 'architect'}})
         self.assertNotIn('intake_general.third_party_contact', project.intake_hidden_keys)
         self.assertEqual(project.intake_total, total_hidden + 1)
+        # an open question for it follows the condition: closed when hidden, reopened when shown again
+        question = self.env['mc.project.question'].create({
+            'project_id': project.id, 'name': "Contact architect / aannemer?",
+            'field_name': 'intake_general.third_party_contact',
+        })
+        project.write({'intake_general': {'third_party': 'none'}})
+        self.assertTrue(question.done)
+        self.assertEqual(question.answer, "Niet van toepassing")
+        project.write({'intake_general': {'third_party': 'contractor'}})
+        self.assertFalse(question.done, "Shown again and still empty: the question is open again")
 
     def test_label_reports_render(self):
         pieces = self.env.ref('mc_interieur.project_vandamme_dressing').piece_ids[:15]

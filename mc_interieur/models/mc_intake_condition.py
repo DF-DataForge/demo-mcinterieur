@@ -20,6 +20,22 @@ class McIntakeCondition(models.Model):
         selection='_selection_when_option', string="Als", required=True,
         help="Vraag en keuze die de vraag zichtbaar maakt.")
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        conditions = super().create(vals_list)
+        self.env['mc.project']._mc_sync_all_hidden_questions()
+        return conditions
+
+    def write(self, vals):
+        result = super().write(vals)
+        self.env['mc.project']._mc_sync_all_hidden_questions()
+        return result
+
+    def unlink(self):
+        result = super().unlink()
+        self.env['mc.project']._mc_sync_all_hidden_questions()
+        return result
+
     @api.model
     def _mc_all_definitions(self):
         """(field, label, definition) for every question of every intake template."""

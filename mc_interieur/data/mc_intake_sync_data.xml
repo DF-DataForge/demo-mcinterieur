@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Runs on every module update: open questions of hidden intake questions are closed as not applicable. -->
+    <function model="mc.project" name="_mc_sync_all_hidden_questions"/>
+</odoo>

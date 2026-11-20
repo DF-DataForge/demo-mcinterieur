@@ -281,7 +281,29 @@ class McProject(models.Model):
                 if project.project_type_id:
                     filled.add('project_type_id')
                 project.question_ids.filtered(lambda q: not q.done and q.field_name in filled).write({'done': True})
+            self._mc_sync_hidden_questions()
         return result
+
+    def _mc_sync_hidden_questions(self):
+        """Open questions follow the conditions: a question that is hidden is closed as not applicable,
+        and reopened when it shows again while still unanswered."""
+        not_applicable = self.env._("Niet van toepassing")
+        for project in self:
+            hidden = project._mc_intake_hidden_keys()
+            questions = project.question_ids.filtered(lambda q: q.field_name)
+            questions.filtered(lambda q: not q.done and q.field_name in hidden).write(
+                {'done': True, 'answer': not_applicable})
+            filled = {item['key'] for item in project._mc_intake_items() if item['filled']}
+            questions.filtered(
+                lambda q: q.done and q.answer == not_applicable and q.field_name not in hidden
+                and q.field_name not in filled and not q.answered_by_customer
+            ).write({'done': False, 'answer': False})
+
+    @api.model
+    def _mc_sync_all_hidden_questions(self):
+        """Called on every module update (data/mc_intake_sync_data.xml) and when conditions change."""
+        self.search([('question_ids', '!=', False)])._mc_sync_hidden_questions()
+        return True
 
     # ------------------------------------------------------------------
     # Intake helpers
