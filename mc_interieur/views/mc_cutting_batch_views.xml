@@ -32,6 +32,10 @@
                             class="btn-primary" invisible="state != 'waiting'"/>
                     <button name="action_mark_sawn" type="object" string="Batch gezaagd"
                             invisible="state != 'ready'"/>
+                    <button name="action_print_labels" type="object" string="Etiketten printen (Odoo)" icon="print"
+                            invisible="state == 'draft'"/>
+                    <button name="action_print_labels_a4" type="object" string="Etiketten op A4" icon="print"
+                            invisible="state == 'draft'"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>

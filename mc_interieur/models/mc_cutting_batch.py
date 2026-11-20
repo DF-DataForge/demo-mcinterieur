@@ -244,5 +244,21 @@ class McCuttingBatch(models.Model):
             batch.message_post(body=self.env._("Materiaal geleverd. Verbruik geboekt, batch klaar om te zagen."))
         return True
 
+    def action_print_labels(self):
+        """Fallback when Ardis or the saw cannot print labels: one 100 x 50 mm label per piece."""
+        self.ensure_one()
+        self.project_ids.filtered(lambda p: not p.piece_ids)._mc_generate_pieces()
+        pieces = self.project_ids.piece_ids
+        if not pieces:
+            raise UserError(self.env._("Deze zaagbatch heeft nog geen etiketten."))
+        return self.env.ref('mc_interieur.action_report_mc_piece_label').report_action(pieces)
+
+    def action_print_labels_a4(self):
+        self.ensure_one()
+        pieces = self.project_ids.piece_ids
+        if not pieces:
+            raise UserError(self.env._("Deze zaagbatch heeft nog geen etiketten."))
+        return self.env.ref('mc_interieur.action_report_mc_piece_label_a4').report_action(pieces)
+
     def action_mark_sawn(self):
         self.write({'state': 'sawn'})

@@ -68,6 +68,19 @@ class TestMcFlow(TransactionCase):
         self.assertEqual(batch.sheets_used, 4)
         self.assertEqual(tv_wall.stage, 'sawing')
 
+    def test_label_reports_render(self):
+        pieces = self.env.ref('mc_interieur.project_vandamme_dressing').piece_ids[:15]
+        Report = self.env['ir.actions.report']
+        for xmlid in ('mc_interieur.action_report_mc_piece_label', 'mc_interieur.action_report_mc_piece_label_a4'):
+            html, _format = Report._render_qweb_html(xmlid, pieces.ids)
+            html = html.decode() if isinstance(html, bytes) else str(html)
+            self.assertIn(pieces[0].barcode, html)
+            self.assertIn('o_mc_label_barcode', html)
+        dressing = self.env.ref('mc_interieur.project_vandamme_dressing')
+        batch = self.env['mc.cutting.batch'].search([('project_ids', 'in', dressing.ids)], limit=1)
+        action = batch.action_print_labels()
+        self.assertEqual(action['type'], 'ir.actions.report')
+
     def test_scan_saw_and_cnc(self):
         Piece = self.env['mc.piece']
         dressing = self.env.ref('mc_interieur.project_vandamme_dressing')

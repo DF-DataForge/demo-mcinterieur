@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fallback label printing from Odoo, for when Ardis or the saw cannot print labels with the Odoo code -->
+    <record id="paperformat_mc_label_100x50" model="report.paperformat">
+        <field name="name">Etiket 100 x 50 mm (etiketprinter)</field>
+        <field name="default" eval="False"/>
+        <field name="format">custom</field>
+        <field name="page_height">100</field>
+        <field name="page_width">50</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_spacing">0</field>
+        <field name="disable_shrinking" eval="True"/>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="action_report_mc_piece_label" model="ir.actions.report">
+        <field name="name">Etiketten 100 x 50 mm (etiketprinter)</field>
+        <field name="model">mc.piece</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">mc_interieur.report_mc_piece_label</field>
+        <field name="report_file">mc_interieur.report_mc_piece_label</field>
+        <field name="paperformat_id" ref="paperformat_mc_label_100x50"/>
+        <field name="print_report_name">'Etiketten - %s' % (object.project_id.ref or '')</field>
+        <field name="binding_model_id" ref="model_mc_piece"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_mc_piece_label_a4" model="ir.actions.report">
+        <field name="name">Etiketten op A4 (2 x 7)</field>
+        <field name="model">mc.piece</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">mc_interieur.report_mc_piece_label_a4</field>
+        <field name="report_file">mc_interieur.report_mc_piece_label_a4</field>
+        <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
+        <field name="print_report_name">'Etiketten A4 - %s' % (object.project_id.ref or '')</field>
+        <field name="binding_model_id" ref="model_mc_piece"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

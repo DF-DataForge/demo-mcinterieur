@@ -43,6 +43,8 @@ Maatwerkflow voor een interieurbouwer / schrijnwerker
         'wizard/mc_topsolid_import_views.xml',
         'views/mc_interieur_menus.xml',
         'views/mc_portal_templates.xml',
+        'report/mc_piece_reports.xml',
+        'report/mc_piece_templates.xml',
         'data/mc_demo_setup_data.xml',
     ],
     'demo': [

@@ -685,6 +685,13 @@ class McProject(models.Model):
         action['context'] = {'default_project_id': self.id}
         return action
 
+    def action_print_labels(self):
+        """Fallback label printing from Odoo (label printer, 100 x 50 mm)."""
+        self.ensure_one()
+        if not self.piece_ids:
+            raise UserError(self.env._("Er zijn nog geen etiketten: die worden aangemaakt bij de goedkeuring door de klant."))
+        return self.env.ref('mc_interieur.action_report_mc_piece_label').report_action(self.piece_ids)
+
     def action_relink_materials(self):
         """Apply the TopSolid to Ardis material links again, after a link was added or changed."""
         self.part_ids._mc_apply_mapping()
