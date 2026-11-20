@@ -64,6 +64,10 @@ section{display:grid;gap:18px}
 .who th,.who td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 .who thead th{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .who td:first-child{font-weight:700;white-space:nowrap}
+.who.hw td{font-variant-numeric:tabular-nums}
+.who.hw td:not(:first-child){white-space:nowrap}
+.who.hw td:last-child{font-weight:700}
+.lightlist ul{display:grid;gap:4px}
 .pill{display:inline-block;white-space:nowrap;font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px}
 .pill.full{background:var(--full-bg);color:var(--brown-2)}
 :root[data-theme="dark"] .pill.full{color:var(--ink)}
@@ -325,12 +329,46 @@ footer .wrap{padding-block:0 40px;color:var(--muted);font-size:.85rem}
       <div class="panel">
         <h3>D · Aparte werkvloer-app</h3>
         <div class="cost">1 × € 44,90 = € 44,90 / maand</div>
-        <p class="note">+ 5 × € 7,90 = € 84,40 als de operators ook in de app Werknemers van Odoo staan.</p>
+        <p class="note">+ 5 × € 7,90 = € 84,40 als de operators ook in de app Werknemers van Odoo staan. Eenmalig: een server in het atelier of op kantoor, € 850 à 1.700.</p>
         <ul>
           <li class="pro">Eigen web-app op een Linux-server in het atelier, gekoppeld via de API (in het plan Gepersonaliseerd)</li>
           <li class="pro">Badge per operator: scans op naam, en werkt door zonder internet</li>
           <li class="con">Eén technische gebruiker voor meerdere operators: alleen na schriftelijk akkoord van Odoo (vraag 3)</li>
           <li class="con">Nieuwe app om te bouwen en te onderhouden. Zie de pagina <a href="https://claude.ai/artifact/NFUCTPbYn1msAPwtFmePpF" target="_blank" rel="noopener">Werkvloer-app</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="hw-t">
+    <h2 id="hw-t">Hardware en licenties samen, over 3 jaar</h2>
+    <p class="sub">Hetzelfde voorbeeld: 5 operators aan 3 werkposten, jaarlijks gefactureerd, prijs vanaf jaar 2 (zonder de korting van jaar 1). Hardwareprijzen zijn grove richtprijzen excl. btw, niet bij leveranciers nagekeken; details op de pagina <a href="https://claude.ai/artifact/NFUCTPbYn1msAPwtFmePpF" target="_blank" rel="noopener">Werkvloer-app</a>.</p>
+    <div class="panel scroll">
+      <table class="who hw">
+        <thead><tr><th>Scenario</th><th>Werkposten (3 ×)</th><th>Server</th><th>Licenties werkvloer, 3 jaar</th><th>Totaal, 3 jaar</th></tr></thead>
+        <tbody>
+          <tr><td>A · Eigen login per operator</td><td>€ 1.650 à 4.050</td><td>—</td><td>€ 8.082</td><td>€ 9.732 à 12.132</td></tr>
+          <tr><td>B · Eén login per werkpost</td><td>€ 1.650 à 4.050</td><td>—</td><td>€ 4.849</td><td>€ 6.499 à 8.899</td></tr>
+          <tr><td>C · Werkpost + badge</td><td>€ 1.650 à 4.050</td><td>—</td><td>€ 6.271</td><td>€ 7.921 à 10.321</td></tr>
+          <tr><td>D · Aparte werkvloer-app</td><td>€ 1.650 à 4.050</td><td>€ 850 à 1.700</td><td>€ 1.616<br><span class="note">€ 3.038 met operators in Werknemers</span></td><td>€ 4.116 à 7.366<br><span class="note">€ 5.538 à 8.788 met Werknemers</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="lightlist">
+      <div class="panel">
+        <h3>Wat er in de hardware zit</h3>
+        <ul>
+          <li><b>Werkpost:</b> scherm (panel-pc of tablet, € 300 à 900) en robuuste scanner (€ 250 à 450). Nodig in elk scenario.</li>
+          <li><b>Server (alleen D):</b> fanloze mini-pc, UPS, switch en access point. Met een reservetoestel: € 400 à 800 extra.</li>
+          <li><b>Etiketprinter</b> (€ 400 à 600 per stuk) alleen als Odoo de etiketten print; niet meegeteld.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Niet meegeteld</h3>
+        <ul>
+          <li><b>Ontwikkeling en onderhoud van de werkvloer-app</b> (scenario D) en de aanpassing van de module voor scenario C. Die kunnen het verschil met A of B deels of helemaal opslorpen.</li>
+          <li>Licenties van de andere gebruikers (kantoor, plaatsers): gelijk in elk scenario.</li>
+          <li>Stroom, back-upopslag en beheer van de server: enkele tientallen euro per jaar plus tijd.</li>
         </ul>
       </div>
     </div>
