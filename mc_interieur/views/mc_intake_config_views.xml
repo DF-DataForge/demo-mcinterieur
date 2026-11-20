@@ -46,22 +46,22 @@
                     </div>
                     <notebook>
                         <page string="Algemeen" name="general">
-                            <field name="general_definition" widget="properties_definition" nolabel="1"/>
+                            <field name="general_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
                         </page>
                         <page string="Ruimte &amp; opmeting" name="space">
-                            <field name="space_definition" widget="properties_definition" nolabel="1"/>
+                            <field name="space_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
                         </page>
                         <page string="Materialen &amp; afwerking" name="materials">
-                            <field name="materials_definition" widget="properties_definition" nolabel="1"/>
+                            <field name="materials_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
                         </page>
                         <page string="Beslag &amp; indeling" name="hardware">
-                            <field name="hardware_definition" widget="properties_definition" nolabel="1"/>
+                            <field name="hardware_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
                         </page>
                         <page string="Werkblad &amp; toestellen" name="appliances">
-                            <field name="appliances_definition" widget="properties_definition" nolabel="1"/>
+                            <field name="appliances_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
                         </page>
                         <page string="Plaatsing" name="installation">
-                            <field name="installation_definition" widget="properties_definition" nolabel="1"/>
+                            <field name="installation_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
                         </page>
                     </notebook>
                 </sheet>
