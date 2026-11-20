@@ -93,6 +93,21 @@ All demo passwords are `demo`. Change or remove these users on a real database.
    details from the intake, checklist, snag list, photos, customer signature. Signing is blocked while
    checklist items are open; after signing the project is *Opgeleverd*.
 
+## Configuring the intake
+
+The intake questions and their options are managed in Odoo, no code needed (manager rights):
+
+* **Interieur → Configuratie → Intakevragen**: one tab per intake tab. Add a question (text, number,
+  choice with options, yes/no, date, ...), rename it, change its options or drag it to another position.
+  Changes apply to all projects at once. Managers can also add a question straight from a project form.
+* **Interieur → Configuratie → Projecttypes**: the project types, whether the *Werkblad & toestellen* tab is
+  shown, and the default number of installation days on the quote.
+
+Nothing is mandatory: an empty question becomes an open question for the drawer when the intake is handed
+over, and it closes by itself once it is answered. A few questions drive logic by their technical name
+(`situation`, `worktop`, `appliance_supply`, `handles`, `handle_model`, `drawers`, `lighting`, `dismantle`,
+`disposal`, `access_info`, `parking`, `utilities`): rename their label freely, but do not delete them.
+
 ## Demo TopSolid and Ardis files
 
 Sample files are in [`mc_interieur/static/demo_files/`](mc_interieur/static/demo_files/) and are also
