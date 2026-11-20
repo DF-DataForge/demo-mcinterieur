@@ -4,17 +4,17 @@
     <template id="report_mc_piece_label_content">
         <t t-set="part" t-value="piece.part_id"/>
         <div class="o_mc_label_top">
-            <span class="o_mc_label_ref" t-out="piece.project_id.ref"/>
             <span class="o_mc_label_customer" t-out="piece.project_id.partner_id.name"/>
+            <span class="o_mc_label_ref" t-out="piece.project_id.ref"/>
         </div>
         <div class="o_mc_label_name">
             <t t-out="part.name"/>
-            <span class="o_mc_label_cabinet" t-if="part.cabinet"> · <t t-out="part.cabinet"/></span>
+            <span class="o_mc_label_cabinet" t-if="part.cabinet"> - <t t-out="part.cabinet"/></span>
         </div>
         <div class="o_mc_label_meta">
             <t t-out="part.length"/> x <t t-out="part.width"/> x <t t-out="'%g' % part.thickness"/> mm
-            · <t t-out="part.product_id.default_code or part.topsolid_material"/>
-            <t t-if="part.grain"> · nerf</t>
+            - <t t-out="part.product_id.default_code or part.topsolid_material"/>
+            <t t-if="part.grain"> - nerf</t>
         </div>
         <div class="o_mc_label_meta" t-if="part._mc_edge_label()">Kant: <t t-out="part._mc_edge_label()"/></div>
         <div class="o_mc_label_meta" t-if="part.cnc_program">CNC: <t t-out="part.cnc_program"/></div>
@@ -26,7 +26,8 @@
     <template id="report_mc_piece_label_style">
         <style>
             .o_mc_label { box-sizing: border-box; overflow: hidden; font-family: Arial, Helvetica, sans-serif; color: #000; }
-            .o_mc_label_top { display: flex; justify-content: space-between; font-size: 8pt; border-bottom: 1px solid #000; padding-bottom: 0.5mm; }
+            .o_mc_label_top { font-size: 8pt; border-bottom: 1px solid #000; padding-bottom: 0.5mm; overflow: hidden; }
+            .o_mc_label_customer { float: right; }
             .o_mc_label_ref { font-weight: bold; }
             .o_mc_label_name { font-size: 11.5pt; font-weight: bold; margin-top: 0.8mm; line-height: 1.15; }
             .o_mc_label_cabinet { font-weight: normal; }
