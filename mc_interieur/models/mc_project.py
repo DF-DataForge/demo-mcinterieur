@@ -690,7 +690,7 @@ class McProject(models.Model):
         self.ensure_one()
         if not self.piece_ids:
             raise UserError(self.env._("Er zijn nog geen etiketten: die worden aangemaakt bij de goedkeuring door de klant."))
-        return self.env.ref('mc_interieur.action_report_mc_piece_label').report_action(self.piece_ids)
+        return self.env.ref('mc_interieur.action_report_mc_piece_label').report_action(self.piece_ids, config=False)
 
     def action_relink_materials(self):
         """Apply the TopSolid to Ardis material links again, after a link was added or changed."""

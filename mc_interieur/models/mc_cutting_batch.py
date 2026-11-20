@@ -251,14 +251,14 @@ class McCuttingBatch(models.Model):
         pieces = self.project_ids.piece_ids
         if not pieces:
             raise UserError(self.env._("Deze zaagbatch heeft nog geen etiketten."))
-        return self.env.ref('mc_interieur.action_report_mc_piece_label').report_action(pieces)
+        return self.env.ref('mc_interieur.action_report_mc_piece_label').report_action(pieces, config=False)
 
     def action_print_labels_a4(self):
         self.ensure_one()
         pieces = self.project_ids.piece_ids
         if not pieces:
             raise UserError(self.env._("Deze zaagbatch heeft nog geen etiketten."))
-        return self.env.ref('mc_interieur.action_report_mc_piece_label_a4').report_action(pieces)
+        return self.env.ref('mc_interieur.action_report_mc_piece_label_a4').report_action(pieces, config=False)
 
     def action_mark_sawn(self):
         self.write({'state': 'sawn'})
