@@ -149,6 +149,20 @@ footer{padding-block:0 40px;color:var(--muted);font-size:13px}
 table.opts td,table.opts th{text-align:left;vertical-align:top}
 table.opts{min-width:720px}
 
+/* intake configuration */
+.cfg{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:16px}
+@media (max-width:900px){.cfg{grid-template-columns:minmax(0,1fr)}}
+.cfg-main,.cfg-side{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;display:grid;gap:12px;align-content:start;min-width:0}
+.cfg-side{background:var(--green-soft);border-color:transparent}
+.cfg-side h3{font-size:17px;color:var(--green-strong)}
+.cfg-steps{margin:0;padding-left:22px;display:grid;gap:10px}
+.cfg-steps b{display:block}
+.cfg-steps span{display:block;font-size:14.5px;color:var(--muted)}
+.hint2{margin:0;font-size:14.5px;color:var(--muted)}
+.logic{width:100%;min-width:0;border-collapse:collapse;font-size:14px}
+.logic th,.logic td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.logic th{background:transparent;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+
 /* decisions */
 .dec{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
 .dgroup{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
@@ -246,6 +260,43 @@ table.opts{min-width:720px}
     <div class="matrix"><table id="matrix"></table></div>
   </section>
 
+  <section aria-labelledby="cfg-title">
+    <h2 id="cfg-title">De intake zelf instellen</h2>
+    <p class="sub">De vragen die de verkoper bij de klant stelt, beheren jullie zelf in Odoo, zonder programmeur. Een wijziging geldt meteen voor alle projecten.</p>
+    <div class="cfg">
+      <div class="cfg-main">
+        <div class="where"><small>Waar</small><div>Interieur &gt; Configuratie &gt; Intakevragen</div></div>
+        <div class="where"><small>Wie</small><div>Beheerder (rol Beheerder in Interieur)</div></div>
+        <ol class="cfg-steps">
+          <li><b>Kies het tabblad</b><span>Algemeen, Ruimte &amp; opmeting, Materialen &amp; afwerking, Beslag &amp; indeling, Werkblad &amp; toestellen of Plaatsing.</span></li>
+          <li><b>Klik op het potloodje naast een vraag</b><span>Wijzig de naam, het type (tekst, getal, keuzelijst, ja/nee, datum) en bij een keuzelijst de keuzes.</span></li>
+          <li><b>Sleep om te herschikken</b><span>Het sleepicoontje naast het potloodje verandert de volgorde van de vragen.</span></li>
+          <li><b>Voeg onderaan een vraag toe</b><span>Ze verschijnt meteen in elk project, telt mee voor de intakescore en wordt een open vraag als ze leeg blijft.</span></li>
+        </ol>
+        <div class="where"><small>Ook instellen</small><div>Interieur &gt; Configuratie &gt; Projecttypes</div></div>
+        <p class="hint2">Per projecttype (keuken, dressing, badkamermeubel, ...) kies je of het tabblad <i>Werkblad &amp; toestellen</i> verschijnt en hoeveel plaatsingsdagen standaard in de offerte komen.</p>
+      </div>
+      <div class="cfg-side">
+        <h3>Vragen met een rol in de logica</h3>
+        <p class="hint2">Deze vragen sturen de offerte, de picklijst beslag en de plaatsing. Hernoemen mag, verwijderen niet. Bij een keuzelijst: labels aanpassen en keuzes toevoegen mag, bestaande keuzes niet verwijderen.</p>
+        <table class="logic">
+          <thead><tr><th>Vraag</th><th>Stuurt</th></tr></thead>
+          <tbody>
+            <tr><td>Situatie</td><td>btw 6 of 21 % op de offerte</td></tr>
+            <tr><td>Werkblad</td><td>raming werkblad, controlepunt opmeting</td></tr>
+            <tr><td>Levering toestellen</td><td>budget toestellen op de offerte</td></tr>
+            <tr><td>Grepen, model greep</td><td>grepen op de picklijst</td></tr>
+            <tr><td>Ladesysteem</td><td>type ladeset op de picklijst</td></tr>
+            <tr><td>Verlichting</td><td>LED op de picklijst, controlepunt</td></tr>
+            <tr><td>Demontage, afvoer</td><td>controlelijst plaatsing</td></tr>
+            <tr><td>Toegang, parkeren, nutsvoorzieningen</td><td>werfgegevens voor de ploeg</td></tr>
+            <tr><td>Type project</td><td>tabblad toestellen, plaatsingsdagen</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <section aria-labelledby="rules-title">
     <h2 id="rules-title">Spelregels die Odoo bewaakt</h2>
     <p class="sub">Op deze punten helpt of blokkeert het systeem, zodat er niets tussen de plooien valt.</p>
@@ -308,7 +359,7 @@ const PHASES=[
   where:'Interieur > Projecten > Nieuw',
   lead:'De verkoper maakt het project aan tijdens of na het klantbezoek, op laptop of tablet.',
   does:['Klant, werfadres en type project invullen','Intake per thema: ruimte, materialen, beslag, toestellen, plaatsing','Foto\'s en schetsen toevoegen (tablet opent de camera)','Tekenaar kiezen en "Doorsturen naar tekenaar"'],
-  auto:['Projectreferentie PRJ-jaar-nummer','Lege intakevragen worden open vragen','Taak voor de tekenaar in zijn activiteiten'],
+  auto:['Projectreferentie PRJ-jaar-nummer','De vragen komen uit de intakeconfiguratie (zie "De intake zelf instellen")','Lege intakevragen worden open vragen','Taak voor de tekenaar in zijn activiteiten'],
   sys:['Odoo']},
  {short:'Tekening',title:'Ontwerp in TopSolid',roles:['drawer'],from:'Tekening',to:'Tekening',
   where:'TopSolid 6 · Odoo: project > Overzicht tekenaar',
@@ -370,6 +421,11 @@ const DECISIONS=[
   ['Moet het etiket blijven zitten na de montage?','Handig voor service later, maar mag niet zichtbaar zijn bij de klant.',''],
   ['Wordt er ook gescand aan de kantenlijmmachine?','Geeft meer zicht op waar een stuk ligt, maar is een extra handeling.','Voorstel: niet in de eerste fase.'],
   ['Welke scanners: vaste scanner per machine of draadloze handscanner?','Bepaalt aankoop en hoe de operator werkt.','']]},
+ {title:'Intake',items:[
+  ['Welke vragen en keuzes stelt de verkoper bij de klant?','De startversie is een voorstel; jullie passen ze zelf aan in Odoo.','Samen de startlijst overlopen.'],
+  ['Wie mag de intakevragen wijzigen?','Een wijziging geldt meteen voor alle projecten.','Voorstel: een of twee beheerders.'],
+  ['Welke projecttypes gebruiken jullie, en bij welke horen werkblad en toestellen?','Bepaalt welke tabbladen de verkoper ziet.',''],
+  ['Hoeveel plaatsingsdagen per projecttype?','Komt standaard in de offerte, de verkoper kan het aanpassen.','']]},
  {title:'TopSolid 6',items:[
   ['Welke export van de materiaallijst kan TopSolid 6 maken?','Bepaalt hoe Odoo de onderdelen inleest: kolommen, materiaalnamen, kantenband, CNC-programma.','Voorbeeldbestand opvragen.'],
   ['Wordt de projectreferentie uit Odoo de naam van het TopSolid-project?','Zo koppelt Odoo de materiaallijst automatisch aan het juiste project.','Voorstel: ja.'],
