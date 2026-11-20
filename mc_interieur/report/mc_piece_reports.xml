@@ -22,7 +22,6 @@
         <field name="model">mc.piece</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">mc_interieur.report_mc_piece_label</field>
-        <field name="report_file">mc_interieur.report_mc_piece_label</field>
         <field name="paperformat_id" ref="paperformat_mc_label_100x50"/>
         <field name="print_report_name">'Etiketten - %s' % (object.project_id.ref or '')</field>
         <field name="binding_model_id" ref="model_mc_piece"/>
@@ -34,7 +33,6 @@
         <field name="model">mc.piece</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">mc_interieur.report_mc_piece_label_a4</field>
-        <field name="report_file">mc_interieur.report_mc_piece_label_a4</field>
         <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
         <field name="print_report_name">'Etiketten A4 - %s' % (object.project_id.ref or '')</field>
         <field name="binding_model_id" ref="model_mc_piece"/>
