@@ -46,50 +46,50 @@ database manager).
 
 ## Demo logins
 
-All demo passwords are `demo`. Change or remove these users on a real database.
+Demo users log in with their e-mail address; all demo passwords are `demo`. Change or remove these users on a real database.
 
 ### Employees (backend, `/odoo`)
 
 | Login | Name | Role | What to show |
 |---|---|---|---|
 | `admin` | Administrator | Everything | |
-| `sofie` | Sofie Verhaeghe | Sales | Projects, intake, quotes |
-| `jonas` | Jonas De Vos | Drawer | Drawing versions, open questions, send drawing + quote |
-| `lien` | Lien Martens | Work preparation, manager | Cutting batches, Ardis export, ordering, material mapping |
-| `kevin` | Kevin Desmet | Shop floor + installation team 1 | *Interieur → Werkvloer* (saw, CNC, assembly), *Plaatsing → Mijn planning* |
-| `bart` | Bart Vandenberghe | Installer, team 1 | *Plaatsing → Mijn planning*, sign-off on site |
-| `jens` | Jens Coppens | Installer, team 2 | *Plaatsing → Mijn planning* |
+| `sofie@interieur-demo.example.com` | Sofie Verhaeghe | Sales | Projects, intake, quotes |
+| `jonas@interieur-demo.example.com` | Jonas De Vos | Drawer | Drawing versions, open questions, send drawing + quote |
+| `lien@interieur-demo.example.com` | Lien Martens | Work preparation, manager | Cutting batches, Ardis export, ordering, material mapping |
+| `kevin@interieur-demo.example.com` | Kevin Desmet | Shop floor + installation team 1 | *Interieur → Werkvloer* (saw, CNC, assembly), *Plaatsing → Mijn planning* |
+| `bart@interieur-demo.example.com` | Bart Vandenberghe | Installer, team 1 | *Plaatsing → Mijn planning*, sign-off on site |
+| `jens@interieur-demo.example.com` | Jens Coppens | Installer, team 2 | *Plaatsing → Mijn planning* |
 
 ### Customers (portal, `/my/interieur`)
 
 | Login | Customer | Projects in the portal |
 |---|---|---|
-| `karen` | Karen Maes | **Keuken Maes** (drawing v2 + quote waiting for approval, 2 open questions) and **Badkamermeubel Maes** (approved, at the CNC) |
-| `tom` | Tom Van Damme | **Dressing Van Damme** (at the saw) and **TV-wand Van Damme** (approved, in work preparation) |
-| `peeters` | Jan Peeters | **Keuken Peeters** (intake) and **Inkomkast Peeters** (being drawn) |
-| `an` | An De Smet | **Bureau-kast De Smet** (assembly, installation planned this week) |
+| `karen.maes@example.com` | Karen Maes | **Keuken Maes** (drawing v2 + quote waiting for approval, 2 open questions) and **Badkamermeubel Maes** (approved, at the CNC) |
+| `tom.vandamme@example.com` | Tom Van Damme | **Dressing Van Damme** (at the saw) and **TV-wand Van Damme** (approved, in work preparation) |
+| `jan.peeters@example.com` | Jan Peeters | **Keuken Peeters** (intake) and **Inkomkast Peeters** (being drawn) |
+| `an.desmet@example.com` | An De Smet | **Bureau-kast De Smet** (assembly, installation planned this week) |
 
 ## Demo script
 
-1. **Intake** (`sofie`): *Interieur → Projecten → Keuken Peeters*. Nothing is mandatory; the banner shows
+1. **Intake** (`sofie@interieur-demo.example.com`): *Interieur → Projecten → Keuken Peeters*. Nothing is mandatory; the banner shows
    how much is filled in. Pick a drawer and click *Doorsturen naar tekenaar*: empty questions become open
    questions and the drawer gets an activity.
-2. **Quote from TopSolid** (`jonas` or `lien`): *Inkomkast Peeters → Offerte*. Generating fails because
+2. **Quote from TopSolid** (`jonas@…` or `lien@interieur-demo.example.com`): *Inkomkast Peeters → Offerte*. Generating fails because
    "Eiken fineer 19" has no Ardis code yet. Link it in *Configuratie → Materiaalkoppeling* (product
    *FIN-EIK-19*), then *Offerte genereren*. Add a drawing version and click
    *Tekening + offerte naar klant*.
-3. **Customer portal** (`karen`): *Mijn interieurprojecten → Keuken Maes*. Approval is blocked until both
+3. **Customer portal** (`karen.maes@example.com`): *Mijn interieurprojecten → Keuken Maes*. Approval is blocked until both
    questions are answered. Answer them, type a name, tick the box, approve: the drawing is approved, the
    quote becomes a sales order and the project goes to work preparation. Or send change requests: each
    line becomes an open question for the drawer.
-4. **Work preparation** (`lien`): *Werkvoorbereiding → Zaagbatches*. The draft batch for TV-wand Van Damme
+4. **Work preparation** (`lien@interieur-demo.example.com`): *Werkvoorbereiding → Zaagbatches*. The draft batch for TV-wand Van Damme
    is short of MDF; *Bestellen voor tekorten* creates and confirms a purchase order per supplier. Then
    *Exporteer naar Ardis* (CSV download) and *Resultaat Ardis inlezen* (simulate, or upload Ardis' CSV with
    columns `Materiaal;Verbruik`). Stock is consumed and the projects move to *Zagen*.
-5. **Shop floor** (`kevin`): *Werkvloer → Paneelzaag*: scan (or click *Scan volgend etiket*) to mark
+5. **Shop floor** (`kevin@interieur-demo.example.com`): *Werkvloer → Paneelzaag*: scan (or click *Scan volgend etiket*) to mark
    parts sawn. *CNC*: scanning loads the TopSolid program name; confirm when done. *Montage werkplaats*:
    scanned parts are collected per cabinet, then *Kast gemonteerd*. Projects move forward automatically.
-6. **Installation** (`bart`): *Plaatsing → Mijn planning* (calendar). Open Bureau-kast De Smet: site
+6. **Installation** (`bart@interieur-demo.example.com`): *Plaatsing → Mijn planning* (calendar). Open Bureau-kast De Smet: site
    details from the intake, checklist, snag list, photos, customer signature. Signing is blocked while
    checklist items are open; after signing the project is *Opgeleverd*.
 

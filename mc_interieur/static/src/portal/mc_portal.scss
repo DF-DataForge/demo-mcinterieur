@@ -3,13 +3,20 @@ $o-mc-brown: #574a36;
 $o-mc-green: #5f7d1c;
 $o-mc-green-soft: #eef4dc;
 
+.o_mc_portal_title {
+    color: $o-mc-brown;
+}
+
+.o_mc_portal_list {
+    .badge.text-bg-light {
+        background-color: $o-mc-green-soft !important;
+        color: $o-mc-green !important;
+    }
+}
+
 .o_mc_portal_project {
     h2, .card-title {
         color: $o-mc-brown;
-    }
-    .btn-primary {
-        background-color: $o-mc-green;
-        border-color: $o-mc-green;
     }
     .o_mc_steps {
         gap: 0;

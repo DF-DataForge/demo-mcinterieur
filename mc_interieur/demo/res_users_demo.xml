@@ -7,7 +7,7 @@
     </record>
     <record id="user_sofie" model="res.users" context="{'no_reset_password': True}">
         <field name="partner_id" ref="partner_sofie"/>
-        <field name="login">sofie</field>
+        <field name="login">sofie@interieur-demo.example.com</field>
         <field name="password">demo</field>
         <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_user'), ref('sales_team.group_sale_salesman'), ref('stock.group_stock_user')])]"/>
     </record>
@@ -18,7 +18,7 @@
     </record>
     <record id="user_jonas" model="res.users" context="{'no_reset_password': True}">
         <field name="partner_id" ref="partner_jonas"/>
-        <field name="login">jonas</field>
+        <field name="login">jonas@interieur-demo.example.com</field>
         <field name="password">demo</field>
         <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_user'), ref('sales_team.group_sale_salesman'), ref('stock.group_stock_user')])]"/>
     </record>
@@ -29,7 +29,7 @@
     </record>
     <record id="user_lien" model="res.users" context="{'no_reset_password': True}">
         <field name="partner_id" ref="partner_lien"/>
-        <field name="login">lien</field>
+        <field name="login">lien@interieur-demo.example.com</field>
         <field name="password">demo</field>
         <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_manager'), ref('sales_team.group_sale_salesman'), ref('stock.group_stock_user'), ref('purchase.group_purchase_user')])]"/>
     </record>
@@ -40,7 +40,7 @@
     </record>
     <record id="user_kevin" model="res.users" context="{'no_reset_password': True}">
         <field name="partner_id" ref="partner_kevin"/>
-        <field name="login">kevin</field>
+        <field name="login">kevin@interieur-demo.example.com</field>
         <field name="password">demo</field>
         <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_shopfloor')])]"/>
     </record>
@@ -51,7 +51,7 @@
     </record>
     <record id="user_bart" model="res.users" context="{'no_reset_password': True}">
         <field name="partner_id" ref="partner_bart"/>
-        <field name="login">bart</field>
+        <field name="login">bart@interieur-demo.example.com</field>
         <field name="password">demo</field>
         <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_shopfloor')])]"/>
     </record>
@@ -62,7 +62,7 @@
     </record>
     <record id="user_jens" model="res.users" context="{'no_reset_password': True}">
         <field name="partner_id" ref="partner_jens"/>
-        <field name="login">jens</field>
+        <field name="login">jens@interieur-demo.example.com</field>
         <field name="password">demo</field>
         <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('mc_interieur_group_shopfloor')])]"/>
     </record>
@@ -93,7 +93,7 @@
     </record>
     <record id="portal_user_maes" model="res.users" context="{'no_reset_password': True}">
         <field name="partner_id" ref="partner_maes"/>
-        <field name="login">karen</field>
+        <field name="login">karen.maes@example.com</field>
         <field name="password">demo</field>
         <field name="group_ids" eval="[Command.clear()]"/>
     </record>
@@ -109,7 +109,7 @@
     </record>
     <record id="portal_user_peeters" model="res.users" context="{'no_reset_password': True}">
         <field name="partner_id" ref="partner_peeters"/>
-        <field name="login">peeters</field>
+        <field name="login">jan.peeters@example.com</field>
         <field name="password">demo</field>
         <field name="group_ids" eval="[Command.clear()]"/>
     </record>
@@ -125,7 +125,7 @@
     </record>
     <record id="portal_user_vandamme" model="res.users" context="{'no_reset_password': True}">
         <field name="partner_id" ref="partner_vandamme"/>
-        <field name="login">tom</field>
+        <field name="login">tom.vandamme@example.com</field>
         <field name="password">demo</field>
         <field name="group_ids" eval="[Command.clear()]"/>
     </record>
@@ -141,7 +141,7 @@
     </record>
     <record id="portal_user_desmet" model="res.users" context="{'no_reset_password': True}">
         <field name="partner_id" ref="partner_desmet"/>
-        <field name="login">an</field>
+        <field name="login">an.desmet@example.com</field>
         <field name="password">demo</field>
         <field name="group_ids" eval="[Command.clear()]"/>
     </record>

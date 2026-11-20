@@ -14,10 +14,8 @@
 
     <template id="portal_my_mc_projects" name="Mijn interieurprojecten">
         <t t-call="portal.portal_layout">
-            <t t-set="breadcrumbs_searchbar" t-value="True"/>
-            <t t-call="portal.portal_searchbar">
-                <t t-set="title">Interieurprojecten</t>
-            </t>
+            <div class="o_mc_portal_list mt-3">
+            <h2 class="o_mc_portal_title mb-3">Mijn interieurprojecten</h2>
             <div t-if="not projects" class="alert alert-info" role="status">U hebt nog geen interieurprojecten.</div>
             <t t-if="projects" t-call="portal.portal_table">
                 <thead>
@@ -42,6 +40,7 @@
                     </tr>
                 </tbody>
             </t>
+            </div>
         </t>
     </template>
 

@@ -1,0 +1,87 @@
+// House colours on the whole customer portal and the login page, same as the backend:
+// walnut brown for actions and links, leaf green as accent line and for "done".
+// The frontend takes its primary colour from its own theme palette, so the Bootstrap
+// colour variables are set here explicitly.
+$o-mc-brown: #574a36;
+$o-mc-brown-hover: #463b2b;
+$o-mc-brown-active: #3b3225;
+$o-mc-green: #95ba3c;
+$o-mc-green-dark: #5f7d1c;
+
+:root {
+    --bs-primary: #{$o-mc-brown};
+    --bs-primary-rgb: 87, 74, 54;
+    --bs-success: #{$o-mc-green-dark};
+    --bs-success-rgb: 95, 125, 28;
+    --bs-link-color: #{$o-mc-brown};
+    --bs-link-color-rgb: 87, 74, 54;
+    --bs-link-hover-color: #{$o-mc-brown-active};
+    --bs-link-hover-color-rgb: 59, 50, 37;
+}
+
+.btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #{$o-mc-brown};
+    --bs-btn-border-color: #{$o-mc-brown};
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #{$o-mc-brown-hover};
+    --bs-btn-hover-border-color: #{$o-mc-brown-hover};
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #{$o-mc-brown-active};
+    --bs-btn-active-border-color: #{$o-mc-brown-active};
+    --bs-btn-disabled-bg: #{$o-mc-brown};
+    --bs-btn-disabled-border-color: #{$o-mc-brown};
+    --bs-btn-focus-shadow-rgb: 87, 74, 54;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #{$o-mc-brown};
+    --bs-btn-border-color: #{$o-mc-brown};
+    --bs-btn-hover-bg: #{$o-mc-brown};
+    --bs-btn-hover-border-color: #{$o-mc-brown};
+    --bs-btn-active-bg: #{$o-mc-brown-active};
+    --bs-btn-active-border-color: #{$o-mc-brown-active};
+}
+
+.btn-link {
+    --bs-btn-color: #{$o-mc-brown};
+    --bs-btn-hover-color: #{$o-mc-brown-active};
+}
+
+.text-primary {
+    color: $o-mc-brown !important;
+}
+
+.bg-primary,
+.text-bg-primary {
+    background-color: $o-mc-brown !important;
+    color: #fff !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: $o-mc-green;
+    box-shadow: 0 0 0 0.2rem rgba($o-mc-green, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: $o-mc-green-dark;
+    border-color: $o-mc-green-dark;
+}
+
+// green line on top of the portal header, as on the backend bar and the mockup
+#wrapwrap > header {
+    border-top: 4px solid $o-mc-green;
+}
+
+.o_portal .breadcrumb a,
+.o_portal_wrap .breadcrumb a {
+    color: $o-mc-brown;
+}
+
+.pagination {
+    --bs-pagination-color: #{$o-mc-brown};
+    --bs-pagination-active-bg: #{$o-mc-brown};
+    --bs-pagination-active-border-color: #{$o-mc-brown};
+}

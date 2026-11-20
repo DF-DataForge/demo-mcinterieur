@@ -202,7 +202,7 @@ class TestMcBackendScreens(HttpCase):
 class TestMcPortal(HttpCase):
 
     def test_portal_pages(self):
-        self.authenticate('karen', 'demo')
+        self.authenticate('karen.maes@example.com', 'demo')
         response = self.url_open('/my/interieur')
         self.assertEqual(response.status_code, 200)
         self.assertIn('Keuken Maes', response.text)
@@ -214,8 +214,14 @@ class TestMcPortal(HttpCase):
         self.assertIn('Vragen van ons', response.text)
         self.assertIn('Offerte', response.text)
 
+    def test_portal_page_in_browser(self):
+        # loads the frontend assets (portal styling) and the portal page as a customer
+        project = self.env.ref('mc_interieur.project_maes_keuken')
+        self.browser_js(f'/my/interieur/{project.id}', "setTimeout(() => console.log('test successful'), 1500)",
+                        login='karen.maes@example.com')
+
     def test_portal_other_customer_is_redirected(self):
-        self.authenticate('tom', 'demo')
+        self.authenticate('tom.vandamme@example.com', 'demo')
         project = self.env.ref('mc_interieur.project_maes_keuken')
         response = self.url_open(f'/my/interieur/{project.id}')
         self.assertNotIn('Vragen van ons', response.text)

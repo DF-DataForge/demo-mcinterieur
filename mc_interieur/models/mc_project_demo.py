@@ -71,9 +71,33 @@ DEMO_STOCK = {
 }
 
 
+DEMO_LOGINS = {
+    'user_sofie': ('sofie', 'sofie@interieur-demo.example.com'),
+    'user_jonas': ('jonas', 'jonas@interieur-demo.example.com'),
+    'user_lien': ('lien', 'lien@interieur-demo.example.com'),
+    'user_kevin': ('kevin', 'kevin@interieur-demo.example.com'),
+    'user_bart': ('bart', 'bart@interieur-demo.example.com'),
+    'user_jens': ('jens', 'jens@interieur-demo.example.com'),
+    'portal_user_maes': ('karen', 'karen.maes@example.com'),
+    'portal_user_peeters': ('peeters', 'jan.peeters@example.com'),
+    'portal_user_vandamme': ('tom', 'tom.vandamme@example.com'),
+    'portal_user_desmet': ('an', 'an.desmet@example.com'),
+}
+
+
 class McProject(models.Model):
     # Demo data loader, called once from demo/mc_project_demo.xml. Kept apart from the business code.
     _inherit = 'mc.project'
+
+    @api.model
+    def _mc_demo_email_logins(self):
+        """Demo users log in with their e-mail address, like real customers. Renames the short logins of
+        databases created with an earlier version; logins changed by hand are left alone."""
+        for xmlid, (old_login, new_login) in DEMO_LOGINS.items():
+            user = self.env.ref(f'mc_interieur.{xmlid}', raise_if_not_found=False)
+            if user and user.login == old_login:
+                user.sudo().login = new_login
+        return True
 
     @api.model
     def _mc_demo_setup(self):
