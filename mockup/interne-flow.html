@@ -192,17 +192,17 @@ table.opts{min-width:720px}
     <div class="map">
       <svg viewBox="0 0 980 520" role="img" aria-labelledby="map-t map-d">
         <title id="map-t">Systemenkaart</title>
-        <desc id="map-d">Odoo in het midden met projecten, offertes, werkvoorbereiding, voorraad en planning. Links TopSolid 6, rechts Ardis, boven het klantportaal, onder de werkvloer met paneelzaag, CNC en montage.</desc>
+        <desc id="map-d">Odoo in het midden met projecten, offertes en facturen, werkvoorbereiding, voorraad en planning. Links TopSolid 6, rechts Ardis, boven het klantportaal, onder de werkvloer met paneelzaag, CNC en montage.</desc>
         <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" class="head"/></marker></defs>
 
         <rect x="370" y="30" width="240" height="64" rx="12" class="ext"/>
         <text x="490" y="57" text-anchor="middle" class="t">Klantportaal</text>
-        <text x="490" y="78" text-anchor="middle" class="s">tekening + offerte, vragen, goedkeuring</text>
+        <text x="490" y="78" text-anchor="middle" class="s">tekening, offerte, vragen, facturen</text>
 
         <rect x="300" y="150" width="380" height="210" rx="16" class="core"/>
         <text x="490" y="180" text-anchor="middle" class="t">Odoo</text>
         <rect x="322" y="198" width="160" height="34" rx="8" class="chip"/><text x="402" y="220" text-anchor="middle" class="m">Projecten en intake</text>
-        <rect x="498" y="198" width="160" height="34" rx="8" class="chip"/><text x="578" y="220" text-anchor="middle" class="m">Offertes</text>
+        <rect x="498" y="198" width="160" height="34" rx="8" class="chip"/><text x="578" y="220" text-anchor="middle" class="m">Offertes en facturen</text>
         <rect x="322" y="244" width="160" height="34" rx="8" class="chip"/><text x="402" y="266" text-anchor="middle" class="m">Werkvoorbereiding</text>
         <rect x="498" y="244" width="160" height="34" rx="8" class="chip"/><text x="578" y="266" text-anchor="middle" class="m">Voorraad en aankoop</text>
         <rect x="322" y="290" width="160" height="34" rx="8" class="chip"/><text x="402" y="312" text-anchor="middle" class="m">Etiketten (barcode)</text>
@@ -307,6 +307,7 @@ table.opts{min-width:720px}
       <div class="rule"><span class="k">Werkvoorbereiding</span><h3>Geen export zonder Ardis-code</h3><p>Elk materiaal moet gekoppeld zijn aan een voorraadartikel met Ardis-code. Een voorraadtekort blokkeert de export niet; de batch wacht dan op levering.</p></div>
       <div class="rule"><span class="k">Werkvloer</span><h3>Volgorde zaag, CNC, montage</h3><p>Een onderdeel dat nog niet gezaagd is, wordt aan de CNC geweigerd. Een kast kan pas gemonteerd worden als alle onderdelen verzameld zijn.</p></div>
       <div class="rule"><span class="k">Oplevering</span><h3>Controlelijst eerst</h3><p>De klant kan pas tekenen als alle controlepunten afgevinkt zijn. Open nazorgpunten worden automatisch taken.</p></div>
+      <div class="rule"><span class="k">Facturatie</span><h3>Facturen volgen het project</h3><p>Elke factuur komt uit de verkooporder van het project. De klant ziet ze per project in het portaal, met wat betaald is en wat nog openstaat. Een factuur in concept ziet de klant niet.</p></div>
     </div>
   </section>
 
@@ -352,7 +353,7 @@ const IC={
   file:`<svg ${S}><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>`,
   prev:`<svg ${S}><path d="M15 6l-6 6 6 6"/></svg>`, next:`<svg ${S}><path d="M9 6l6 6-6 6"/></svg>`,
 };
-const ROLES={sales:'Verkoop',drawer:'Tekenaar',customer:'Klant',prep:'Werkvoorbereiding',floor:'Werkvloer',install:'Plaatsing'};
+const ROLES={sales:'Verkoop',drawer:'Tekenaar',customer:'Klant',prep:'Werkvoorbereiding',floor:'Werkvloer',install:'Plaatsing',finance:'Boekhouding'};
 
 const PHASES=[
  {short:'Intake',title:'Intake bij de klant',roles:['sales'],from:'nieuw',to:'Tekening',
@@ -373,11 +374,11 @@ const PHASES=[
   does:['Marge, korting, plaatsingsdagen, werkblad en toestellen nakijken','"Offerte genereren"','"Tekening + offerte naar klant"'],
   auto:['Prijs per meubelgroep: platen, kantenband, beslag, machinetijd, montage','Btw voorgesteld uit de intake (6 of 21 %)','Verkoopofferte in Odoo Verkoop, gekoppeld aan de tekeningversie','E-mail en portaaltoegang voor de klant'],
   sys:['Odoo']},
- {short:'Klantvalidatie',title:'Klant keurt goed in het portaal',roles:['customer','sales'],from:'Klantvalidatie',to:'Werkvoorbereiding',
-  where:'Klantportaal: /my/interieur',
-  lead:'De klant bekijkt tekening en offerte, beantwoordt vragen en keurt goed of vraagt wijzigingen.',
-  does:['Klant: vragen beantwoorden','Klant: goedkeuren met naam en bevestiging','Of: opmerkingen doorsturen (elke lijn een vraag)','Verkoop: vragen opvolgen, herinnering sturen'],
-  auto:['Goedkeuring geblokkeerd zolang er klantvragen open staan','Offerte wordt verkooporder, voorschot kan gefactureerd worden','Etiket met barcode per onderdeel aangemaakt','Bij wijzigingen: terug naar Tekening met vragen voor de tekenaar'],
+ {short:'Klantvalidatie',title:'Klant keurt goed in het portaal',roles:['customer','sales','finance'],from:'Klantvalidatie',to:'Werkvoorbereiding',
+  where:'Klantportaal: /my/interieur · Odoo: verkooporder > Factuur aanmaken',
+  lead:'De klant bekijkt tekening en offerte, beantwoordt vragen en keurt goed of vraagt wijzigingen. Na goedkeuring volgt de voorschotfactuur.',
+  does:['Klant: vragen beantwoorden','Klant: goedkeuren met naam en bevestiging','Of: opmerkingen doorsturen (elke lijn een vraag)','Verkoop: vragen opvolgen, herinnering sturen','Boekhouding: voorschotfactuur maken vanuit de verkooporder en bevestigen','Klant: voorschot betalen'],
+  auto:['Goedkeuring geblokkeerd zolang er klantvragen open staan','Offerte wordt verkooporder','Voorschotfactuur hangt aan het project en verschijnt bij het project in het klantportaal, met betaalstatus','Etiket met barcode per onderdeel aangemaakt','Bij wijzigingen: terug naar Tekening met vragen voor de tekenaar'],
   sys:['Klantportaal','Odoo']},
  {short:'Werkvoorbereiding',title:'Zaagbatch en Ardis-export',roles:['prep'],from:'Werkvoorbereiding',to:'Zagen',
   where:'Interieur > Werkvoorbereiding > Zaagbatches',
@@ -403,11 +404,11 @@ const PHASES=[
   does:['Onderdelen scannen: Odoo zegt bij welke kast','Beslag picken volgens de picklijst','"Kast gemonteerd" per kast'],
   auto:['Teller per kast: verzameld / totaal','Picklijst beslag uit onderdelen en intake','Melding "Klaar voor plaatsing"'],
   sys:['Odoo']},
- {short:'Plaatsing',title:'Plaatsing en oplevering',roles:['install','prep'],from:'Montage & plaatsing',to:'Opgeleverd',
-  where:'Interieur > Plaatsing > Mijn planning',
-  lead:'De plaatsing wordt ingepland per ploeg. Ter plaatse werkt de ploeg op de tablet.',
-  does:['Planner: ploeg en dag kiezen','Plaatser: werfgegevens bekijken, controlelijst afvinken','Nazorgpunten en foto\'s toevoegen','Klant laten tekenen op de tablet'],
-  auto:['Werfgegevens uit de intake: toegang, parkeren, demontage','Controlelijst op maat van het project','Tekenen pas mogelijk als alles afgevinkt is','Project opgeleverd, nazorg als taak'],
+ {short:'Plaatsing',title:'Plaatsing, oplevering en eindfactuur',roles:['install','prep','finance'],from:'Montage & plaatsing',to:'Opgeleverd',
+  where:'Interieur > Plaatsing > Mijn planning · Project > knop Facturen',
+  lead:'De plaatsing wordt ingepland per ploeg. Ter plaatse werkt de ploeg op de tablet. Na de oplevering volgt de eindfactuur.',
+  does:['Planner: ploeg en dag kiezen','Plaatser: werfgegevens bekijken, controlelijst afvinken','Nazorgpunten en foto\'s toevoegen','Klant laten tekenen op de tablet','Boekhouding: factuur bij levering, als zo afgesproken','Boekhouding: eindfactuur na oplevering, voorschotten afgetrokken','Betalingen opvolgen per project'],
+  auto:['Werfgegevens uit de intake: toegang, parkeren, demontage','Controlelijst op maat van het project','Tekenen pas mogelijk als alles afgevinkt is','Project opgeleverd, nazorg als taak','Eindfactuur trekt de betaalde voorschotten automatisch af','Alle facturen van het project in het klantportaal: betaald, deels betaald of te betalen'],
   sys:['Odoo']},
 ];
 
@@ -444,7 +445,9 @@ const DECISIONS=[
  {title:'Offertes en prijzen',items:[
   ['Welke tarieven: machine-uur, montage-uur, dagtarief plaatsing, lakwerk per m2?','Basis van elke offerte.',''],
   ['Welke marges op eigen productie en op extern werk?','',''],
-  ['Welk voorschot en wanneer factureren?','Wordt automatisch voorgesteld bij goedkeuring.','Voorstel: 30 % bij goedkeuring.'],
+  ['Welk voorschot en wanneer factureren?','Bepaalt welke facturen de klant per project krijgt.','Voorstel: 40 % bij goedkeuring, 50 % bij levering, saldo bij oplevering (zoals in de demo).'],
+  ['Factureren jullie in Odoo of in een ander boekhoudpakket?','De facturen per project in het klantportaal werken enkel als de facturen in Odoo gemaakt worden.','Voorstel: factureren in Odoo, eventueel doorboeken naar de boekhouder.'],
+  ['Betalen klanten via overschrijving of online in het portaal?','Online betalen vraagt een betaalprovider (bv. Mollie of Stripe); de betaalstatus volgt dan vanzelf.','Voorstel: overschrijving met gestructureerde mededeling, online betalen later.'],
   ['Wanneer 6 % en wanneer 21 % btw?','Odoo stelt het voor uit de intake; de verkoper moet het bevestigen.',''],
   ['Mogen klanten opties aanvinken in het portaal (bv. verlichting)?','Kan later toegevoegd worden.','']]},
  {title:'Klantportaal en communicatie',items:[
