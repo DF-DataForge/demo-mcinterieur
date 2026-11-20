@@ -73,6 +73,10 @@ table.t .hl { font-weight: 700; }
 .wf.klant { background: var(--green); border-color: var(--green); color: var(--dark); }
 .wf.vloer { background: var(--brown); border-color: var(--brown); color: var(--muted-dark); }
 .wf.vloer b { color: var(--light); }
+.wf.core { background: var(--dark); border-color: var(--dark); color: var(--muted-dark); }
+.wf.core b { color: var(--light); }
+.wf.opt { background: var(--warn-bg); border: 3px dashed var(--warn); color: var(--warn); }
+.wf.opt b { color: var(--dark); }
 .wfnote { position: absolute; font-size: 24px; line-height: 1.4; color: var(--muted); }
 
 .rise { animation: rise 500ms ease-out both; animation-delay: calc(var(--i, 0) * 110ms); }
