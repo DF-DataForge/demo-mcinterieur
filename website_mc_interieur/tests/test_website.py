@@ -26,7 +26,7 @@ class TestMcWebsite(HttpCase):
             self.assertIn('o_mcw_footer', response.text, f"{url}: footer")
 
     def test_setup(self):
-        website = self.env.ref('website.default_website')
+        website = self.env['website'].search([], order='id', limit=1)
         self.assertTrue(website.logo)
         urls = set(self.env['website.menu'].search([('website_id', '=', website.id)]).mapped('url'))
         self.assertTrue({'/keukens', '/over-ons', '/contactus'} <= urls, urls)
