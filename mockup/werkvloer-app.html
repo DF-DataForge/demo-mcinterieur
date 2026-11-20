@@ -92,6 +92,10 @@ table.grid td:first-child{font-weight:700;white-space:nowrap}
 .cmp td:not(:first-child){white-space:normal}
 .yes{color:var(--green-dk);font-weight:700} .no{color:var(--warn);font-weight:700}
 
+.note{font-size:.88rem;color:var(--muted)}
+.callout{padding:16px 18px;border-radius:14px;background:var(--warn-bg);border:1px solid var(--line);display:grid;gap:6px}
+.callout h3{color:var(--warn)}
+.price{white-space:nowrap;font-variant-numeric:tabular-nums}
 .phases{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .phases li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:14px;padding:14px 18px;background:var(--paper);border:1px solid var(--line);border-radius:14px}
 @media (max-width:560px){.phases li{grid-template-columns:minmax(0,1fr)}}
@@ -269,6 +273,89 @@ footer .wrap{padding-block:0 40px;color:var(--muted);font-size:.85rem}
     </div>
   </section>
 
+  <section aria-labelledby="hw-t">
+    <h2 id="hw-t">Hardware en software</h2>
+    <p class="sub">Een voorstel voor een atelier met houtstof, trillingen en weinig IT-beheer. Prijzen zijn grove richtprijzen excl. btw, niet bij leveranciers nagekeken.</p>
+
+    <div class="two">
+      <div class="panel">
+        <h3>Waar staat de server?</h3>
+        <p>Liefst niet in het atelier zelf: fijn houtstof, temperatuurschommelingen en stroompieken van de machines. Beter in een technisch lokaal of een kast op kantoor, op hetzelfde netwerk. In het atelier staan dan alleen de schermen en scanners.</p>
+        <p class="note">Moet hij toch in het atelier: in een gesloten wandkast (IP54), weg van zaag en afzuiging en niet boven een machine.</p>
+      </div>
+      <div class="callout">
+        <h3>Niet op het werkstation van de tekenaar</h3>
+        <p>Het TopSolid-werkstation is krachtig genoeg, maar dan hangen werkvloer en tekenwerk van elkaar af: herstart of uitzetten legt de scan stil, de app vertraagt TopSolid, en één defect treft twee afdelingen. Ook voor de proef niet gebruiken.</p>
+      </div>
+    </div>
+
+    <h3>Server</h3>
+    <div class="panel scroll">
+      <table class="grid">
+        <thead><tr><th>Onderdeel</th><th>Voorstel</th><th>Waarom</th><th>Richtprijs</th></tr></thead>
+        <tbody>
+          <tr><td>Server</td><td>Fanloze industriële mini-pc (bv. OnLogic, Advantech, ASRock Industrial of een fanloze Intel N100/N305-box), 16 GB RAM, 512 GB NVMe-SSD, 2 netwerkpoorten</td><td>Geen ventilator dus geen stof binnen, zuinig (10 à 15 W), ruim genoeg voor app en database</td><td class="price">€ 400 à 800</td></tr>
+          <tr><td>Behuizing</td><td>Wandkast IP54 met stoffilter (alleen als de server in het atelier staat)</td><td>Beschermt tegen stof, spatten en stoten</td><td class="price">€ 150 à 300</td></tr>
+          <tr><td>UPS</td><td>700 à 1000 VA met USB-kabel naar de server (bv. APC Back-UPS, Eaton 3S)</td><td>Vangt stroompieken op; bij een onderbreking sluit de server netjes af</td><td class="price">€ 100 à 200</td></tr>
+          <tr><td>Netwerk</td><td>Beheerde switch, met PoE voor access points; werkposten bedraad waar het kan</td><td>Wifi in een atelier vol metaal is onbetrouwbaar</td><td class="price">€ 80 à 200</td></tr>
+          <tr><td>Wifi</td><td>Eén zakelijk access point aan het plafond (bv. Ubiquiti, TP-Link Omada), alleen voor tablets</td><td>Stabiele dekking voor mobiele werkposten</td><td class="price">€ 100 à 200</td></tr>
+          <tr><td>Reserve (optioneel)</td><td>Tweede identieke mini-pc in de kast op kantoor</td><td>Bij een defect binnen het uur terug aan het werk: reserve inpluggen, back-up terugzetten</td><td class="price">€ 400 à 800</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Totaal zonder reserve: ongeveer € 850 à 1.700. Jaarlijks: stroom enkele tientallen euro (100 à 150 kWh), externe back-up een paar euro per maand, UPS-batterij om de 3 à 5 jaar.</p>
+
+    <h3>Per werkpost</h3>
+    <div class="panel scroll">
+      <table class="grid">
+        <thead><tr><th>Onderdeel</th><th>Voorstel</th><th>Richtprijs</th></tr></thead>
+        <tbody>
+          <tr><td>Scherm</td><td>Panel-pc of robuuste tablet met wandhouder; browser in kioskmodus</td><td class="price">€ 300 à 900</td></tr>
+          <tr><td>Scanner</td><td>Robuuste, stofdichte scanner (bv. Zebra DS3600-reeks, Honeywell Granit); een kantoorscanner gaat niet lang mee</td><td class="price">€ 250 à 450</td></tr>
+          <tr><td>Etiketprinter</td><td>Alleen als Odoo print: thermisch, 100 x 50 mm (bv. Zebra ZD421, Brother TD-4)</td><td class="price">€ 400 à 600</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Software op de server</h3>
+    <div class="panel scroll">
+      <table class="grid">
+        <thead><tr><th>Laag</th><th>Voorstel</th></tr></thead>
+        <tbody>
+          <tr><td>Besturingssysteem</td><td>Debian 12 of Ubuntu Server 24.04 LTS, automatische beveiligingsupdates (<code>unattended-upgrades</code>)</td></tr>
+          <tr><td>Containers</td><td>Docker met Docker Compose: app, database en webserver elk in een eigen container; updates met één commando</td></tr>
+          <tr><td>App</td><td>Werkvloer-app in Python (FastAPI), als Docker-image dat GitHub bouwt na elke geteste wijziging</td></tr>
+          <tr><td>Database</td><td>PostgreSQL 16 in een container, op de SSD</td></tr>
+          <tr><td>Webserver</td><td>Caddy, met https op het lokale netwerk</td></tr>
+          <tr><td>Tijd</td><td>NTP-tijdsynchronisatie: elke scan heeft een tijdstip</td></tr>
+          <tr><td>Beheer op afstand</td><td>Tailscale of een gelijkaardige VPN die alleen uitgaand verbindt: support zonder open poort</td></tr>
+          <tr><td>Bewaking</td><td>Gezondheidscontrole (bv. Uptime Kuma) met e-mail als app of synchronisatie stilvalt; SMART-controle van de SSD</td></tr>
+          <tr><td>Back-up</td><td>Elke nacht een versleutelde databasedump naar een NAS of cloudopslag (bv. restic). Het scanlogboek staat ook in Odoo; de back-up dient vooral voor instellingen en badges</td></tr>
+          <tr><td>Werkposten</td><td>Chromium in kioskmodus, opent bij het opstarten meteen de pagina van de werkpost</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="two">
+      <div class="panel">
+        <h3>Netwerk en veiligheid</h3>
+        <ul>
+          <li>De server praat alleen uitgaand met Odoo (https naar Cloudpepper); niets van buiten komt binnen</li>
+          <li>CNC en zaag op het netwerk? Dan in een eigen VLAN, gescheiden van werkposten en internet</li>
+          <li>Eén beheeraccount op de server, met sleutels in plaats van wachtwoorden; afspreken wie het beheert</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Voor de proef aan de paneelzaag</h3>
+        <ul>
+          <li><b>Voorkeur:</b> meteen de mini-pc die in productie blijft, op kantoor: na de proef niets te verhuizen</li>
+          <li>Of een vrije oude kantoor-pc (minstens 8 GB geheugen en een SSD), gewist en met Ubuntu Server</li>
+          <li>Of een bestaande server of NAS met Docker (bv. Synology), als kleine container of VM</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <section aria-labelledby="cmp-t">
     <h2 id="cmp-t">Naast de andere opties voor de werkvloer</h2>
     <div class="panel scroll">
@@ -302,7 +389,9 @@ footer .wrap{padding-block:0 40px;color:var(--muted);font-size:.85rem}
       <li><b>Odoo:</b> mag een aparte app via één technische API-gebruiker scans van meerdere operators doorsturen?</li>
       <li><b>MC Interieur:</b> staan de operators in de app Werknemers van Odoo (dan tellen ze als light-gebruiker), of beheren we de badges in de werkvloer-app?</li>
       <li><b>MC Interieur:</b> welke toestellen aan de werkposten: pc, tablet of beide, en welke scanners?</li>
-      <li><b>MC Interieur:</b> waar komt de server: in het atelier of in een kast op kantoor, en is er stroom- en netwerkback-up?</li>
+      <li><b>MC Interieur:</b> waar komt de server: op kantoor (voorkeur) of in een kast in het atelier, en is er een UPS?</li>
+      <li><b>MC Interieur:</b> is er al een server of NAS op kantoor waarop de app kan draaien, of kopen we een aparte mini-pc?</li>
+      <li><b>MC Interieur:</b> hangen de CNC en de zaag aan het netwerk, en zitten ze al in een apart netwerk?</li>
       <li><b>Ardis:</b> kan Ardis per stuk het plaatnummer en de zaagvolgorde exporteren (voor de wachtrij per plaat)?</li>
       <li><b>MC Interieur:</b> wordt de kantenlijmmachine een werkpost met scan?</li>
       <li><b>MC Interieur:</b> wie onderhoudt de app en de server (updates, back-ups)?</li>
