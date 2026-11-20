@@ -36,32 +36,36 @@
                         <h1><field name="name"/></h1>
                     </div>
                     <div class="alert alert-info" role="status">
-                        Voeg per tabblad vragen toe, wijzig een vraag of de keuzes, of sleep vragen in een andere volgorde.
-                        Elke wijziging geldt meteen voor alle projecten. Niets is verplicht: een lege vraag wordt bij het
-                        doorsturen een open vraag voor de tekenaar.
+                        Dit is een voorbeeld van het intakeformulier. Klik op het <b>potloodje</b> naast een vraag om het
+                        type en de keuzes te wijzigen, sleep een vraag om de volgorde te veranderen, of voeg onderaan een
+                        vraag toe. Zie je geen potloodjes, kies dan in het menu <b>⋮ (tandwiel)</b> bovenaan
+                        <b>Eigenschappen bewerken</b>.
                         <br/>
-                        De vragen met een vaste technische naam (bv. werkblad, grepen, verlichting, demontage) sturen de
-                        offerte, de picklijst beslag en de controlelijst van de plaatsing: hernoem ze gerust, maar verwijder
-                        ze niet.
+                        Elke wijziging geldt meteen voor alle projecten. Niets is verplicht: een lege vraag wordt bij het
+                        doorsturen een open vraag voor de tekenaar. De vragen werkblad, levering toestellen, situatie,
+                        grepen, model greep, ladesysteem, verlichting, demontage, afvoer, toegang, parkeren en
+                        nutsvoorzieningen sturen de offerte, de picklijst beslag en de plaatsing: hernoem ze gerust, maar
+                        verwijder ze niet. Wat je hier invult is enkel een voorbeeld en komt niet in een project.
                     </div>
+                    <field name="preview_template_id" invisible="1"/>
                     <notebook>
                         <page string="Algemeen" name="general">
-                            <field name="general_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
+                            <field name="preview_general" nolabel="1" editMode="1" columns="2"/>
                         </page>
                         <page string="Ruimte &amp; opmeting" name="space">
-                            <field name="space_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
+                            <field name="preview_space" nolabel="1" editMode="1" columns="2"/>
                         </page>
                         <page string="Materialen &amp; afwerking" name="materials">
-                            <field name="materials_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
+                            <field name="preview_materials" nolabel="1" editMode="1" columns="2"/>
                         </page>
                         <page string="Beslag &amp; indeling" name="hardware">
-                            <field name="hardware_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
+                            <field name="preview_hardware" nolabel="1" editMode="1" columns="2"/>
                         </page>
                         <page string="Werkblad &amp; toestellen" name="appliances">
-                            <field name="appliances_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
+                            <field name="preview_appliances" nolabel="1" editMode="1" columns="2"/>
                         </page>
                         <page string="Plaatsing" name="installation">
-                            <field name="installation_definition" widget="properties_definition" nolabel="1" editMode="1" columns="2"/>
+                            <field name="preview_installation" nolabel="1" editMode="1" columns="2"/>
                         </page>
                     </notebook>
                 </sheet>

@@ -148,6 +148,14 @@ class TestMcBackendScreens(HttpCase):
     def test_scan_station(self):
         self._open('/odoo/action-mc_interieur.mc_scan_station_action_assembly')
 
+    def test_intake_configuration_is_editable(self):
+        code = """setTimeout(() => {
+            const icons = document.querySelectorAll('.o_field_property_open_popover').length;
+            if (icons) { console.log('test successful'); }
+            else { console.error('No edit icons next to the intake questions'); }
+        }, 3000)"""
+        self.browser_js('/odoo/action-mc_interieur.mc_intake_template_action', code, login='admin')
+
 
 @tagged('post_install', '-at_install')
 class TestMcPortal(HttpCase):
