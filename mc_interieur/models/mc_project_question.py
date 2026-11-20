@@ -42,8 +42,9 @@ class McProjectQuestion(models.Model):
         self.ensure_one()
         self.write({'answer': answer, 'done': True, 'answered_by_customer': True})
         project = self.project_id
-        field = project._fields.get(self.field_name) if self.field_name else None
-        if field and field.type == 'char':
-            project[self.field_name] = answer
+        if self.field_name and '.' in self.field_name:
+            item = next((i for i in project._mc_intake_items() if i['key'] == self.field_name), None)
+            if item and item['type'] in ('char', 'text'):
+                project._mc_set_intake(self.field_name, answer)
         project.message_post(body=self.env._(
             "Klant beantwoordde \"%(question)s\": %(answer)s", question=self.name, answer=answer))

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Starting configuration of the intake. noupdate: once installed, the questions and options are managed in Odoo
+     (Interieur > Configuratie > Intakevragen and Projecttypes) and an upgrade never overwrites them.
+     The technical names (name) of the questions below are used by the quote, the hardware pick list and the
+     installation checklist: rename the label (string) freely, keep the name. -->
+<odoo noupdate="1">
+    <record id="project_type_kitchen" model="mc.project.type">
+        <field name="name">Keuken</field>
+        <field name="code">kitchen</field>
+        <field name="sequence">1</field>
+        <field name="show_appliances" eval="True"/>
+        <field name="default_install_days">3</field>
+    </record>
+    <record id="project_type_wardrobe" model="mc.project.type">
+        <field name="name">Inbouwkast</field>
+        <field name="code">wardrobe</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="project_type_dressing" model="mc.project.type">
+        <field name="name">Dressing</field>
+        <field name="code">dressing</field>
+        <field name="sequence">3</field>
+        <field name="default_install_days">2</field>
+    </record>
+    <record id="project_type_bathroom" model="mc.project.type">
+        <field name="name">Badkamermeubel</field>
+        <field name="code">bathroom</field>
+        <field name="sequence">4</field>
+        <field name="show_appliances" eval="True"/>
+    </record>
+    <record id="project_type_tv" model="mc.project.type">
+        <field name="name">TV-meubel</field>
+        <field name="code">tv</field>
+        <field name="sequence">5</field>
+    </record>
+    <record id="project_type_desk" model="mc.project.type">
+        <field name="name">Bureau</field>
+        <field name="code">desk</field>
+        <field name="sequence">6</field>
+    </record>
+    <record id="project_type_other" model="mc.project.type">
+        <field name="name">Andere</field>
+        <field name="code">other</field>
+        <field name="sequence">7</field>
+    </record>
+
+    <record id="intake_template_default" model="mc.intake.template">
+        <field name="name">Standaard intake</field>
+        <field name="general_definition" eval="[
+            {'name': 'room', 'string': 'Ruimte', 'type': 'char'},
+            {'name': 'situation', 'string': 'Situatie', 'type': 'selection', 'selection': [['new', 'Nieuwbouw'], ['renovation', 'Renovatie'], ['replacement', 'Vervanging bestaand meubel']]},
+            {'name': 'budget', 'string': 'Budgetindicatie', 'type': 'selection', 'selection': [['lt5', '&lt; EUR 5.000'], ['5_10', 'EUR 5.000 - 10.000'], ['10_20', 'EUR 10.000 - 20.000'], ['20_35', 'EUR 20.000 - 35.000'], ['gt35', '&gt; EUR 35.000'], ['unknown', 'Nog niet bekend']]},
+            {'name': 'third_party', 'string': 'Architect / aannemer', 'type': 'selection', 'selection': [['none', 'Geen'], ['architect', 'Architect'], ['contractor', 'Aannemer'], ['both', 'Beide']]},
+            {'name': 'third_party_contact', 'string': 'Contact architect / aannemer', 'type': 'char'},
+            {'name': 'style', 'string': 'Stijl / inspiratie', 'type': 'char'},
+        ]"/>
+        <field name="space_definition" eval="[
+            {'name': 'space_width', 'string': 'Breedte ruimte', 'type': 'integer', 'suffix': 'mm'},
+            {'name': 'space_height', 'string': 'Hoogte ruimte', 'type': 'integer', 'suffix': 'mm'},
+            {'name': 'space_depth', 'string': 'Diepte ruimte', 'type': 'integer', 'suffix': 'mm'},
+            {'name': 'ceiling_height', 'string': 'Plafondhoogte', 'type': 'integer', 'suffix': 'mm'},
+            {'name': 'measure_state', 'string': 'Definitieve opmeting', 'type': 'selection', 'selection': [['done', 'Gebeurd bij intake'], ['todo', 'Nog in te plannen'], ['after_plaster', 'Na pleisterwerk']]},
+            {'name': 'floor_state', 'string': 'Vloer', 'type': 'selection', 'selection': [['finished', 'Afgewerkt'], ['todo', 'Nog te plaatsen'], ['heating', 'Vloerverwarming']]},
+            {'name': 'walls_state', 'string': 'Muren', 'type': 'selection', 'selection': [['ok', 'Haaks en te lood'], ['deviations', 'Afwijkingen'], ['unchecked', 'Niet gecontroleerd']]},
+            {'name': 'wall_type', 'string': 'Wandtype (ophangen)', 'type': 'selection', 'selection': [['concrete', 'Beton / snelbouw'], ['gyproc', 'Gyproc'], ['timber', 'Houtskelet'], ['mixed', 'Gemengd']]},
+            {'name': 'obstacles', 'string': 'Obstakels', 'type': 'char'},
+            {'name': 'access_info', 'string': 'Toegang voor levering', 'type': 'char'},
+        ]"/>
+        <field name="materials_definition" eval="[
+            {'name': 'carcass_material', 'string': 'Korpusmateriaal', 'type': 'selection', 'selection': [['melamine', 'Melamine 18 mm'], ['mdf_lacquer', 'MDF gelakt'], ['plywood', 'Multiplex'], ['veneer', 'Fineer']]},
+            {'name': 'carcass_color', 'string': 'Kleur korpus', 'type': 'char'},
+            {'name': 'front_material', 'string': 'Fronten', 'type': 'selection', 'selection': [['melamine', 'Melamine'], ['mdf_lacquer', 'MDF gelakt'], ['veneer', 'Fineer'], ['solid', 'Massief hout'], ['hpl', 'HPL / Fenix'], ['glass', 'Glas']]},
+            {'name': 'front_color', 'string': 'Kleur fronten', 'type': 'char'},
+            {'name': 'gloss', 'string': 'Glansgraad', 'type': 'selection', 'selection': [['matt', 'Mat'], ['satin', 'Satijn'], ['gloss', 'Hoogglans'], ['structure', 'Structuur']]},
+            {'name': 'grain', 'string': 'Nerfrichting', 'type': 'selection', 'selection': [['continuous', 'Doorlopend over fronten'], ['vertical', 'Verticaal per front'], ['horizontal', 'Horizontaal'], ['na', 'Niet van toepassing']]},
+            {'name': 'edge_finish', 'string': 'Kantafwerking', 'type': 'selection', 'selection': [['abs1', 'ABS 1 mm'], ['abs2', 'ABS 2 mm'], ['lacquered', 'Gelakt'], ['veneer', 'Fineer']]},
+        ]"/>
+        <field name="hardware_definition" eval="[
+            {'name': 'handles', 'string': 'Grepen', 'type': 'selection', 'selection': [['none', 'Greeploos (push-to-open)'], ['profile', 'Greeplijst / uitfrezing'], ['handles', 'Grepen'], ['knobs', 'Knoppen']]},
+            {'name': 'handle_model', 'string': 'Model greep', 'type': 'char'},
+            {'name': 'hinges', 'string': 'Scharnieren', 'type': 'selection', 'selection': [['softclose', 'Softclose'], ['push', 'Push-to-open'], ['any', 'Geen voorkeur']]},
+            {'name': 'drawers', 'string': 'Ladesysteem', 'type': 'selection', 'selection': [['standard', 'Standaard dubbelwandig'], ['premium', 'Premium dunwandig'], ['wood', 'Houten lades'], ['none', 'Geen lades']]},
+            {'name': 'inner_drawers', 'string': 'Binnenlades', 'type': 'selection', 'selection': [['yes', 'Ja'], ['no', 'Nee']]},
+            {'name': 'layout_wishes', 'string': 'Indeling', 'type': 'char'},
+            {'name': 'lighting', 'string': 'Verlichting', 'type': 'selection', 'selection': [['none', 'Geen'], ['strip', 'LED-strip'], ['spots', 'LED-spots'], ['sensor', 'LED met sensor']]},
+        ]"/>
+        <field name="appliances_definition" eval="[
+            {'name': 'worktop', 'string': 'Werkblad', 'type': 'selection', 'selection': [['melamine', 'Melamine / compact'], ['stone', 'Composiet of natuursteen (extern)'], ['ceramic', 'Keramiek (extern)'], ['wood', 'Massief hout'], ['none', 'Geen']]},
+            {'name': 'appliances', 'string': 'Inbouwtoestellen', 'type': 'char'},
+            {'name': 'fridge_niche', 'string': 'Nishoogte koelkast', 'type': 'selection', 'selection': [['88', '88 cm'], ['122', '122 cm'], ['140', '140 cm'], ['158', '158 cm'], ['178', '178 cm'], ['free', 'Vrijstaand']]},
+            {'name': 'hood', 'string': 'Dampkap', 'type': 'selection', 'selection': [['exhaust', 'Afvoer naar buiten'], ['recirculation', 'Recirculatie'], ['hob', 'In kookplaat'], ['ceiling', 'Plafondunit']]},
+            {'name': 'sink', 'string': 'Spoelbak', 'type': 'selection', 'selection': [['under', 'Onderbouw'], ['top', 'Opbouw'], ['flush', 'Vlakbouw']]},
+            {'name': 'appliance_supply', 'string': 'Levering toestellen', 'type': 'selection', 'selection': [['us', 'Via ons'], ['customer', 'Klant zelf'], ['undecided', 'Nog te beslissen']]},
+        ]"/>
+        <field name="installation_definition" eval="[
+            {'name': 'installer', 'string': 'Plaatsing door', 'type': 'selection', 'selection': [['us', 'Ons team'], ['customer', 'Klant zelf'], ['contractor', 'Aannemer']]},
+            {'name': 'dismantle', 'string': 'Demontage bestaand', 'type': 'selection', 'selection': [['yes', 'Ja'], ['no', 'Nee']]},
+            {'name': 'disposal', 'string': 'Afvoer oud meubilair', 'type': 'selection', 'selection': [['yes', 'Ja'], ['no', 'Nee']]},
+            {'name': 'utilities', 'string': 'Aanpassingen nutsvoorzieningen', 'type': 'char'},
+            {'name': 'parking', 'string': 'Parkeren / laden', 'type': 'char'},
+        ]"/>
+    </record>
+</odoo>

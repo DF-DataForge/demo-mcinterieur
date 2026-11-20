@@ -27,3 +27,7 @@ access_mc_installation_punch_shopfloor,mc.installation.punch shopfloor,mc.instal
 access_mc_installation_punch_user,mc.installation.punch user,mc.installation.punch,mc_interieur_group_user,crud,
 access_mc_team_shopfloor,mc.team shopfloor,mc.team,mc_interieur_group_shopfloor,r,
 access_mc_team_manager,mc.team manager,mc.team,mc_interieur_group_manager,crud,
+access_mc_project_type_shopfloor,mc.project.type shopfloor,mc.project.type,mc_interieur_group_shopfloor,r,
+access_mc_project_type_manager,mc.project.type manager,mc.project.type,mc_interieur_group_manager,crud,
+access_mc_intake_template_shopfloor,mc.intake.template shopfloor,mc.intake.template,mc_interieur_group_shopfloor,r,
+access_mc_intake_template_manager,mc.intake.template manager,mc.intake.template,mc_interieur_group_manager,crud,

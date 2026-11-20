@@ -8,36 +8,15 @@
         <field name="street">Kerkstraat 4</field>
         <field name="city">Aalter</field>
         <field name="user_id" ref="user_sofie"/>
-        <field name="project_type">kitchen</field>
-        <field name="room">Keuken en berging gelijkvloers</field>
-        <field name="situation">renovation</field>
+        <field name="project_type_id" ref="project_type_kitchen"/>
         <field name="desired_date" eval="(DateTime.today() + relativedelta(months=4)).strftime('%Y-%m-%d')"/>
-        <field name="budget">20_35</field>
-        <field name="third_party">contractor</field>
-        <field name="third_party_contact">Bouwbedrijf Mortier, 09 123 45 67</field>
-        <field name="space_width">4120</field>
-        <field name="space_height">2650</field>
-        <field name="space_depth">3240</field>
-        <field name="ceiling_height">2650</field>
-        <field name="measure_state">todo</field>
-        <field name="floor_state">todo</field>
-        <field name="walls_state">unchecked</field>
-        <field name="obstacles">Radiator, raam met vensterbank</field>
-        <field name="front_material">mdf_lacquer</field>
-        <field name="front_color">RAL 7044 zijdegrijs</field>
-        <field name="gloss">matt</field>
-        <field name="edge_finish">lacquered</field>
-        <field name="worktop">stone</field>
-        <field name="handles">none</field>
-        <field name="hinges">push</field>
-        <field name="drawers">premium</field>
-        <field name="appliances">Oven, combi-microgolf, vaatwasser, koelkast, inductie, dampkap</field>
-        <field name="hood">recirculation</field>
-        <field name="sink">under</field>
-        <field name="appliance_supply">us</field>
-        <field name="installer">us</field>
-        <field name="dismantle">yes</field>
         <field name="notes" type="html"><p>Klant wil een eiland met zitgedeelte voor 2 krukken. Werkblad komt van de steenhouwer, opmeting werkblad na plaatsing van de kasten.</p></field>
+        <field name="intake_general" eval="{'room': 'Keuken en berging gelijkvloers', 'situation': 'renovation', 'budget': '20_35', 'third_party': 'contractor', 'third_party_contact': 'Bouwbedrijf Mortier, 09 123 45 67'}"/>
+        <field name="intake_space" eval="{'space_width': 4120, 'space_height': 2650, 'space_depth': 3240, 'ceiling_height': 2650, 'measure_state': 'todo', 'floor_state': 'todo', 'walls_state': 'unchecked', 'obstacles': 'Radiator, raam met vensterbank'}"/>
+        <field name="intake_materials" eval="{'front_material': 'mdf_lacquer', 'front_color': 'RAL 7044 zijdegrijs', 'gloss': 'matt', 'edge_finish': 'lacquered'}"/>
+        <field name="intake_hardware" eval="{'handles': 'none', 'hinges': 'push', 'drawers': 'premium'}"/>
+        <field name="intake_appliances" eval="{'worktop': 'stone', 'appliances': 'Oven, combi-microgolf, vaatwasser, koelkast, inductie, dampkap', 'hood': 'recirculation', 'sink': 'under', 'appliance_supply': 'us'}"/>
+        <field name="intake_installation" eval="{'installer': 'us', 'dismantle': 'yes'}"/>
     </record>
 
     <!-- 2. Drawing: the drawer works on it, material list from TopSolid is in, one material still unlinked -->
@@ -48,23 +27,17 @@
         <field name="user_id" ref="user_sofie"/>
         <field name="drawer_id" ref="user_jonas"/>
         <field name="stage">drawing</field>
-        <field name="project_type">wardrobe</field>
-        <field name="room">Inkomhal onder de trap</field>
-        <field name="situation">renovation</field>
-        <field name="space_width">1800</field>
-        <field name="space_height">2450</field>
-        <field name="space_depth">600</field>
-        <field name="carcass_material">melamine</field>
-        <field name="carcass_color">Wit</field>
-        <field name="front_material">veneer</field>
-        <field name="front_color">Eiken natuur, geolied</field>
-        <field name="handles">profile</field>
-        <field name="installer">us</field>
+        <field name="project_type_id" ref="project_type_wardrobe"/>
+        <field name="intake_general" eval="{'room': 'Inkomhal onder de trap', 'situation': 'renovation'}"/>
+        <field name="intake_space" eval="{'space_width': 1800, 'space_height': 2450, 'space_depth': 600}"/>
+        <field name="intake_materials" eval="{'carcass_material': 'melamine', 'carcass_color': 'Wit', 'front_material': 'veneer', 'front_color': 'Eiken natuur, geolied'}"/>
+        <field name="intake_hardware" eval="{'handles': 'profile'}"/>
+        <field name="intake_installation" eval="{'installer': 'us'}"/>
     </record>
     <record id="question_peeters_inkomkast_1" model="mc.project.question">
         <field name="project_id" ref="project_peeters_inkomkast"/>
         <field name="name">Wandtype achter de kast?</field>
-        <field name="field_name">wall_type</field>
+        <field name="field_name">intake_space.wall_type</field>
     </record>
     <record id="version_peeters_inkomkast_1" model="mc.drawing.version">
         <field name="project_id" ref="project_peeters_inkomkast"/>
@@ -82,40 +55,14 @@
         <field name="user_id" ref="user_sofie"/>
         <field name="drawer_id" ref="user_jonas"/>
         <field name="stage">drawing</field>
-        <field name="project_type">kitchen</field>
-        <field name="room">Leefkeuken</field>
-        <field name="situation">renovation</field>
+        <field name="project_type_id" ref="project_type_kitchen"/>
         <field name="desired_date" eval="(DateTime.today() + relativedelta(months=2)).strftime('%Y-%m-%d')"/>
-        <field name="budget">20_35</field>
-        <field name="third_party">none</field>
-        <field name="space_width">3240</field>
-        <field name="space_height">2600</field>
-        <field name="space_depth">3800</field>
-        <field name="ceiling_height">2600</field>
-        <field name="measure_state">done</field>
-        <field name="floor_state">finished</field>
-        <field name="walls_state">ok</field>
-        <field name="wall_type">concrete</field>
-        <field name="carcass_material">melamine</field>
-        <field name="carcass_color">Wit</field>
-        <field name="front_material">mdf_lacquer</field>
-        <field name="front_color">RAL 9010 zuiver wit</field>
-        <field name="gloss">matt</field>
-        <field name="grain">na</field>
-        <field name="edge_finish">lacquered</field>
-        <field name="worktop">stone</field>
-        <field name="handles">profile</field>
-        <field name="hinges">softclose</field>
-        <field name="drawers">premium</field>
-        <field name="lighting">strip</field>
-        <field name="appliances">Oven, combi-microgolf, vaatwasser, koelkast, kookplaat, dampkap</field>
-        <field name="fridge_niche">178</field>
-        <field name="hood">ceiling</field>
-        <field name="sink">under</field>
-        <field name="appliance_supply">us</field>
-        <field name="installer">us</field>
-        <field name="dismantle">yes</field>
-        <field name="disposal">yes</field>
+        <field name="intake_general" eval="{'room': 'Leefkeuken', 'situation': 'renovation', 'budget': '20_35', 'third_party': 'none'}"/>
+        <field name="intake_space" eval="{'space_width': 3240, 'space_height': 2600, 'space_depth': 3800, 'ceiling_height': 2600, 'measure_state': 'done', 'floor_state': 'finished', 'walls_state': 'ok', 'wall_type': 'concrete'}"/>
+        <field name="intake_materials" eval="{'carcass_material': 'melamine', 'carcass_color': 'Wit', 'front_material': 'mdf_lacquer', 'front_color': 'RAL 9010 zuiver wit', 'gloss': 'matt', 'grain': 'na', 'edge_finish': 'lacquered'}"/>
+        <field name="intake_hardware" eval="{'handles': 'profile', 'hinges': 'softclose', 'drawers': 'premium', 'lighting': 'strip'}"/>
+        <field name="intake_appliances" eval="{'worktop': 'stone', 'appliances': 'Oven, combi-microgolf, vaatwasser, koelkast, kookplaat, dampkap', 'fridge_niche': '178', 'hood': 'ceiling', 'sink': 'under', 'appliance_supply': 'us'}"/>
+        <field name="intake_installation" eval="{'installer': 'us', 'dismantle': 'yes', 'disposal': 'yes'}"/>
     </record>
     <record id="question_maes_keuken_1" model="mc.project.question">
         <field name="project_id" ref="project_maes_keuken"/>
@@ -151,15 +98,13 @@ Extra lade onder de kookplaat.</field>
         <field name="user_id" ref="user_sofie"/>
         <field name="drawer_id" ref="user_lien"/>
         <field name="stage">drawing</field>
-        <field name="project_type">bathroom</field>
-        <field name="situation">renovation</field>
-        <field name="carcass_material">melamine</field>
-        <field name="front_material">mdf_lacquer</field>
-        <field name="front_color">RAL 9010</field>
-        <field name="worktop">stone</field>
-        <field name="drawers">standard</field>
-        <field name="installer">us</field>
-        <field name="access_info">1ste verdieping, trap 90 cm breed</field>
+        <field name="project_type_id" ref="project_type_bathroom"/>
+        <field name="intake_general" eval="{'situation': 'renovation'}"/>
+        <field name="intake_space" eval="{'access_info': '1ste verdieping, trap 90 cm breed'}"/>
+        <field name="intake_materials" eval="{'carcass_material': 'melamine', 'front_material': 'mdf_lacquer', 'front_color': 'RAL 9010'}"/>
+        <field name="intake_hardware" eval="{'drawers': 'standard'}"/>
+        <field name="intake_appliances" eval="{'worktop': 'stone'}"/>
+        <field name="intake_installation" eval="{'installer': 'us'}"/>
     </record>
     <record id="version_maes_badkamer_1" model="mc.drawing.version">
         <field name="project_id" ref="project_maes_badkamer"/>
@@ -177,20 +122,13 @@ Extra lade onder de kookplaat.</field>
         <field name="user_id" ref="user_sofie"/>
         <field name="drawer_id" ref="user_jonas"/>
         <field name="stage">drawing</field>
-        <field name="project_type">dressing</field>
-        <field name="room">Slaapkamer 1</field>
-        <field name="situation">new</field>
+        <field name="project_type_id" ref="project_type_dressing"/>
         <field name="desired_date" eval="(DateTime.today() + relativedelta(days=10)).strftime('%Y-%m-%d')"/>
-        <field name="carcass_material">melamine</field>
-        <field name="carcass_color">Eiken natuur</field>
-        <field name="front_material">mdf_lacquer</field>
-        <field name="front_color">NCS S 2005-Y20R</field>
-        <field name="handles">profile</field>
-        <field name="lighting">sensor</field>
-        <field name="layout_wishes">Hangroede, schoenenrek, broekenrek</field>
-        <field name="installer">us</field>
-        <field name="access_info">Appartement 3de verdieping, lift 1,1 m diep</field>
-        <field name="parking">Laadzone voor de deur, vooraf aanvragen bij de stad</field>
+        <field name="intake_general" eval="{'room': 'Slaapkamer 1', 'situation': 'new'}"/>
+        <field name="intake_space" eval="{'access_info': 'Appartement 3de verdieping, lift 1,1 m diep'}"/>
+        <field name="intake_materials" eval="{'carcass_material': 'melamine', 'carcass_color': 'Eiken natuur', 'front_material': 'mdf_lacquer', 'front_color': 'NCS S 2005-Y20R'}"/>
+        <field name="intake_hardware" eval="{'handles': 'profile', 'lighting': 'sensor', 'layout_wishes': 'Hangroede, schoenenrek, broekenrek'}"/>
+        <field name="intake_installation" eval="{'installer': 'us', 'parking': 'Laadzone voor de deur, vooraf aanvragen bij de stad'}"/>
     </record>
     <record id="version_vandamme_dressing_1" model="mc.drawing.version">
         <field name="project_id" ref="project_vandamme_dressing"/>
@@ -207,13 +145,11 @@ Extra lade onder de kookplaat.</field>
         <field name="user_id" ref="user_sofie"/>
         <field name="drawer_id" ref="user_jonas"/>
         <field name="stage">drawing</field>
-        <field name="project_type">tv</field>
-        <field name="situation">new</field>
-        <field name="carcass_material">melamine</field>
-        <field name="carcass_color">Antraciet</field>
-        <field name="front_material">mdf_lacquer</field>
-        <field name="lighting">strip</field>
-        <field name="installer">us</field>
+        <field name="project_type_id" ref="project_type_tv"/>
+        <field name="intake_general" eval="{'situation': 'new'}"/>
+        <field name="intake_materials" eval="{'carcass_material': 'melamine', 'carcass_color': 'Antraciet', 'front_material': 'mdf_lacquer'}"/>
+        <field name="intake_hardware" eval="{'lighting': 'strip'}"/>
+        <field name="intake_installation" eval="{'installer': 'us'}"/>
     </record>
     <record id="version_vandamme_tv_1" model="mc.drawing.version">
         <field name="project_id" ref="project_vandamme_tv"/>
@@ -231,20 +167,12 @@ Extra lade onder de kookplaat.</field>
         <field name="user_id" ref="user_sofie"/>
         <field name="drawer_id" ref="user_lien"/>
         <field name="stage">drawing</field>
-        <field name="project_type">desk</field>
-        <field name="situation">renovation</field>
-        <field name="carcass_material">melamine</field>
-        <field name="carcass_color">Eiken</field>
-        <field name="handles">handles</field>
-        <field name="handle_model">Lijngreep zwart 160 mm</field>
-        <field name="drawers">standard</field>
-        <field name="lighting">strip</field>
-        <field name="installer">us</field>
-        <field name="dismantle">no</field>
-        <field name="disposal">no</field>
-        <field name="access_info">2de verdieping, lift aanwezig</field>
-        <field name="parking">Parkeerplaats voor de deur</field>
-        <field name="utilities">Door klant geregeld</field>
+        <field name="project_type_id" ref="project_type_desk"/>
+        <field name="intake_general" eval="{'situation': 'renovation'}"/>
+        <field name="intake_space" eval="{'access_info': '2de verdieping, lift aanwezig'}"/>
+        <field name="intake_materials" eval="{'carcass_material': 'melamine', 'carcass_color': 'Eiken'}"/>
+        <field name="intake_hardware" eval="{'handles': 'handles', 'handle_model': 'Lijngreep zwart 160 mm', 'drawers': 'standard', 'lighting': 'strip'}"/>
+        <field name="intake_installation" eval="{'installer': 'us', 'dismantle': 'no', 'disposal': 'no', 'parking': 'Parkeerplaats voor de deur', 'utilities': 'Door klant geregeld'}"/>
     </record>
     <record id="version_desmet_bureau_1" model="mc.drawing.version">
         <field name="project_id" ref="project_desmet_bureau"/>

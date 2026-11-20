@@ -1,7 +1,10 @@
 import math
+from html import escape
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
+
+from .mc_intake_template import INTAKE_SECTIONS
 
 STAGES = [
     ('intake', "Intake"),
@@ -12,22 +15,6 @@ STAGES = [
     ('cnc', "CNC"),
     ('assembly', "Montage & plaatsing"),
     ('delivered', "Opgeleverd"),
-]
-
-# Intake questions: (field name, only relevant for kitchens)
-INTAKE_FIELDS = [
-    ('project_type', False), ('room', False), ('situation', False), ('desired_date', False),
-    ('budget', False), ('third_party', False), ('style', False),
-    ('space_width', False), ('space_height', False), ('space_depth', False), ('ceiling_height', False),
-    ('measure_state', False), ('floor_state', False), ('walls_state', False), ('wall_type', False),
-    ('obstacles', False), ('access_info', False),
-    ('carcass_material', False), ('carcass_color', False), ('front_material', False), ('front_color', False),
-    ('gloss', False), ('grain', False), ('edge_finish', False),
-    ('handles', False), ('hinges', False), ('drawers', False), ('inner_drawers', False),
-    ('layout_wishes', False), ('lighting', False),
-    ('worktop', True), ('appliances', True), ('fridge_niche', True), ('hood', True), ('sink', True),
-    ('appliance_supply', True),
-    ('installer', False), ('dismantle', False), ('disposal', False), ('utilities', False), ('parking', False),
 ]
 
 CABINET_PREFIX = {
@@ -71,109 +58,24 @@ class McProject(models.Model):
         help="Foto's van de ruimte, schetsen op papier, architectenplannen.")
 
     # ------------------------------------------------------------------
-    # Intake: all optional, nothing blocks the flow
+    # Intake: all optional, nothing blocks the flow. The questions and their options are
+    # configured in Odoo (Configuratie > Intakevragen) and stored as properties.
     # ------------------------------------------------------------------
-    project_type = fields.Selection([
-        ('kitchen', "Keuken"), ('wardrobe', "Inbouwkast"), ('dressing', "Dressing"),
-        ('bathroom', "Badkamermeubel"), ('tv', "TV-meubel"), ('desk', "Bureau"), ('other', "Andere"),
-    ], string="Type project", tracking=True)
-    room = fields.Char(string="Ruimte")
-    situation = fields.Selection([
-        ('new', "Nieuwbouw"), ('renovation', "Renovatie"), ('replacement', "Vervanging bestaand meubel"),
-    ], string="Situatie")
+    project_type_id = fields.Many2one('mc.project.type', string="Type project", tracking=True, index='btree_not_null')
+    show_appliances = fields.Boolean(related='project_type_id.show_appliances')
     desired_date = fields.Date(string="Gewenste plaatsing")
-    budget = fields.Selection([
-        ('lt5', "< EUR 5.000"), ('5_10', "EUR 5.000 - 10.000"), ('10_20', "EUR 10.000 - 20.000"),
-        ('20_35', "EUR 20.000 - 35.000"), ('gt35', "> EUR 35.000"), ('unknown', "Nog niet bekend"),
-    ], string="Budgetindicatie")
-    third_party = fields.Selection([
-        ('none', "Geen"), ('architect', "Architect"), ('contractor', "Aannemer"), ('both', "Beide"),
-    ], string="Architect / aannemer")
-    third_party_contact = fields.Char(string="Contact architect / aannemer")
-    style = fields.Char(string="Stijl / inspiratie")
-
-    space_width = fields.Integer(string="Breedte ruimte (mm)")
-    space_height = fields.Integer(string="Hoogte ruimte (mm)")
-    space_depth = fields.Integer(string="Diepte ruimte (mm)")
-    ceiling_height = fields.Integer(string="Plafondhoogte (mm)")
-    measure_state = fields.Selection([
-        ('done', "Gebeurd bij intake"), ('todo', "Nog in te plannen"), ('after_plaster', "Na pleisterwerk"),
-    ], string="Definitieve opmeting")
-    floor_state = fields.Selection([
-        ('finished', "Afgewerkt"), ('todo', "Nog te plaatsen"), ('heating', "Vloerverwarming"),
-    ], string="Vloer")
-    walls_state = fields.Selection([
-        ('ok', "Haaks en te lood"), ('deviations', "Afwijkingen"), ('unchecked', "Niet gecontroleerd"),
-    ], string="Muren")
-    wall_type = fields.Selection([
-        ('concrete', "Beton / snelbouw"), ('gyproc', "Gyproc"), ('timber', "Houtskelet"), ('mixed', "Gemengd"),
-    ], string="Wandtype (ophangen)")
-    obstacles = fields.Char(string="Obstakels", help="Radiator, stopcontacten, leidingen, schuine wand, ...")
-    access_info = fields.Char(string="Toegang voor levering", help="Verdieping, lift, smalste deur of trap")
-
-    carcass_material = fields.Selection([
-        ('melamine', "Melamine 18 mm"), ('mdf_lacquer', "MDF gelakt"), ('plywood', "Multiplex"), ('veneer', "Fineer"),
-    ], string="Korpusmateriaal")
-    carcass_color = fields.Char(string="Kleur korpus")
-    front_material = fields.Selection([
-        ('melamine', "Melamine"), ('mdf_lacquer', "MDF gelakt"), ('veneer', "Fineer"), ('solid', "Massief hout"),
-        ('hpl', "HPL / Fenix"), ('glass', "Glas"),
-    ], string="Fronten")
-    front_color = fields.Char(string="Kleur fronten", help="RAL, NCS, stalen of referentie")
-    gloss = fields.Selection([
-        ('matt', "Mat"), ('satin', "Satijn"), ('gloss', "Hoogglans"), ('structure', "Structuur"),
-    ], string="Glansgraad")
-    grain = fields.Selection([
-        ('continuous', "Doorlopend over fronten"), ('vertical', "Verticaal per front"),
-        ('horizontal', "Horizontaal"), ('na', "Niet van toepassing"),
-    ], string="Nerfrichting")
-    edge_finish = fields.Selection([
-        ('abs1', "ABS 1 mm"), ('abs2', "ABS 2 mm"), ('lacquered', "Gelakt"), ('veneer', "Fineer"),
-    ], string="Kantafwerking")
-
-    handles = fields.Selection([
-        ('none', "Greeploos (push-to-open)"), ('profile', "Greeplijst / uitfrezing"),
-        ('handles', "Grepen"), ('knobs', "Knoppen"),
-    ], string="Grepen")
-    handle_model = fields.Char(string="Model greep")
-    hinges = fields.Selection([
-        ('softclose', "Softclose"), ('push', "Push-to-open"), ('any', "Geen voorkeur"),
-    ], string="Scharnieren")
-    drawers = fields.Selection([
-        ('standard', "Standaard dubbelwandig"), ('premium', "Premium dunwandig"),
-        ('wood', "Houten lades"), ('none', "Geen lades"),
-    ], string="Ladesysteem")
-    inner_drawers = fields.Selection([('yes', "Ja"), ('no', "Nee")], string="Binnenlades")
-    layout_wishes = fields.Char(string="Indeling", help="Hangroede, schoenenrek, afvalsysteem, hoekoplossing, ...")
-    lighting = fields.Selection([
-        ('none', "Geen"), ('strip', "LED-strip"), ('spots', "LED-spots"), ('sensor', "LED met sensor"),
-    ], string="Verlichting")
-
-    worktop = fields.Selection([
-        ('melamine', "Melamine / compact"), ('stone', "Composiet of natuursteen (extern)"),
-        ('ceramic', "Keramiek (extern)"), ('wood', "Massief hout"), ('none', "Geen"),
-    ], string="Werkblad")
-    appliances = fields.Char(string="Inbouwtoestellen")
-    fridge_niche = fields.Selection([
-        ('88', "88 cm"), ('122', "122 cm"), ('140', "140 cm"), ('158', "158 cm"), ('178', "178 cm"),
-        ('free', "Vrijstaand"),
-    ], string="Nishoogte koelkast")
-    hood = fields.Selection([
-        ('exhaust', "Afvoer naar buiten"), ('recirculation', "Recirculatie"), ('hob', "In kookplaat"),
-        ('ceiling', "Plafondunit"),
-    ], string="Dampkap")
-    sink = fields.Selection([('under', "Onderbouw"), ('top', "Opbouw"), ('flush', "Vlakbouw")], string="Spoelbak")
-    appliance_supply = fields.Selection([
-        ('us', "Via ons"), ('customer', "Klant zelf"), ('undecided', "Nog te beslissen"),
-    ], string="Levering toestellen")
-
-    installer = fields.Selection([
-        ('us', "Ons team"), ('customer', "Klant zelf"), ('contractor', "Aannemer"),
-    ], string="Plaatsing door")
-    dismantle = fields.Selection([('yes', "Ja"), ('no', "Nee")], string="Demontage bestaand")
-    disposal = fields.Selection([('yes', "Ja"), ('no', "Nee")], string="Afvoer oud meubilair")
-    utilities = fields.Char(string="Aanpassingen nutsvoorzieningen")
-    parking = fields.Char(string="Parkeren / laden")
+    intake_template_id = fields.Many2one(
+        'mc.intake.template', string="Intakesjabloon", required=True,
+        default=lambda self: self.env.ref('mc_interieur.intake_template_default', raise_if_not_found=False))
+    intake_general = fields.Properties("Algemeen", definition='intake_template_id.general_definition', copy=True)
+    intake_space = fields.Properties("Ruimte & opmeting", definition='intake_template_id.space_definition', copy=True)
+    intake_materials = fields.Properties(
+        "Materialen & afwerking", definition='intake_template_id.materials_definition', copy=True)
+    intake_hardware = fields.Properties("Beslag & indeling", definition='intake_template_id.hardware_definition', copy=True)
+    intake_appliances = fields.Properties(
+        "Werkblad & toestellen", definition='intake_template_id.appliances_definition', copy=True)
+    intake_installation = fields.Properties(
+        "Plaatsing", definition='intake_template_id.installation_definition', copy=True)
 
     intake_progress = fields.Integer(string="Intake ingevuld (%)", compute='_compute_intake_progress')
     intake_missing = fields.Integer(string="Lege intakevragen", compute='_compute_intake_progress')
@@ -181,6 +83,8 @@ class McProject(models.Model):
     intake_total = fields.Integer(string="Intakevragen", compute='_compute_intake_progress')
     attachment_count = fields.Integer(string="Foto's en plannen ", compute='_compute_attachment_count')
     topsolid_folder = fields.Char(string="TopSolid-projectmap", compute='_compute_topsolid_folder')
+    intake_summary_html = fields.Html(
+        string="Samenvatting intake", compute='_compute_intake_summary_html', sanitize=True)
 
     # ------------------------------------------------------------------
     # Questions, drawings, quotes
@@ -223,15 +127,16 @@ class McProject(models.Model):
     # ------------------------------------------------------------------
     # Computes
     # ------------------------------------------------------------------
-    @api.depends(*[name for name, _kitchen in INTAKE_FIELDS])
+    @api.depends('project_type_id', 'intake_template_id', *[section[0] for section in INTAKE_SECTIONS])
     def _compute_intake_progress(self):
         for project in self:
-            relevant = [name for name, kitchen in INTAKE_FIELDS if not kitchen or project.project_type == 'kitchen']
-            done = sum(1 for name in relevant if project[name])
-            project.intake_progress = round(done * 100 / len(relevant)) if relevant else 0
-            project.intake_missing = len(relevant) - done
+            items = project._mc_intake_items()
+            done = sum(1 for item in items if item['filled']) + (1 if project.project_type_id else 0)
+            total = len(items) + 1
+            project.intake_progress = round(done * 100 / total)
+            project.intake_missing = total - done
             project.intake_answered = done
-            project.intake_total = len(relevant)
+            project.intake_total = total
 
     @api.depends('attachment_ids')
     def _compute_attachment_count(self):
@@ -243,6 +148,36 @@ class McProject(models.Model):
         for project in self:
             customer = ''.join((project.partner_id.name or 'klant').split())
             project.topsolid_folder = f"\\\\server\\TopSolid\\Projecten\\{project.ref}_{customer}"
+
+    @api.depends('project_type_id', 'intake_template_id', *[section[0] for section in INTAKE_SECTIONS])
+    def _compute_intake_summary_html(self):
+        for project in self:
+            rows = []
+            current_tab = None
+            for item in project._mc_intake_items():
+                if not item['filled']:
+                    continue
+                tab = dict((s[0], s[2]) for s in INTAKE_SECTIONS)[item['field']]
+                if tab != current_tab:
+                    rows.append(f"<tr><th colspan='2' class='pt-3'>{escape(tab)}</th></tr>")
+                    current_tab = tab
+                rows.append(f"<tr><td class='text-muted'>{escape(item['string'])}</td>"
+                            f"<td>{escape(project._mc_intake_label(item))}</td></tr>")
+            project.intake_summary_html = (
+                f"<table class='table table-sm o_mc_table'><tbody>{''.join(rows)}</tbody></table>" if rows
+                else f"<p class='text-muted'>{escape(self.env._('Nog niets ingevuld.'))}</p>")
+
+    def _mc_intake_label(self, item):
+        """Readable answer: the option label for a choice, the value otherwise."""
+        if item['type'] == 'selection':
+            for field_name, definition_field, _label in INTAKE_SECTIONS:
+                if field_name == item['field']:
+                    for definition in self.intake_template_id[definition_field] or []:
+                        if definition['name'] == item['name']:
+                            return dict(definition.get('selection') or []).get(item['value'], item['value'])
+        if item['type'] == 'boolean':
+            return self.env._("Ja") if item['value'] else self.env._("Nee")
+        return str(item['value'])
 
     @api.depends('question_ids.done', 'question_ids.to_customer')
     def _compute_question_counts(self):
@@ -280,14 +215,15 @@ class McProject(models.Model):
                 kit=len(pieces.filtered('kitted')),
             )
 
-    @api.depends('project_type', 'situation', 'worktop', 'appliance_supply')
+    @api.depends('project_type_id', 'intake_general', 'intake_appliances')
     def _compute_quote_defaults(self):
         for project in self:
-            project.quote_install_days = {'kitchen': 3, 'dressing': 2}.get(project.project_type, 1)
-            project.quote_worktop_amount = 2400.0 if project.worktop in ('stone', 'ceramic') else 0.0
+            project.quote_install_days = project.project_type_id.default_install_days or 1
+            project.quote_worktop_amount = 2400.0 if project._mc_intake('worktop') in ('stone', 'ceramic') else 0.0
             project.quote_appliance_amount = (
-                4800.0 if project.project_type == 'kitchen' and project.appliance_supply == 'us' else 0.0)
-            project.quote_vat = '21' if project.situation == 'new' else '6'
+                4800.0 if project.project_type_id.code == 'kitchen' and project._mc_intake('appliance_supply') == 'us'
+                else 0.0)
+            project.quote_vat = '21' if project._mc_intake('situation') == 'new' else '6'
 
     @api.depends('part_ids', 'quote_margin', 'quote_margin_external', 'quote_discount', 'quote_install_days',
                  'quote_worktop_amount', 'quote_appliance_amount', 'quote_vat', 'quote_deposit')
@@ -299,7 +235,7 @@ class McProject(models.Model):
             calc = project._mc_quote_calc()
             project.quote_preview_html = project._mc_render_calc(calc)
 
-    @api.depends('part_ids', 'handles', 'drawers', 'lighting', 'handle_model')
+    @api.depends('part_ids', 'intake_hardware')
     def _compute_hardware_html(self):
         for project in self:
             lines = project._mc_hardware_lines()
@@ -329,11 +265,61 @@ class McProject(models.Model):
 
     def write(self, vals):
         result = super().write(vals)
-        intake_names = {name for name, _kitchen in INTAKE_FIELDS}
-        filled = [name for name in vals if name in intake_names and vals[name]]
-        if filled:
-            self.question_ids.filtered(lambda q: not q.done and q.field_name in filled).write({'done': True})
+        if any(section[0] in vals for section in INTAKE_SECTIONS) or vals.get('project_type_id'):
+            for project in self:
+                filled = {item['key'] for item in project._mc_intake_items() if item['filled']}
+                if project.project_type_id:
+                    filled.add('project_type_id')
+                project.question_ids.filtered(lambda q: not q.done and q.field_name in filled).write({'done': True})
         return result
+
+    # ------------------------------------------------------------------
+    # Intake helpers
+    # ------------------------------------------------------------------
+    def _mc_intake_sections(self):
+        """Intake tabs that apply to this project (the appliances tab only for some project types)."""
+        self.ensure_one()
+        return [section for section in INTAKE_SECTIONS
+                if section[0] != 'intake_appliances' or self.project_type_id.show_appliances]
+
+    def _mc_intake_items(self):
+        """Every intake question of this project: key (field.name), label, type, value, filled."""
+        self.ensure_one()
+        items = []
+        template = self.intake_template_id
+        for field_name, definition_field, _label in self._mc_intake_sections():
+            values = self[field_name]
+            for definition in template[definition_field] or []:
+                if definition.get('type') == 'separator':
+                    continue
+                value = values.get(definition['name']) if values else None
+                items.append({
+                    'key': f"{field_name}.{definition['name']}",
+                    'field': field_name,
+                    'name': definition['name'],
+                    'string': definition.get('string') or definition['name'],
+                    'type': definition.get('type'),
+                    'value': value,
+                    'filled': value not in (None, False, '', 0, []),
+                })
+        return items
+
+    def _mc_intake(self, name):
+        """Value of an intake question by its technical name, on any tab (False when empty or removed)."""
+        self.ensure_one()
+        for field_name, _definition, _label in INTAKE_SECTIONS:
+            values = self[field_name]
+            if values and name in values:
+                return values.get(name) or False
+        return False
+
+    def _mc_set_intake(self, key, value):
+        """Write one intake answer, given its key "field.name"."""
+        self.ensure_one()
+        field_name, name = key.split('.', 1)
+        values = dict(self[field_name] or {})
+        values[name] = value
+        self[field_name] = values
 
     def _mc_notify_customer_questions(self):
         for project in self:
@@ -358,14 +344,14 @@ class McProject(models.Model):
                 raise UserError(self.env._("Kies eerst een tekenaar voor %s.", project.display_name))
             existing = set(project.question_ids.filtered(lambda q: not q.done).mapped('field_name'))
             new_questions = []
-            for name, kitchen in INTAKE_FIELDS:
-                if kitchen and project.project_type != 'kitchen':
-                    continue
-                if not project[name] and name not in existing:
+            for item in project._mc_intake_items():
+                if not item['filled'] and item['key'] not in existing:
                     new_questions.append(Command.create({
-                        'name': self.env._("%s?", project._fields[name].string),
-                        'field_name': name,
+                        'name': self.env._("%s?", item['string']),
+                        'field_name': item['key'],
                     }))
+            if not project.project_type_id and 'project_type_id' not in existing:
+                new_questions.append(Command.create({'name': self.env._("Type project?"), 'field_name': 'project_type_id'}))
             project.write({'stage': 'drawing', 'question_ids': new_questions})
             project.activity_schedule(
                 'mail.mail_activity_data_todo', user_id=project.drawer_id.id,
@@ -453,8 +439,9 @@ class McProject(models.Model):
         def add(code, qty):
             totals[code] = totals.get(code, 0) + qty
 
-        grip = {'handles': 'HW-GREEP', 'knobs': 'HW-KNOP'}.get(self.handles)
-        drawer = {'premium': 'HW-LADE-PREM', 'wood': 'HW-LADE-HOUT'}.get(self.drawers, 'HW-LADE-STD')
+        handles = self._mc_intake('handles')
+        grip = {'handles': 'HW-GREEP', 'knobs': 'HW-KNOP'}.get(handles)
+        drawer = {'premium': 'HW-LADE-PREM', 'wood': 'HW-LADE-HOUT'}.get(self._mc_intake('drawers'), 'HW-LADE-STD')
         for part in self.part_ids:
             name = (part.name or '').lower()
             if any(key in name for key in ('deur', 'klep', 'front kolom', 'front boven')):
@@ -474,7 +461,8 @@ class McProject(models.Model):
                 add('HW-OPHANG', part.quantity / 2)
             if 'zijwand' in name:
                 add('HW-EXCENTER', 4 * part.quantity)
-        if self.lighting and self.lighting != 'none' and self.part_ids:
+        lighting = self._mc_intake('lighting')
+        if lighting and lighting != 'none' and self.part_ids:
             add('HW-LED', 1)
         lines = []
         for code, qty in totals.items():

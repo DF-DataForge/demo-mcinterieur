@@ -27,11 +27,11 @@ class McInstallation(models.Model):
     # Site information from the intake
     site_city = fields.Char(related='project_id.city', string="Gemeente")
     site_street = fields.Char(related='project_id.street', string="Adres")
-    access_info = fields.Char(related='project_id.access_info')
-    parking = fields.Char(related='project_id.parking')
-    dismantle = fields.Selection(related='project_id.dismantle')
-    disposal = fields.Selection(related='project_id.disposal')
-    utilities = fields.Char(related='project_id.utilities')
+    access_info = fields.Char(string="Toegang voor levering", compute='_compute_site_info')
+    parking = fields.Char(string="Parkeren / laden", compute='_compute_site_info')
+    dismantle = fields.Char(string="Demontage bestaand", compute='_compute_site_info')
+    disposal = fields.Char(string="Afvoer oud meubilair", compute='_compute_site_info')
+    utilities = fields.Char(string="Aanpassingen nutsvoorzieningen", compute='_compute_site_info')
 
     check_ids = fields.One2many('mc.installation.check', 'installation_id', string="Controlelijst")
     open_check_count = fields.Integer(compute='_compute_open_check_count')
@@ -45,6 +45,16 @@ class McInstallation(models.Model):
     def _compute_name(self):
         for installation in self:
             installation.name = installation.project_id.display_name or self.env._("Plaatsing")
+
+    @api.depends('project_id.intake_space', 'project_id.intake_installation')
+    def _compute_site_info(self):
+        """Site details from the intake, shown with the option label the team configured."""
+        for installation in self:
+            project = installation.project_id
+            labels = {item['name']: item for item in project._mc_intake_items()} if project else {}
+            for name in ('access_info', 'parking', 'dismantle', 'disposal', 'utilities'):
+                item = labels.get(name)
+                installation[name] = project._mc_intake_label(item) if item and item['filled'] else False
 
     @api.depends('check_ids.done')
     def _compute_open_check_count(self):
@@ -76,17 +86,18 @@ class McInstallation(models.Model):
     def _mc_default_checks(self):
         project = self.project_id
         checks = [self.env._("Alle kasten geleverd en gecontroleerd")]
-        if project.dismantle == 'yes':
+        if project._mc_intake('dismantle') == 'yes':
             checks.append(self.env._("Oude meubels gedemonteerd"))
         checks += [self.env._("Kasten geplaatst, waterpas en verankerd"), self.env._("Deuren en lades afgesteld")]
-        if project.project_type == 'kitchen':
+        if project.project_type_id.code == 'kitchen':
             checks.append(self.env._("Toestellen ingebouwd en getest"))
-        if project.worktop in ('stone', 'ceramic'):
+        if project._mc_intake('worktop') in ('stone', 'ceramic'):
             checks.append(self.env._("Werkblad opgemeten voor de steenhouwer"))
-        if project.lighting and project.lighting != 'none':
+        lighting = project._mc_intake('lighting')
+        if lighting and lighting != 'none':
             checks.append(self.env._("Verlichting aangesloten en getest"))
         checks.append(self.env._("Werf proper achtergelaten"))
-        if project.disposal == 'yes':
+        if project._mc_intake('disposal') == 'yes':
             checks.append(self.env._("Oud meubilair afgevoerd"))
         return checks
 

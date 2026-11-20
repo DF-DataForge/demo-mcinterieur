@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mc_project_type_view_list" model="ir.ui.view">
+        <field name="name">mc.project.type.view.list</field>
+        <field name="model">mc.project.type</field>
+        <field name="arch" type="xml">
+            <list string="Projecttypes" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="show_appliances"/>
+                <field name="default_install_days"/>
+                <field name="code" optional="hide"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mc_project_type_action" model="ir.actions.act_window">
+        <field name="name">Projecttypes</field>
+        <field name="res_model">mc.project.type</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Voeg een projecttype toe</p>
+            <p>Bv. keuken, dressing, badkamermeubel. Per type kies je of de vragen over werkblad en toestellen
+               verschijnen en hoeveel dagen plaatsing standaard in de offerte komen.</p>
+        </field>
+    </record>
+
+    <record id="mc_intake_template_view_form" model="ir.ui.view">
+        <field name="name">mc.intake.template.view.form</field>
+        <field name="model">mc.intake.template</field>
+        <field name="arch" type="xml">
+            <form string="Intakevragen">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <div class="alert alert-info" role="status">
+                        Voeg per tabblad vragen toe, wijzig een vraag of de keuzes, of sleep vragen in een andere volgorde.
+                        Elke wijziging geldt meteen voor alle projecten. Niets is verplicht: een lege vraag wordt bij het
+                        doorsturen een open vraag voor de tekenaar.
+                        <br/>
+                        De vragen met een vaste technische naam (bv. werkblad, grepen, verlichting, demontage) sturen de
+                        offerte, de picklijst beslag en de controlelijst van de plaatsing: hernoem ze gerust, maar verwijder
+                        ze niet.
+                    </div>
+                    <notebook>
+                        <page string="Algemeen" name="general">
+                            <field name="general_definition" widget="properties_definition" nolabel="1"/>
+                        </page>
+                        <page string="Ruimte &amp; opmeting" name="space">
+                            <field name="space_definition" widget="properties_definition" nolabel="1"/>
+                        </page>
+                        <page string="Materialen &amp; afwerking" name="materials">
+                            <field name="materials_definition" widget="properties_definition" nolabel="1"/>
+                        </page>
+                        <page string="Beslag &amp; indeling" name="hardware">
+                            <field name="hardware_definition" widget="properties_definition" nolabel="1"/>
+                        </page>
+                        <page string="Werkblad &amp; toestellen" name="appliances">
+                            <field name="appliances_definition" widget="properties_definition" nolabel="1"/>
+                        </page>
+                        <page string="Plaatsing" name="installation">
+                            <field name="installation_definition" widget="properties_definition" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mc_intake_template_view_list" model="ir.ui.view">
+        <field name="name">mc.intake.template.view.list</field>
+        <field name="model">mc.intake.template</field>
+        <field name="arch" type="xml">
+            <list string="Intakesjablonen">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mc_intake_template_action" model="ir.actions.act_window">
+        <field name="name">Intakevragen</field>
+        <field name="res_model">mc.intake.template</field>
+        <field name="view_mode">form,list</field>
+        <field name="res_id" ref="intake_template_default"/>
+    </record>
+</odoo>

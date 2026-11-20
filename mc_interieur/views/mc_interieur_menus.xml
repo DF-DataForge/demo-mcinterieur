@@ -30,6 +30,10 @@
 
     <menuitem id="mc_config_menu" name="Configuratie" parent="mc_interieur_menu_root" sequence="90"
               groups="mc_interieur_group_manager"/>
+    <menuitem id="mc_intake_template_menu" name="Intakevragen" parent="mc_config_menu" sequence="1"
+              action="mc_intake_template_action"/>
+    <menuitem id="mc_project_type_menu" name="Projecttypes" parent="mc_config_menu" sequence="2"
+              action="mc_project_type_action"/>
     <menuitem id="mc_material_mapping_menu" name="Materiaalkoppeling TopSolid - Ardis" parent="mc_config_menu"
               sequence="10" action="mc_material_mapping_action"/>
     <menuitem id="mc_material_menu" name="Materialen en beslag" parent="mc_config_menu" sequence="20"

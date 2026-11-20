@@ -9,7 +9,7 @@
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="city" optional="show"/>
-                <field name="project_type" optional="show"/>
+                <field name="project_type_id" optional="show"/>
                 <field name="stage" widget="badge"/>
                 <field name="intake_progress" widget="progressbar" decoration-success="True" optional="show"/>
                 <field name="open_question_count" optional="show"/>
@@ -37,7 +37,7 @@
                             <field name="partner_id"/><t t-if="record.city.raw_value"> · <field name="city"/></t>
                         </div>
                         <div class="d-flex flex-wrap gap-1 mt-2">
-                            <field name="project_type" widget="badge" class="o_mc_badge"/>
+                            <field name="project_type_id" widget="badge" class="o_mc_badge"/>
                             <span t-if="record.open_question_count.raw_value" class="badge rounded-pill o_mc_badge_warn">
                                 <t t-out="record.open_question_count.raw_value"/> open
                                 <t t-if="record.open_question_count.raw_value == 1">vraag</t><t t-else="">vragen</t>
@@ -83,7 +83,7 @@
                 <group>
                     <filter name="group_stage" string="Fase" context="{'group_by': 'stage'}"/>
                     <filter name="group_partner" string="Klant" context="{'group_by': 'partner_id'}"/>
-                    <filter name="group_type" string="Type" context="{'group_by': 'project_type'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'project_type_id'}"/>
                 </group>
             </search>
         </field>
@@ -152,96 +152,36 @@
                         <page string="Algemeen" name="intake_general">
                             <group>
                                 <group>
-                                    <field name="project_type" widget="badges_selection"/>
-                                    <field name="room" placeholder="bv. keuken gelijkvloers, slaapkamer 2"/>
-                                    <field name="situation" widget="badges_selection"/>
+                                    <field name="project_type_id" widget="badges_many2one" options="{'no_create': True}"/>
                                     <field name="desired_date"/>
                                 </group>
                                 <group>
-                                    <field name="budget"/>
-                                    <field name="third_party" widget="badges_selection"/>
-                                    <field name="third_party_contact" placeholder="naam, telefoon" invisible="third_party in (False, 'none')"/>
-                                    <field name="style" placeholder="bv. landelijk, strak greeploos"/>
+                                    <field name="intake_template_id" groups="mc_interieur.mc_interieur_group_manager"
+                                           options="{'no_create': True}"/>
                                 </group>
                             </group>
+                            <p class="text-muted small mb-2">Vragen en keuzes beheer je onder Configuratie &gt; Intakevragen. Een beheerder kan hier ook rechtstreeks een vraag toevoegen of aanpassen.</p>
+                            <field name="intake_general" nolabel="1" columns="2"/>
                         </page>
                         <page string="Ruimte &amp; opmeting" name="intake_space">
-                            <group>
-                                <group>
-                                    <label for="space_width" string="Beschikbare ruimte (mm)"/>
-                                    <div class="o_row">
-                                        <field name="space_width" placeholder="B"/> x
-                                        <field name="space_height" placeholder="H"/> x
-                                        <field name="space_depth" placeholder="D"/>
-                                    </div>
-                                    <field name="ceiling_height" placeholder="2600"/>
-                                    <field name="measure_state" widget="badges_selection"/>
-                                    <field name="floor_state" widget="badges_selection"/>
-                                </group>
-                                <group>
-                                    <field name="walls_state" widget="badges_selection"/>
-                                    <field name="wall_type" widget="badges_selection"/>
-                                    <field name="obstacles" placeholder="radiator, stopcontacten, leidingen, schuine wand"/>
-                                    <field name="access_info" placeholder="verdieping, lift, smalste deur of trap"/>
-                                </group>
-                            </group>
+                            <p class="text-muted small mb-2">Vragen en keuzes beheer je onder Configuratie &gt; Intakevragen. Een beheerder kan hier ook rechtstreeks een vraag toevoegen of aanpassen.</p>
+                            <field name="intake_space" nolabel="1" columns="2"/>
                         </page>
                         <page string="Materialen &amp; afwerking" name="intake_materials">
-                            <group>
-                                <group>
-                                    <field name="carcass_material" widget="badges_selection"/>
-                                    <field name="carcass_color" placeholder="bv. wit, antraciet, eiken"/>
-                                    <field name="front_material" widget="badges_selection"/>
-                                    <field name="front_color" placeholder="RAL, NCS, stalen of referentie"/>
-                                </group>
-                                <group>
-                                    <field name="gloss" widget="badges_selection"/>
-                                    <field name="grain" widget="badges_selection"/>
-                                    <field name="edge_finish" widget="badges_selection"/>
-                                </group>
-                            </group>
+                            <p class="text-muted small mb-2">Vragen en keuzes beheer je onder Configuratie &gt; Intakevragen. Een beheerder kan hier ook rechtstreeks een vraag toevoegen of aanpassen.</p>
+                            <field name="intake_materials" nolabel="1" columns="2"/>
                         </page>
                         <page string="Beslag &amp; indeling" name="intake_hardware">
-                            <group>
-                                <group>
-                                    <field name="handles" widget="badges_selection"/>
-                                    <field name="handle_model" placeholder="merk, model, hart-op-hart" invisible="handles not in ('handles', 'knobs')"/>
-                                    <field name="hinges" widget="badges_selection"/>
-                                    <field name="drawers" widget="badges_selection"/>
-                                </group>
-                                <group>
-                                    <field name="inner_drawers" widget="badges_selection"/>
-                                    <field name="layout_wishes" placeholder="hangroede, schoenenrek, afvalsysteem"/>
-                                    <field name="lighting" widget="badges_selection"/>
-                                </group>
-                            </group>
+                            <p class="text-muted small mb-2">Vragen en keuzes beheer je onder Configuratie &gt; Intakevragen. Een beheerder kan hier ook rechtstreeks een vraag toevoegen of aanpassen.</p>
+                            <field name="intake_hardware" nolabel="1" columns="2"/>
                         </page>
-                        <page string="Toestellen" name="intake_appliances" invisible="project_type != 'kitchen'">
-                            <group>
-                                <group>
-                                    <field name="worktop" widget="badges_selection"/>
-                                    <field name="appliances" placeholder="oven, vaatwasser, koelkast, ..."/>
-                                    <field name="fridge_niche" widget="badges_selection"/>
-                                </group>
-                                <group>
-                                    <field name="hood" widget="badges_selection"/>
-                                    <field name="sink" widget="badges_selection"/>
-                                    <field name="appliance_supply" widget="badges_selection"/>
-                                </group>
-                            </group>
+                        <page string="Werkblad &amp; toestellen" name="intake_appliances" invisible="not show_appliances">
+                            <p class="text-muted small mb-2">Vragen en keuzes beheer je onder Configuratie &gt; Intakevragen. Een beheerder kan hier ook rechtstreeks een vraag toevoegen of aanpassen.</p>
+                            <field name="intake_appliances" nolabel="1" columns="2"/>
                         </page>
                         <page string="Plaatsing" name="intake_installation">
-                            <group>
-                                <group>
-                                    <field name="installer" widget="badges_selection"/>
-                                    <field name="dismantle" widget="badges_selection"/>
-                                    <field name="disposal" widget="badges_selection"/>
-                                </group>
-                                <group>
-                                    <field name="utilities" placeholder="elektricien, loodgieter, door klant geregeld"/>
-                                    <field name="parking" placeholder="oprit, betalend parkeren, smalle straat"/>
-                                </group>
-                            </group>
+                            <p class="text-muted small mb-2">Vragen en keuzes beheer je onder Configuratie &gt; Intakevragen. Een beheerder kan hier ook rechtstreeks een vraag toevoegen of aanpassen.</p>
+                            <field name="intake_installation" nolabel="1" columns="2"/>
                         </page>
                         <page string="Foto's &amp; plannen" name="media">
                             <p class="text-muted">Op tablet of gsm opent "Bestanden toevoegen" meteen de camera. Schets op papier: foto nemen.</p>
@@ -276,25 +216,8 @@
                                     <field name="ref" string="Projectreferentie" widget="CopyClipboardChar" readonly="1"/>
                                 </group>
                             </div>
-                            <group string="Samenvatting intake">
-                                <group>
-                                    <field name="project_type" readonly="1"/>
-                                    <field name="space_width" readonly="1"/>
-                                    <field name="space_height" readonly="1"/>
-                                    <field name="space_depth" readonly="1"/>
-                                    <field name="carcass_material" readonly="1"/>
-                                    <field name="front_material" readonly="1"/>
-                                    <field name="front_color" readonly="1"/>
-                                </group>
-                                <group>
-                                    <field name="handles" readonly="1"/>
-                                    <field name="drawers" readonly="1"/>
-                                    <field name="lighting" readonly="1"/>
-                                    <field name="worktop" readonly="1" invisible="project_type != 'kitchen'"/>
-                                    <field name="appliances" readonly="1" invisible="project_type != 'kitchen'"/>
-                                    <field name="open_question_count" readonly="1"/>
-                                </group>
-                            </group>
+                            <separator string="Samenvatting intake"/>
+                            <field name="intake_summary_html" nolabel="1" readonly="1"/>
                         </page>
                         <page string="Tekening" name="drawing">
                             <field name="version_ids" context="{'default_project_id': id}">

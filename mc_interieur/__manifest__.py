@@ -1,6 +1,6 @@
 {
     'name': 'MC Interieur - Maatwerkflow',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.1.0',
     'summary': 'Intake, TopSolid-offertes, klantportaal, Ardis-export, werkvloer, montage en plaatsing voor interieurbouw',
     'description': """
 Maatwerkflow voor een interieurbouwer / schrijnwerker
@@ -28,8 +28,10 @@ Maatwerkflow voor een interieurbouwer / schrijnwerker
         'security/mc_interieur_security.xml',
         'security/ir.access.csv',
         'data/ir_sequence_data.xml',
+        'data/mc_intake_data.xml',
         'data/product_data.xml',
         'data/portal_entry_data.xml',
+        'views/mc_intake_config_views.xml',
         'views/mc_project_views.xml',
         'views/mc_part_views.xml',
         'views/mc_cutting_batch_views.xml',

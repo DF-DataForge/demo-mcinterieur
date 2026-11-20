@@ -68,6 +68,28 @@ class TestMcFlow(TransactionCase):
         self.assertEqual(batch.sheets_used, 4)
         self.assertEqual(tv_wall.stage, 'sawing')
 
+    def test_configurable_intake(self):
+        template = self.env.ref('mc_interieur.intake_template_default')
+        project = self.env.ref('mc_interieur.project_peeters_keuken')
+        self.assertEqual(project._mc_intake('worktop'), 'stone', "Demo answers are stored as properties")
+        self.assertEqual(project.quote_vat, '6', "Renovation in the intake gives 6 %")
+        total_before = project.intake_total
+        # a manager adds a question with options, straight from Odoo
+        template.hardware_definition = template.hardware_definition + [{
+            'name': 'soft_close_bins', 'string': 'Afvalsysteem', 'type': 'selection',
+            'selection': [['yes', 'Ja'], ['no', 'Nee']],
+        }]
+        project.invalidate_recordset()
+        self.assertEqual(project.intake_total, total_before + 1)
+        project.drawer_id = self.env.ref('mc_interieur.user_jonas')
+        project.action_handoff_drawer()
+        question = project.question_ids.filtered(lambda q: q.field_name == 'intake_hardware.soft_close_bins')
+        self.assertTrue(question, "An empty configured question becomes an open question for the drawer")
+        project._mc_set_intake('intake_hardware.soft_close_bins', 'yes')
+        project.write({'intake_hardware': dict(project.intake_hardware)})
+        self.assertTrue(question.done, "Answering the intake closes the open question")
+        self.assertIn('Afvalsysteem', project.intake_summary_html)
+
     def test_label_reports_render(self):
         pieces = self.env.ref('mc_interieur.project_vandamme_dressing').piece_ids[:15]
         Report = self.env['ir.actions.report']

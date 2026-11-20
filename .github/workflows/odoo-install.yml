@@ -108,6 +108,24 @@ jobs:
           cat upg2.log | tail -5
           grep -q "AFTER_UPGRADE validation assembly" upg2.log
 
+      - name: Upgrade from 20.0.1.0.0 (fixed intake fields) to the configurable intake
+        env:
+          PGPASSWORD: odoo
+        run: |
+          git -C addons fetch --depth 50 origin main
+          git -C addons worktree add ../old_addons 5287eba
+          OLD="--addons-path=odoo/addons,odoo/odoo/addons,old_addons --db_host=localhost --db_user=odoo --db_password=odoo"
+          NEW="--addons-path=odoo/addons,odoo/odoo/addons,addons --db_host=localhost --db_user=odoo --db_password=odoo"
+          python odoo/odoo-bin $OLD -d mc_mig -i mc_interieur --with-demo --stop-after-init --log-level=warn
+          python odoo/odoo-bin $NEW -d mc_mig -u mc_interieur --stop-after-init --log-level=warn 2>&1 | tee mig.log
+          if grep -E "ERROR|CRITICAL|Traceback" mig.log; then exit 1; fi
+          python odoo/odoo-bin shell $NEW -d mc_mig --log-level=warn > mig2.log 2>&1 <<'EOF' || (cat mig2.log; exit 1)
+          p = env.ref('mc_interieur.project_maes_keuken')
+          print('MIGRATED', p.project_type_id.code, p._mc_intake('worktop'), p._mc_intake('space_width'), p.stage)
+          EOF
+          cat mig2.log | tail -5
+          grep -q "MIGRATED kitchen stone 3240 validation" mig2.log
+
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v4
