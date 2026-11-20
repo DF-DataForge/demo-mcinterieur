@@ -161,6 +161,7 @@ mc_interieur/          Odoo 20.0 module
 mockup/                intake-odoo.html: clickable HTML mockup the module is based on
                        klant-traject.html: the project in 8 steps, for customers
                        interne-flow.html: the internal flow in 9 phases, for the team
+                       odoo-licenties.html: Odoo Enterprise licensing, calculator, open questions
 .github/workflows/     installs the module with demo data on Odoo 20.0 and runs the tests
 ```
 

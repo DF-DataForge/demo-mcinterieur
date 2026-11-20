@@ -1,0 +1,451 @@
+<title>Odoo-licenties MC Interieur</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one reading column with full-width colour bands; calculator as a two-pane tool. */
+:root{
+  --brown:#574A36; --brown-2:#78664A; --green:#95BA3C; --green-dk:#5F7D1C;
+  --bg:#FBFAF7; --paper:#FFFFFF; --ink:#2B251C; --muted:#6E6455; --line:#E4DED3; --soft:#F2EEE6;
+  --warn:#9A5B00; --warn-bg:#FFF4E0; --free:#2F6B3A; --free-bg:#E9F4E3; --full-bg:#EFE9DF; --light-bg:#EEF4E0;
+  --on-band:#FFFFFF;
+  --f-body:'Open Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1C1913; --paper:#25211A; --ink:#EEE8DD; --muted:#B4AA99; --line:#3A342A; --soft:#2D2820;
+  --green-dk:#A9CC57; --warn:#F2B35A; --warn-bg:#3A2C14; --free:#9FD39A; --free-bg:#1F3220; --full-bg:#342D22; --light-bg:#2B3420;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1C1913; --paper:#25211A; --ink:#EEE8DD; --muted:#B4AA99; --line:#3A342A; --soft:#2D2820;
+  --green-dk:#A9CC57; --warn:#F2B35A; --warn-bg:#3A2C14; --free:#9FD39A; --free-bg:#1F3220; --full-bg:#342D22; --light-bg:#2B3420;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{line-height:1.2;text-wrap:balance;margin:0}
+h2{font-size:1.6rem;font-weight:800}
+h3{font-size:1.05rem;font-weight:700}
+p{margin:0}
+a{color:var(--green-dk)}
+.band{background:var(--brown);color:var(--on-band);border-top:6px solid var(--green)}
+.band .wrap{padding-block:44px 40px;display:grid;gap:14px}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+.band h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800}
+.band p{max-width:62ch;opacity:.92}
+.verdict{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.verdict span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 14px;font-size:.9rem}
+.verdict b{color:var(--green)}
+main .wrap{display:grid;gap:56px;padding-block:44px 64px}
+section{display:grid;gap:18px}
+.sub{color:var(--muted);max-width:70ch}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px}
+
+/* Plans */
+.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:860px){.plans{grid-template-columns:minmax(0,1fr)}}
+.plan{padding:20px;display:grid;gap:10px;align-content:start}
+.plan.pick{border:2px solid var(--green-dk)}
+.plan .tag{justify-self:start;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px}
+.tag.ok{background:var(--light-bg);color:var(--green-dk)}
+.tag.no{background:var(--soft);color:var(--muted)}
+.price{font-size:2rem;font-weight:800;font-variant-numeric:tabular-nums}
+.price small{font-size:.9rem;font-weight:600;color:var(--muted)}
+.plan ul{margin:0;padding-left:1.1rem;display:grid;gap:4px;font-size:.95rem}
+.ptable{width:100%;border-collapse:collapse;font-size:.92rem;font-variant-numeric:tabular-nums}
+.ptable th,.ptable td{text-align:left;padding:6px 0;border-bottom:1px solid var(--line)}
+.ptable td:last-child,.ptable th:last-child{text-align:right}
+.note{font-size:.88rem;color:var(--muted)}
+
+/* Who needs what */
+.scroll{overflow-x:auto}
+.who{width:100%;border-collapse:collapse;min-width:640px}
+.who th,.who td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.who thead th{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.who td:first-child{font-weight:700;white-space:nowrap}
+.pill{display:inline-block;white-space:nowrap;font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px}
+.pill.full{background:var(--full-bg);color:var(--brown-2)}
+:root[data-theme="dark"] .pill.full{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pill.full{color:var(--ink)}}
+.pill.light{background:var(--light-bg);color:var(--green-dk)}
+.pill.free{background:var(--free-bg);color:var(--free)}
+.pill.ask{background:var(--warn-bg);color:var(--warn)}
+.lightlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:720px){.lightlist{grid-template-columns:minmax(0,1fr)}}
+.lightlist .panel{padding:18px;display:grid;gap:8px}
+.lightlist ul{margin:0;padding-left:1.1rem}
+
+/* Calculator */
+.calc{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:0;overflow:hidden}
+@media (max-width:860px){.calc{grid-template-columns:minmax(0,1fr)}}
+.calc-in{padding:20px;display:grid;gap:16px}
+.calc-out{background:var(--brown);color:var(--on-band);padding:22px;display:grid;gap:14px;align-content:start}
+.opts{display:flex;flex-wrap:wrap;gap:18px}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:6px}
+legend{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg label{padding:7px 12px;cursor:pointer;font-size:.9rem;font-weight:600}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg input:checked + span{color:var(--paper);background:var(--brown);}
+.seg label span{display:block;margin:-7px -12px;padding:7px 12px}
+.seg input:focus-visible + span{outline:2px solid var(--green-dk);outline-offset:-2px}
+.rows{display:grid;gap:0}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 84px 150px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+@media (max-width:520px){.row{grid-template-columns:minmax(0,1fr) 70px;}.row select{grid-column:1 / -1}}
+.row .lbl{font-weight:600;font-size:.95rem}
+.row .lbl small{display:block;font-weight:400;color:var(--muted);font-size:.82rem}
+input[type=number],select{font:inherit;font-size:.95rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 8px;width:100%;font-variant-numeric:tabular-nums}
+input:focus-visible,select:focus-visible{outline:2px solid var(--green-dk);outline-offset:1px}
+.hosting{display:grid;gap:8px}
+.hosting .row{grid-template-columns:minmax(0,1fr) 150px}
+.out-big{font-size:2.3rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.out-big small{font-size:1rem;font-weight:600;opacity:.8}
+.out-lines{display:grid;gap:6px;font-variant-numeric:tabular-nums;font-size:.93rem}
+.out-lines div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:6px}
+.out-lines .k{opacity:.85}
+.calc-out .eyebrow{color:var(--green)}
+.calc-out .fine{font-size:.82rem;opacity:.8}
+.pillbar{display:flex;gap:8px;flex-wrap:wrap}
+.pillbar span{background:rgba(255,255,255,.12);border-radius:999px;padding:3px 10px;font-size:.82rem;font-variant-numeric:tabular-nums}
+
+/* Scenarios */
+.scen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:860px){.scen{grid-template-columns:minmax(0,1fr)}}
+.scen .panel{padding:18px;display:grid;gap:10px;align-content:start}
+.scen .cost{font-family:var(--f-mono);font-size:1.05rem;font-variant-numeric:tabular-nums;color:var(--brown-2)}
+:root[data-theme="dark"] .scen .cost{color:var(--green-dk)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .scen .cost{color:var(--green-dk)}}
+.scen ul{margin:0;padding-left:1.1rem;font-size:.93rem;display:grid;gap:3px}
+.pro{color:var(--free)} .con{color:var(--warn)}
+
+/* Questions */
+.qs{display:grid;gap:12px;counter-reset:q;list-style:none;margin:0;padding:0}
+.q{padding:16px 18px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px}
+.q::before{counter-increment:q;content:counter(q);grid-row:1 / span 3;width:30px;height:30px;border-radius:50%;background:var(--brown);color:var(--on-band);display:grid;place-items:center;font-weight:700;font-size:.9rem}
+.q .impact{font-size:.9rem;color:var(--muted)}
+.q .impact b{color:var(--ink)}
+.q .who-ask{font-size:.82rem}
+.q.key{border-left:5px solid var(--green)}
+.src{font-size:.88rem;color:var(--muted);display:grid;gap:4px}
+footer .wrap{padding-block:0 40px;color:var(--muted);font-size:.85rem}
+@media (prefers-reduced-motion: no-preference){.calc-out .out-big{transition:color .2s}}
+</style>
+
+<header class="band">
+  <div class="wrap">
+    <div class="eyebrow">MC Interieur · Odoo Enterprise</div>
+    <h1>Wie heeft een Odoo-licentie nodig?</h1>
+    <p>Overzicht van de Enterprise-plannen, wie in de flow van MC Interieur betalend is en wie niet, een rekenhulp en de vragen die de prijs nog bepalen.</p>
+    <div class="verdict">
+      <span>Plan: <b>Gepersonaliseerd</b> (nodig voor de eigen modules en hosting buiten Odoo Online)</span>
+      <span>Klanten in het portaal: <b>gratis</b></span>
+      <span>Werkvloer: <b>nog te beslissen</b></span>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <section aria-labelledby="plans-t">
+    <h2 id="plans-t">De plannen en prijzen</h2>
+    <p class="sub">Prijzen per gebruiker per maand zoals ze op odoo.com stonden op 20 november 2026, voor België. Het eerste jaar geldt een korting voor het aantal gebruikers dat je bij de start bestelt; daarna geldt de gewone prijs. Bevestig de bedragen (en of ze excl. btw zijn) in de offerte van Odoo.</p>
+    <div class="plans">
+      <div class="panel plan">
+        <span class="tag no">Niet geschikt</span>
+        <h3>Eén app gratis</h3>
+        <div class="price">€ 0</div>
+        <p class="note">Eén app, onbeperkt gebruikers, alleen op Odoo Online. Te beperkt voor deze flow (Verkoop, Voorraad, Inkoop, Website en de eigen module).</p>
+      </div>
+      <div class="panel plan">
+        <span class="tag no">Niet geschikt</span>
+        <h3>Standaard</h3>
+        <div class="price">€ 24,90 <small>/ gebr. / maand</small></div>
+        <table class="ptable" aria-label="Prijzen Standaard">
+          <tr><th>Facturatie</th><th>Jaar 1</th><th>Daarna</th></tr>
+          <tr><td>Jaarlijks</td><td>€ 19,90</td><td>€ 24,90</td></tr>
+          <tr><td>Maandelijks</td><td>€ 24,90</td><td>€ 31,10</td></tr>
+        </table>
+        <p class="note">Alle apps, maar alleen op Odoo Online en zonder eigen modules. De MC Interieur-module en de websitemodule kunnen hier niet op draaien.</p>
+      </div>
+      <div class="panel plan pick">
+        <span class="tag ok">Nodig voor MC Interieur</span>
+        <h3>Gepersonaliseerd</h3>
+        <div class="price">€ 44,90 <small>/ gebr. / maand</small></div>
+        <table class="ptable" aria-label="Prijzen Gepersonaliseerd">
+          <tr><th>Facturatie</th><th>Jaar 1</th><th>Daarna</th></tr>
+          <tr><td>Jaarlijks</td><td>€ 35,90</td><td>€ 44,90</td></tr>
+          <tr><td>Maandelijks</td><td>€ 44,90</td><td>€ 56,90</td></tr>
+        </table>
+        <ul>
+          <li>Eigen modules (mc_interieur, website)</li>
+          <li>Hosting op Odoo.sh of zelf (on-premise, bv. Cloudpepper)</li>
+          <li>Externe API (koppeling TopSolid / Ardis)</li>
+          <li>Studio, agentic AI, meerdere bedrijven</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note"><b>Light-gebruiker: € 7,90</b> per maand, alleen via een Odoo-adviseur (offerte op maat). <b>Niet in de licentie:</b> hosting op Odoo.sh of bij een andere hoster, implementatie, onderhoud van eigen code, credits (sms, AI-scan van facturen).</p>
+  </section>
+
+  <section aria-labelledby="who-t">
+    <h2 id="who-t">Wie heeft een licentie nodig?</h2>
+    <p class="sub">Volgens Odoo is betalend wie in de backend documenten aanmaakt, bekijkt of bewerkt, en ook elke werknemer in de app Werknemers zonder eigen gebruiker. Wie alleen via het portaal of de website werkt, is gratis.</p>
+    <div class="panel scroll">
+      <table class="who">
+        <thead><tr><th>Wie</th><th>Wat doet die in Odoo</th><th>Licentie</th></tr></thead>
+        <tbody>
+          <tr><td>Zaakvoerder / administratie</td><td>Overzicht, offertes, facturen, instellingen</td><td><span class="pill full">Volledig</span></td></tr>
+          <tr><td>Verkoop</td><td>Intake, projecten, offertes, klantvragen</td><td><span class="pill full">Volledig</span></td></tr>
+          <tr><td>Tekenaar</td><td>Open vragen, TopSolid-lijst inlezen, tekeningversies</td><td><span class="pill full">Volledig</span></td></tr>
+          <tr><td>Werkvoorbereiding</td><td>Zaagbatches, Ardis-export, voorraad, aankoop</td><td><span class="pill full">Volledig</span></td></tr>
+          <tr><td>Boekhouding (intern)</td><td>Facturen, betalingen</td><td><span class="pill full">Volledig</span></td></tr>
+          <tr><td>Externe boekhouder</td><td>Werkt rechtstreeks in jullie Odoo</td><td><span class="pill full">Volledig</span></td></tr>
+          <tr><td>Operator zaag / CNC / montage</td><td>Scant etiketten in het scanscherm van de module</td><td><span class="pill ask">Volledig, tenzij…</span> zie vragen 1 en 2</td></tr>
+          <tr><td>Plaatser</td><td>Planning, controlelijst, handtekening op tablet</td><td><span class="pill ask">Volledig, tenzij…</span> zie vraag 3</td></tr>
+          <tr><td>Werknemer zonder login</td><td>Staat in de app Werknemers (verlof, loon, badge)</td><td><span class="pill light">Light € 7,90</span></td></tr>
+          <tr><td>Klant</td><td>Tekening en offerte goedkeuren, vragen, facturen in het portaal</td><td><span class="pill free">Gratis</span></td></tr>
+          <tr><td>Leverancier, architect</td><td>Documenten via het portaal</td><td><span class="pill free">Gratis</span></td></tr>
+          <tr><td>Websitebezoeker</td><td>Contactformulier, website</td><td><span class="pill free">Gratis</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="lightlist">
+      <div class="panel">
+        <h3>Wat een light-gebruiker mag (volgens Odoo)</h3>
+        <ul>
+          <li>Eigen verlof, onkosten, evaluaties, aanwezigheid, planning</li>
+          <li>Buitendienst (Field Service)</li>
+          <li><b>Barcode-operator voor Voorraad</b></li>
+          <li>Kennis, alleen lezen</li>
+        </ul>
+        <p class="note">Als werknemer zonder login: loonstroken ontvangen, kassa bedienen, <b>Werkvloer van Productie</b> gebruiken.</p>
+      </div>
+      <div class="panel">
+        <h3>Wat dat betekent voor MC Interieur</h3>
+        <p>Het scanscherm en de plaatsingsschermen van de eigen module staan niet in die lijst. Zonder aanpassing tellen operators en plaatsers die er zelf inloggen dus als volledige gebruiker.</p>
+        <p class="note">Wil je ze als light-gebruiker, dan moet de werkvloer via Odoo's eigen Werkvloer- of Barcode-app lopen, of moet Odoo bevestigen dat het eigen scherm meetelt als light. Zie vraag 2.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="calc-t">
+    <h2 id="calc-t">Rekenhulp</h2>
+    <p class="sub">Vul het aantal mensen per rol in en kies hun licentie. De startwaarden zijn een voorbeeld, geen gegevens van MC Interieur.</p>
+    <div class="panel calc">
+      <form class="calc-in" id="calc" onsubmit="return false">
+        <div class="opts">
+          <fieldset>
+            <legend>Facturatie</legend>
+            <div class="seg">
+              <label><input type="radio" name="billing" id="b-year" value="year" checked><span>Jaarlijks</span></label>
+              <label><input type="radio" name="billing" id="b-month" value="month"><span>Maandelijks</span></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Periode</legend>
+            <div class="seg">
+              <label><input type="radio" name="period" id="p-1" value="y1" checked><span>Jaar 1</span></label>
+              <label><input type="radio" name="period" id="p-2" value="y2"><span>Vanaf jaar 2</span></label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="rows" id="rows"></div>
+        <div class="hosting">
+          <legend>Hosting (niet in de licentie)</legend>
+          <div class="row">
+            <label class="lbl" for="host">Waar draait Odoo?<small>Odoo Online kan niet met eigen Python-modules</small></label>
+            <select id="host">
+              <option value="own">Eigen hoster (bv. Cloudpepper)</option>
+              <option value="sh">Odoo.sh</option>
+            </select>
+          </div>
+          <div class="row" id="own-row">
+            <label class="lbl" for="own-cost">Kost eigen hoster<small>per maand, volgens jullie contract</small></label>
+            <input type="number" id="own-cost" min="0" step="1" value="0">
+          </div>
+          <div class="row" id="sh-row" hidden>
+            <label class="lbl" for="sh-workers">Odoo.sh: workers + 10 GB opslag<small>€ 48 per worker, € 0,16 per GB, staging € 12</small></label>
+            <input type="number" id="sh-workers" min="1" max="16" step="1" value="1">
+          </div>
+          <div class="row" id="sh-staging-row" hidden>
+            <label class="lbl" for="sh-staging">Odoo.sh: stagingomgevingen</label>
+            <input type="number" id="sh-staging" min="0" max="20" step="1" value="1">
+          </div>
+        </div>
+      </form>
+      <div class="calc-out" aria-live="polite">
+        <div class="eyebrow">Totaal Gepersonaliseerd</div>
+        <div class="out-big" id="out-month">€ 0 <small>/ maand</small></div>
+        <div class="pillbar"><span id="out-full">0 volledig</span><span id="out-light">0 light</span><span id="out-free">klanten gratis</span></div>
+        <div class="out-lines">
+          <div><span class="k">Volledige gebruikers</span><span id="l-full">€ 0</span></div>
+          <div><span class="k">Light-gebruikers</span><span id="l-light">€ 0</span></div>
+          <div><span class="k">Hosting</span><span id="l-host">€ 0</span></div>
+          <div><span class="k">Per jaar</span><span id="l-year">€ 0</span></div>
+        </div>
+        <p class="fine" id="out-note">Prijzen van odoo.com op 20/11/2026. Light € 7,90 is een richtprijs via een adviseur. Bedragen zonder btw-controle: zie de offerte van Odoo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="scen-t">
+    <h2 id="scen-t">Drie manieren om de werkvloer te laten scannen</h2>
+    <p class="sub">Voorbeeld: 5 operators aan 3 werkposten (paneelzaag, CNC, montage), jaarlijks gefactureerd, prijs vanaf jaar 2.</p>
+    <div class="scen">
+      <div class="panel">
+        <h3>A · Eigen login per operator</h3>
+        <div class="cost">5 × € 44,90 = € 224,50 / maand</div>
+        <ul>
+          <li class="pro">Elke scan op naam, zoals nu in de module</li>
+          <li class="pro">Geen aanpassing nodig</li>
+          <li class="con">Duurste optie, groeit mee met het aantal operators</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>B · Eén login per werkpost</h3>
+        <div class="cost">3 × € 44,90 = € 134,70 / maand</div>
+        <ul>
+          <li class="pro">Betalen per machine, niet per persoon</li>
+          <li class="con">Odoo ziet niet wie er scande, alleen welke post</li>
+          <li class="con">Een gedeelde login kan tegen de abonnementsvoorwaarden ingaan: navragen (vraag 1)</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>C · Werkpost + badge per operator</h3>
+        <div class="cost">3 × € 44,90 + 5 × € 7,90 = € 174,20 / maand</div>
+        <ul>
+          <li class="pro">Operator scant eerst zijn badge: scans op naam</li>
+          <li class="pro">Operators zijn werknemers zonder login (light)</li>
+          <li class="con">Aanpassing van de module nodig; of de werkpostlogin volledig moet zijn, navragen (vraag 2)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="q-t">
+    <h2 id="q-t">Nog te beantwoorden vragen met impact op de licenties</h2>
+    <p class="sub">De vragen voor Odoo stel je best aan een Odoo-adviseur of aan jullie Odoo-partner, en laat je het antwoord schriftelijk bevestigen.</p>
+    <ol class="qs">
+      <li class="panel q key">
+        <h3>Mag één login per werkpost gedeeld worden door meerdere operators?</h3>
+        <p class="impact"><b>Impact:</b> bepaalt of scenario B kan. Bij 5 operators en 3 posten scheelt dat ongeveer € 90 per maand tegenover A.</p>
+        <p class="who-ask"><span class="pill ask">Vraag aan Odoo</span></p>
+      </li>
+      <li class="panel q key">
+        <h3>Telt het eigen scanscherm (zaag, CNC, montage) als light-gebruik, net zoals de Barcode-app en de Werkvloer van Productie?</h3>
+        <p class="impact"><b>Impact:</b> € 44,90 of € 7,90 per operator. Zo niet: kiezen tussen scenario A, B of C, of de werkvloer via Odoo's eigen Productie-Werkvloer laten lopen.</p>
+        <p class="who-ask"><span class="pill ask">Vraag aan Odoo</span></p>
+      </li>
+      <li class="panel q key">
+        <h3>Hoe werken de plaatsers: eigen login op een tablet, of één tablet per ploeg?</h3>
+        <p class="impact"><b>Impact:</b> per plaatser een volledige licentie, of één per ploeg. Dezelfde vraag over gedeelde logins als bij de werkvloer.</p>
+        <p class="who-ask"><span class="pill full">Beslissing MC Interieur</span></p>
+      </li>
+      <li class="panel q">
+        <h3>Hoeveel mensen werken echt in de backend, en wie mag alleen kijken?</h3>
+        <p class="impact"><b>Impact:</b> ook alleen bekijken in de backend is betalend. Wie alleen af en toe iets moet zien, kan misschien een rapport per e-mail krijgen.</p>
+        <p class="who-ask"><span class="pill full">Beslissing MC Interieur</span></p>
+      </li>
+      <li class="panel q">
+        <h3>Gebruiken jullie de app Werknemers (verlof, onkosten, loon, badges)?</h3>
+        <p class="impact"><b>Impact:</b> elke werknemer zonder eigen login telt dan als light-gebruiker (€ 7,90), ook wie nooit in Odoo werkt.</p>
+        <p class="who-ask"><span class="pill full">Beslissing MC Interieur</span></p>
+      </li>
+      <li class="panel q">
+        <h3>Werkt de boekhouder rechtstreeks in Odoo, of krijgt die een export?</h3>
+        <p class="impact"><b>Impact:</b> een externe boekhouder die in Odoo werkt, is een betalende gebruiker.</p>
+        <p class="who-ask"><span class="pill full">Beslissing MC Interieur</span></p>
+      </li>
+      <li class="panel q">
+        <h3>Waar draait Odoo: Cloudpepper (on-premise) of Odoo.sh?</h3>
+        <p class="impact"><b>Impact:</b> beide vragen het plan Gepersonaliseerd. Odoo.sh kost apart (vanaf € 48 per worker per maand plus opslag). Bij Cloudpepper betaal je de hoster en doe je de upgrades zelf of via een partner.</p>
+        <p class="who-ask"><span class="pill full">Beslissing MC Interieur</span></p>
+      </li>
+      <li class="panel q">
+        <h3>Jaarlijks of maandelijks betalen?</h3>
+        <p class="impact"><b>Impact:</b> maandelijks is ongeveer 25 % duurder. Op odoo.com staat on-premise alleen bij jaarlijkse facturatie: navragen.</p>
+        <p class="who-ask"><span class="pill ask">Vraag aan Odoo</span></p>
+      </li>
+      <li class="panel q">
+        <h3>Met hoeveel gebruikers starten jullie?</h3>
+        <p class="impact"><b>Impact:</b> de korting van het eerste jaar geldt alleen voor het aantal gebruikers dat je bij de start bestelt. Later bijkomende gebruikers betalen meteen de gewone prijs.</p>
+        <p class="who-ask"><span class="pill full">Beslissing MC Interieur</span></p>
+      </li>
+      <li class="panel q">
+        <h3>Komt er een koppeling waarbij TopSolid of Ardis zelf gegevens naar Odoo stuurt?</h3>
+        <p class="impact"><b>Impact:</b> dat is "externe API" en zit alleen in het plan Gepersonaliseerd. Met Gepersonaliseerd geen extra kost; wel na te kijken als ooit Standaard overwogen wordt.</p>
+        <p class="who-ask"><span class="pill full">Beslissing MC Interieur</span></p>
+      </li>
+      <li class="panel q">
+        <h3>Wie onderhoudt de eigen modules bij een nieuwe Odoo-versie?</h3>
+        <p class="impact"><b>Impact:</b> Odoo-upgrades zitten in de licentie, het onderhoud van eigen code niet. Reken op een budget per versie-upgrade.</p>
+        <p class="who-ask"><span class="pill full">Beslissing MC Interieur</span></p>
+      </li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="src-t">
+    <h2 id="src-t">Bronnen</h2>
+    <div class="src">
+      <p>Odoo, prijzen en veelgestelde vragen: <a href="https://www.odoo.com/nl_NL/pricing" target="_blank" rel="noopener">odoo.com/nl_NL/pricing</a> (geraadpleegd 20/11/2026): plannen, light-gebruiker, definitie betalende gebruiker, on-premise / Odoo.sh, externe API.</p>
+      <p>Odoo.sh, hostingprijzen: <a href="https://www.odoo.sh/pricing" target="_blank" rel="noopener">odoo.sh/pricing</a> (geraadpleegd 20/11/2026).</p>
+      <p>Prijzen en voorwaarden veranderen; de offerte van Odoo is bindend, deze pagina niet.</p>
+    </div>
+  </section>
+
+</div>
+</main>
+<footer><div class="wrap">Opgemaakt voor de Odoo-implementatie bij MC Interieur.</div></footer>
+
+<script>
+const PRICES={full:{year:{y1:35.90,y2:44.90},month:{y1:44.90,y2:56.90}},light:7.90};
+// Example team, not MC Interieur's real numbers
+const ROLES=[
+  ['admin','Zaakvoerder / administratie','',1,'full'],
+  ['sales','Verkoop','',1,'full'],
+  ['drawer','Tekenaars','',1,'full'],
+  ['prep','Werkvoorbereiding','',1,'full'],
+  ['acc','Boekhouding','intern of externe boekhouder in Odoo',1,'full'],
+  ['posts','Werkposten op de werkvloer','login per machine (scenario B of C)',0,'full'],
+  ['ops','Operators zaag / CNC / montage','eigen login (A) of badge als werknemer (C)',5,'full'],
+  ['inst','Plaatsers','',3,'full'],
+  ['emp','Andere werknemers in de app Werknemers','zonder login',0,'light'],
+];
+const fmt=n=>'€ '+n.toLocaleString('nl-BE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const rows=document.getElementById('rows');
+rows.innerHTML=ROLES.map(([k,l,s,n,t])=>`<div class="row">
+  <label class="lbl" for="n-${k}">${l}${s?`<small>${s}</small>`:''}</label>
+  <input type="number" id="n-${k}" min="0" max="500" step="1" value="${n}" aria-label="Aantal ${l}">
+  <select id="t-${k}" aria-label="Licentie ${l}">
+    <option value="full"${t==='full'?' selected':''}>Volledig</option>
+    <option value="light"${t==='light'?' selected':''}>Light</option>
+    <option value="none">Geen (portaal)</option>
+  </select></div>`).join('');
+const $=id=>document.getElementById(id);
+function val(id){const v=parseInt($(id).value,10);return isNaN(v)||v<0?0:v}
+function calc(){
+  const billing=document.querySelector('input[name=billing]:checked').value;
+  const period=document.querySelector('input[name=period]:checked').value;
+  let full=0,light=0;
+  for(const [k] of ROLES){const n=val('n-'+k),t=$('t-'+k).value;if(t==='full')full+=n;else if(t==='light')light+=n;}
+  const pFull=PRICES.full[billing][period];
+  const fullCost=full*pFull, lightCost=light*PRICES.light;
+  const sh=$('host').value==='sh';
+  $('own-row').hidden=sh; $('sh-row').hidden=!sh; $('sh-staging-row').hidden=!sh;
+  const host=sh?(Math.max(1,val('sh-workers'))*48+10*0.16+val('sh-staging')*12):val('own-cost');
+  const month=fullCost+lightCost+host;
+  $('out-month').innerHTML=fmt(month)+' <small>/ maand</small>';
+  $('out-full').textContent=full+' volledig à '+fmt(pFull);
+  $('out-light').textContent=light+' light à '+fmt(PRICES.light);
+  $('l-full').textContent=fmt(fullCost);
+  $('l-light').textContent=fmt(lightCost);
+  $('l-host').textContent=fmt(host);
+  $('l-year').textContent=fmt(month*12);
+}
+document.getElementById('calc').addEventListener('input',calc);
+document.getElementById('calc').addEventListener('change',calc);
+calc();
+</script>
