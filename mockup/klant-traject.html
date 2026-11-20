@@ -104,8 +104,9 @@ main > section{min-width:0}
 .card small{font-size:13.5px;color:var(--muted);line-height:1.45}
 .card[aria-current="step"]{border:2px solid var(--brown)}
 
-.promise{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;background:var(--brown);color:var(--on-brown);border-radius:14px;padding:26px 28px}
-@media (max-width:860px){.promise{grid-template-columns:minmax(0,1fr)}}
+.promise{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;background:var(--brown);color:var(--on-brown);border-radius:14px;padding:26px 28px}
+@media (max-width:980px){.promise{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.promise{grid-template-columns:minmax(0,1fr)}}
 .promise h3{font-size:17px;font-weight:700;margin-bottom:4px}
 .promise p{margin:0;font-size:15px;opacity:.9}
 .promise svg{width:26px;height:26px;color:var(--green);margin-bottom:6px}
@@ -137,7 +138,7 @@ footer{padding-block:0 40px;color:var(--muted);font-size:13px}
     <div>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="1"/><path d="M2 19h20"/><path d="M8 9h8M8 12h5"/></svg>
       <h3>Altijd zicht op uw project</h3>
-      <p>Tekening, offerte, vragen en planning staan samen in uw klantportaal.</p>
+      <p>Tekening, offerte, vragen, planning en facturen staan samen in uw klantportaal.</p>
     </div>
     <div>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
@@ -148,6 +149,11 @@ footer{padding-block:0 40px;color:var(--muted);font-size:13px}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6v12M7 6v12M10 6v12M14 6v12M16 6v12M20 6v12"/></svg>
       <h3>Elk onderdeel gevolgd</h3>
       <p>Elk paneel krijgt een etiket met barcode, van de zaag tot bij u thuis.</p>
+    </div>
+    <div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+      <h3>Facturen bij uw project</h3>
+      <p>Voorschot en eindfactuur staan bij het project, met wat al betaald is.</p>
     </div>
   </section>
 </main>
@@ -190,8 +196,8 @@ const STEPS = [
   { key:'approve', short:'Uw goedkeuring', title:'U keurt goed, of vraagt een aanpassing', tag:'digitaal ondertekenen',
     lead:'Klopt alles, dan keurt u tekening en offerte in één keer goed. Wilt u iets anders, dan maken we een nieuwe versie.',
     we:['Uw opmerkingen verwerken in een nieuwe versie','Na goedkeuring: voorschotfactuur sturen'],
-    you:['Open vragen beantwoorden','Goedkeuren met uw naam, of opmerkingen doorsturen'],
-    portal:['Eén knop voor goedkeuring','Goedkeuren kan pas als alle vragen beantwoord zijn'] },
+    you:['Open vragen beantwoorden','Goedkeuren met uw naam, of opmerkingen doorsturen','Het voorschot betalen'],
+    portal:['Eén knop voor goedkeuring','Goedkeuren kan pas als alle vragen beantwoord zijn','Na goedkeuring: de voorschotfactuur bij uw project'] },
   { key:'prep', short:'Werkvoorbereiding', title:'Werkvoorbereiding', tag:'materiaal · zaagplan',
     lead:'We zetten alles klaar voor de productie: materiaal, zaagplannen en planning.',
     we:['Plaatmateriaal en beslag reserveren of bestellen','Zaagplannen optimaliseren voor zo weinig mogelijk afval','Productie inplannen'],
@@ -206,12 +212,12 @@ const STEPS = [
     lead:'We spreken een datum af. Onze ploeg kent vooraf alle praktische info van uw woning.',
     we:['Plaatsingsdatum en ploeg vastleggen','Levering, montage en afstelling','Aansluiten van verlichting en toestellen, waar afgesproken'],
     you:['De ruimte vrijmaken','Afspraken met elektricien of loodgieter, indien nodig'],
-    portal:['Uw plaatsingsdatum'] },
+    portal:['Uw plaatsingsdatum','Factuur voor de levering, als dat zo afgesproken is'] },
   { key:'deliver', short:'Oplevering', title:'Oplevering en nazorg', tag:'controle · handtekening',
     lead:'We lopen het resultaat samen met u na. Is er nog iets te doen, dan noteren en plannen we het meteen.',
-    we:['Controlelijst samen overlopen','Eventuele nazorgpunten noteren en opvolgen','Werf proper achterlaten'],
-    you:['Het resultaat nakijken','Oplevering digitaal ondertekenen'],
-    portal:['Foto\'s van het resultaat en de opleveringsdocumenten'] },
+    we:['Controlelijst samen overlopen','Eventuele nazorgpunten noteren en opvolgen','Werf proper achterlaten','Eindfactuur sturen, met de betaalde voorschotten afgetrokken'],
+    you:['Het resultaat nakijken','Oplevering digitaal ondertekenen','De eindfactuur betalen'],
+    portal:['Foto\'s van het resultaat en de opleveringsdocumenten','Alle facturen van uw project, met wat betaald is en wat nog openstaat'] },
 ];
 
 let cur = 0;
