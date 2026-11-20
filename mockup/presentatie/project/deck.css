@@ -68,5 +68,12 @@ table.t .hl { font-weight: 700; }
 .tag { font-size: 24px; font-weight: 700; color: var(--warn); background: var(--warn-bg); padding: 6px 16px; border-radius: 999px; }
 .taggreen { font-size: 24px; font-weight: 700; color: var(--dark); background: var(--green); padding: 6px 16px; border-radius: 999px; }
 
+.wf { position: absolute; box-sizing: border-box; padding: 18px 22px; border-radius: 14px; background: var(--paper); border: 2px solid var(--brown-2); font-size: 24px; line-height: 1.35; color: var(--muted); }
+.wf b { font-size: 28px; color: var(--dark); }
+.wf.klant { background: var(--green); border-color: var(--green); color: var(--dark); }
+.wf.vloer { background: var(--brown); border-color: var(--brown); color: var(--muted-dark); }
+.wf.vloer b { color: var(--light); }
+.wfnote { position: absolute; font-size: 24px; line-height: 1.4; color: var(--muted); }
+
 .rise { animation: rise 500ms ease-out both; animation-delay: calc(var(--i, 0) * 110ms); }
 @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }

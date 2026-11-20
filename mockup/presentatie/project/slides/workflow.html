@@ -1,0 +1,31 @@
+<section id="workflow">
+<h2>Interne workflow: van intake tot oplevering</h2>
+<!-- host 1664x700; columns 288 wide at 0,344,688,1032,1376; row1 top 90 h150 (mid y 165, bottom 240); row2 top 470 h150 (mid y 545)
+     A intake 0,90  B tekening 344,90  C offerte 688,90  D goedkeuring 1032,90  E zaagbatch 1376,90
+     F zagen 1376,470  G cnc 1032,470  H montage 688,470  I plaatsing 344,470  note 0,470 -->
+<div style="position:relative;width:1664px;height:700px;">
+<p class="wf" style="left:0;top:90px;width:288px;height:150px;"><b>1 · Intake</b><br>Verkoop · Odoo</p>
+<p class="wf" style="left:344px;top:90px;width:288px;height:150px;"><b>2 · Tekening</b><br>Tekenaar · TopSolid, lijst naar Odoo</p>
+<p class="wf" style="left:688px;top:90px;width:288px;height:150px;"><b>3 · Offerte</b><br>Uit de materiaallijst</p>
+<p class="wf klant" style="left:1032px;top:90px;width:288px;height:150px;"><b>4 · Goedkeuring</b><br>Klant · portaal</p>
+<p class="wf" style="left:1376px;top:90px;width:288px;height:150px;"><b>5 · Zaagbatch</b><br>Werkvoorbereiding · Ardis</p>
+<p class="wf vloer" style="left:1376px;top:470px;width:288px;height:150px;"><b>6 · Zagen</b><br>Etiket kleven, scannen</p>
+<p class="wf vloer" style="left:1032px;top:470px;width:288px;height:150px;"><b>7 · CNC</b><br>Scan toont het programma</p>
+<p class="wf vloer" style="left:688px;top:470px;width:288px;height:150px;"><b>8 · Montage</b><br>Stukken per kast</p>
+<p class="wf vloer" style="left:344px;top:470px;width:288px;height:150px;"><b>9 · Plaatsing</b><br>Handtekening, eindfactuur</p>
+<p class="wfnote" style="left:0;top:470px;width:300px;">Elke stap schuift het project vanzelf door. Eén projectreferentie van intake tot oplevering.</p>
+<x-connector x1="288" y1="165" x2="344" y2="165" style="color:#78664A;border-width:3px;"></x-connector>
+<x-connector x1="632" y1="165" x2="688" y2="165" style="color:#78664A;border-width:3px;"></x-connector>
+<x-connector x1="976" y1="165" x2="1032" y2="165" style="color:#78664A;border-width:3px;"></x-connector>
+<x-connector x1="1320" y1="165" x2="1376" y2="165" style="color:#78664A;border-width:3px;"></x-connector>
+<x-connector x1="1520" y1="240" x2="1520" y2="470" style="color:#78664A;border-width:3px;"></x-connector>
+<x-connector x1="1376" y1="545" x2="1320" y2="545" style="color:#78664A;border-width:3px;"></x-connector>
+<x-connector x1="1032" y1="545" x2="976" y2="545" style="color:#78664A;border-width:3px;"></x-connector>
+<x-connector x1="688" y1="545" x2="632" y2="545" style="color:#78664A;border-width:3px;"></x-connector>
+<x-connector x1="1176" y1="90" x2="1176" y2="30" head="none" style="color:#8A5300;border-width:3px;border-style:dashed;"></x-connector>
+<x-connector x1="1176" y1="30" x2="488" y2="30" head="none" style="color:#8A5300;border-width:3px;border-style:dashed;"></x-connector>
+<x-connector x1="488" y1="30" x2="488" y2="90" style="color:#8A5300;border-width:3px;border-style:dashed;"></x-connector>
+<p class="wfnote" style="left:560px;top:40px;width:560px;color:#8A5300;">Wijzigingen van de klant → nieuwe tekeningversie</p>
+</div>
+<aside>Hetzelfde verhaal als een schema. Bovenaan het kantoorwerk: intake, tekening, offerte. Groen is de klant, die in het portaal goedkeurt. Vraagt de klant een wijziging, dan gaat het terug naar de tekenaar met een nieuwe versie: de gestippelde lijn. Na de goedkeuring maakt de werkvoorbereiding de zaagbatch en gaat het naar de werkvloer, in bruin: zagen, CNC, montage, en tot slot de plaatsing. Elke stap schuift het project zelf door. Ongeveer 1,5 minuut.</aside>
+</section>
