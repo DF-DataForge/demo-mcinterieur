@@ -111,7 +111,7 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--green-dk);outli
 .pillbar span{background:rgba(255,255,255,.12);border-radius:999px;padding:3px 10px;font-size:.82rem;font-variant-numeric:tabular-nums}
 
 /* Scenarios */
-.scen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.scen{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 @media (max-width:860px){.scen{grid-template-columns:minmax(0,1fr)}}
 .scen .panel{padding:18px;display:grid;gap:10px;align-content:start}
 .scen .cost{font-family:var(--f-mono);font-size:1.05rem;font-variant-numeric:tabular-nums;color:var(--brown-2)}
@@ -203,8 +203,8 @@ footer .wrap{padding-block:0 40px;color:var(--muted);font-size:.85rem}
           <tr><td>Werkvoorbereiding</td><td>Zaagbatches, Ardis-export, voorraad, aankoop</td><td><span class="pill full">Volledig</span></td></tr>
           <tr><td>Boekhouding (intern)</td><td>Facturen, betalingen</td><td><span class="pill full">Volledig</span></td></tr>
           <tr><td>Externe boekhouder</td><td>Werkt rechtstreeks in jullie Odoo</td><td><span class="pill full">Volledig</span></td></tr>
-          <tr><td>Operator zaag / CNC / montage</td><td>Scant etiketten in het scanscherm van de module</td><td><span class="pill ask">Volledig, tenzij…</span> zie vragen 1 en 2</td></tr>
-          <tr><td>Plaatser</td><td>Planning, controlelijst, handtekening op tablet</td><td><span class="pill ask">Volledig, tenzij…</span> zie vraag 3</td></tr>
+          <tr><td>Operator zaag / CNC / montage</td><td>Scant etiketten in het scanscherm van de module</td><td><span class="pill ask">Volledig, tenzij…</span> zie vragen 1 tot 3</td></tr>
+          <tr><td>Plaatser</td><td>Planning, controlelijst, handtekening op tablet</td><td><span class="pill ask">Volledig, tenzij…</span> zie vraag 4</td></tr>
           <tr><td>Werknemer zonder login</td><td>Staat in de app Werknemers (verlof, loon, badge)</td><td><span class="pill light">Light € 7,90</span></td></tr>
           <tr><td>Klant</td><td>Tekening en offerte goedkeuren, vragen, facturen in het portaal</td><td><span class="pill free">Gratis</span></td></tr>
           <tr><td>Leverancier, architect</td><td>Documenten via het portaal</td><td><span class="pill free">Gratis</span></td></tr>
@@ -292,7 +292,7 @@ footer .wrap{padding-block:0 40px;color:var(--muted);font-size:.85rem}
   </section>
 
   <section aria-labelledby="scen-t">
-    <h2 id="scen-t">Drie manieren om de werkvloer te laten scannen</h2>
+    <h2 id="scen-t">Vier manieren om de werkvloer te laten scannen</h2>
     <p class="sub">Voorbeeld: 5 operators aan 3 werkposten (paneelzaag, CNC, montage), jaarlijks gefactureerd, prijs vanaf jaar 2.</p>
     <div class="scen">
       <div class="panel">
@@ -322,6 +322,17 @@ footer .wrap{padding-block:0 40px;color:var(--muted);font-size:.85rem}
           <li class="con">Aanpassing van de module nodig; of de werkpostlogin volledig moet zijn, navragen (vraag 2)</li>
         </ul>
       </div>
+      <div class="panel">
+        <h3>D · Aparte werkvloer-app</h3>
+        <div class="cost">1 × € 44,90 = € 44,90 / maand</div>
+        <p class="note">+ 5 × € 7,90 = € 84,40 als de operators ook in de app Werknemers van Odoo staan.</p>
+        <ul>
+          <li class="pro">Eigen web-app op een Linux-server in het atelier, gekoppeld via de API (in het plan Gepersonaliseerd)</li>
+          <li class="pro">Badge per operator: scans op naam, en werkt door zonder internet</li>
+          <li class="con">Eén technische gebruiker voor meerdere operators: alleen na schriftelijk akkoord van Odoo (vraag 3)</li>
+          <li class="con">Nieuwe app om te bouwen en te onderhouden. Zie de pagina <a href="https://claude.ai/artifact/NFUCTPbYn1msAPwtFmePpF" target="_blank" rel="noopener">Werkvloer-app</a></li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -337,6 +348,11 @@ footer .wrap{padding-block:0 40px;color:var(--muted);font-size:.85rem}
       <li class="panel q key">
         <h3>Telt het eigen scanscherm (zaag, CNC, montage) als light-gebruik, net zoals de Barcode-app en de Werkvloer van Productie?</h3>
         <p class="impact"><b>Impact:</b> € 44,90 of € 7,90 per operator. Zo niet: kiezen tussen scenario A, B of C, of de werkvloer via Odoo's eigen Productie-Werkvloer laten lopen.</p>
+        <p class="who-ask"><span class="pill ask">Vraag aan Odoo</span></p>
+      </li>
+      <li class="panel q key">
+        <h3>Mag een aparte werkvloer-app via één technische API-gebruiker de scans van meerdere operators naar Odoo sturen?</h3>
+        <p class="impact"><b>Impact:</b> bepaalt of scenario D kan: één volledige licentie voor de hele werkvloer in plaats van één per operator of werkpost.</p>
         <p class="who-ask"><span class="pill ask">Vraag aan Odoo</span></p>
       </li>
       <li class="panel q key">
