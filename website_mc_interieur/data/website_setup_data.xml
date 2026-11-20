@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Colours, font, logo, menu and language of the website. Runs once per website; changes made later in the
+         website editor are kept. -->
+    <function model="website" name="_mcw_setup_websites"/>
+</odoo>

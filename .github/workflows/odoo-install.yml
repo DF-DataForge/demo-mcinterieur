@@ -69,6 +69,22 @@ jobs:
             exit 1
           fi
 
+      - name: Install the website (website_mc_interieur) and run its tests
+        env:
+          PGPASSWORD: odoo
+        run: |
+          python odoo/odoo-bin \
+            --addons-path=odoo/addons,odoo/odoo/addons,addons \
+            --db_host=localhost --db_user=odoo --db_password=odoo \
+            -d mc_web -i website_mc_interieur \
+            --test-tags=/website_mc_interieur \
+            --stop-after-init --log-level=info 2>&1 | tee website.log
+          if grep -E "ERROR|CRITICAL|Traceback" website.log | grep -v "INFO" ; then
+            echo "::error::Errors found in the Odoo log"
+            exit 1
+          fi
+          grep -q "post-tests" website.log
+
       - name: Install without demo data, load demo data afterwards
         env:
           PGPASSWORD: odoo

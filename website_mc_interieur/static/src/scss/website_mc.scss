@@ -1,0 +1,262 @@
+// MC Interieur website: layout on top of the website palette (set on install, see models/website.py).
+$mcw-green: #95ba3c;
+$mcw-green-dark: #5f7d1c;
+$mcw-brown: #574a36;
+$mcw-brown-deep: #2e271d;
+$mcw-sand: #f3efe7;
+$mcw-radius: 14px;
+
+.o_mcw {
+    .o_mcw_eyebrow {
+        font-size: .8rem;
+        font-weight: 700;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: $mcw-green-dark;
+        margin-bottom: .5rem;
+    }
+    .o_cc5 .o_mcw_eyebrow,
+    .o_cc4 .o_mcw_eyebrow {
+        color: $mcw-green;
+    }
+    h1, h2 {
+        letter-spacing: -.01em;
+    }
+}
+
+// Header picture with text over a dark brown veil
+.o_mcw_hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 56vh;
+    padding: 8rem 0 4rem;
+    background-size: cover;
+    background-position: center;
+
+    &.o_mcw_hero_big {
+        min-height: min(88vh, 820px);
+    }
+    .o_mcw_hero_filter {
+        background: linear-gradient(180deg, rgba($mcw-brown-deep, .25) 0%, rgba($mcw-brown-deep, .55) 45%, rgba($mcw-brown-deep, .88) 100%);
+    }
+    > .container {
+        position: relative;
+    }
+    .o_mcw_hero_text {
+        max-width: 720px;
+        color: #fff;
+        h1 {
+            color: #fff;
+            line-height: 1.08;
+        }
+        .lead {
+            font-size: 1.2rem;
+            opacity: .92;
+        }
+    }
+    .o_mcw_hero_text::before {
+        content: "";
+        display: block;
+        width: 64px;
+        height: 6px;
+        background: $mcw-green;
+        border-radius: 3px;
+        margin-bottom: 1.25rem;
+    }
+}
+
+.o_mcw_page_head {
+    border-top: 6px solid $mcw-green;
+}
+
+// Facts next to the intro
+.o_mcw_fact {
+    height: 100%;
+    padding: 1.25rem;
+    border-radius: $mcw-radius;
+    background: $mcw-sand;
+    border-left: 5px solid $mcw-green;
+    span {
+        display: block;
+    }
+    .o_mcw_fact_k {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: $mcw-brown;
+        margin-bottom: .25rem;
+    }
+}
+
+// Service cards
+.o_mcw_card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: $mcw-radius;
+    overflow: hidden;
+    background: #fff;
+    color: inherit !important;
+    text-decoration: none !important;
+    box-shadow: 0 1px 2px rgba($mcw-brown-deep, .08), 0 8px 24px rgba($mcw-brown-deep, .06);
+    transition: transform .2s ease, box-shadow .2s ease;
+
+    &:hover,
+    &:focus-visible {
+        transform: translateY(-4px);
+        box-shadow: 0 2px 4px rgba($mcw-brown-deep, .1), 0 16px 32px rgba($mcw-brown-deep, .12);
+        .o_mcw_card_img {
+            transform: scale(1.04);
+        }
+    }
+    .o_mcw_card_img {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        transition: transform .4s ease;
+    }
+    .o_mcw_card_body {
+        display: block;
+        padding: 1.25rem 1.25rem 1.5rem;
+        flex: 1;
+    }
+    .o_mcw_more {
+        display: inline-block;
+        margin-top: .75rem;
+        font-weight: 700;
+        color: $mcw-green-dark;
+        &::after {
+            content: " \2192";
+        }
+    }
+    &.o_mcw_card_cta {
+        justify-content: center;
+        background: $mcw-brown;
+        color: #fff !important;
+        .o_mcw_more {
+            color: $mcw-green;
+        }
+    }
+}
+
+// Way of working
+.o_mcw_steps {
+    counter-reset: none;
+    li {
+        position: relative;
+    }
+    .o_mcw_step_nr {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: $mcw-brown;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: .75rem;
+        box-shadow: 0 0 0 6px rgba($mcw-green, .25);
+    }
+}
+
+// Lists with a green tick
+.o_mcw_checks li {
+    position: relative;
+    padding: .45rem 0 .45rem 2rem;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: .7rem;
+        width: 1.1rem;
+        height: 1.1rem;
+        border-radius: 50%;
+        background: $mcw-green url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 80% no-repeat;
+    }
+}
+
+.o_mcw_box {
+    padding: 1.5rem;
+    border-radius: $mcw-radius;
+    background: $mcw-sand;
+    &.o_mcw_box_dark {
+        background: rgba(255, 255, 255, .06);
+        border: 1px solid rgba(255, 255, 255, .12);
+    }
+}
+
+.o_mcw_text p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+.o_mcw_machines li {
+    padding: .6rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+    b {
+        color: $mcw-green;
+    }
+}
+
+.o_mcw_gallery_img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: $mcw-radius;
+}
+
+.o_mcw_atelier img.rounded-3 {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .35);
+}
+
+.o_mcw_cta {
+    h2 {
+        color: #fff;
+    }
+}
+
+// Footer
+.o_mcw_footer {
+    border-top: 6px solid $mcw-green;
+    h5 {
+        font-size: .85rem;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: $mcw-green;
+        margin-bottom: 1rem;
+    }
+    li {
+        padding: .2rem 0;
+    }
+    a:not(.btn) {
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    .o_mcw_footer_logo {
+        width: 120px;
+        height: auto;
+        border-radius: 6px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .o_mcw_hero {
+        padding: 6rem 0 2.5rem;
+        min-height: 60vh;
+        .display-4 {
+            font-size: 2.1rem;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .o_mcw_card,
+    .o_mcw_card .o_mcw_card_img {
+        transition: none;
+    }
+}

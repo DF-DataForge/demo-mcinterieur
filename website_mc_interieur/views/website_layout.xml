@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Header button -->
+    <template id="header_call_to_action" inherit_id="website.header_call_to_action" name="MC Interieur: header button">
+        <xpath expr="//a[hasclass('btn_cta')]" position="replace">
+            <a href="/contactus" class="oe_unremovable btn btn-primary btn_cta">Afspraak maken</a>
+        </xpath>
+    </template>
+
+    <!-- Footer: services, contact details from the company, customer portal -->
+    <template id="footer" inherit_id="website.layout" name="MC Interieur: footer" priority="30">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <div id="footer" class="oe_structure oe_structure_solo o_mcw_footer" t-ignore="true" t-if="not no_footer">
+                <section class="s_text_block pt56 pb32" data-snippet="s_text_block" data-name="Footer">
+                    <div class="container">
+                        <div class="row g-4">
+                            <div class="col-lg-4">
+                                <img src="/website_mc_interieur/static/img/logo.png" alt="MC Interieur" class="o_mcw_footer_logo mb-3"/>
+                                <p>Interieur en maatmeubelen: ontworpen voor uw ruimte, gemaakt in ons eigen atelier en geplaatst door ons eigen team.</p>
+                            </div>
+                            <div class="col-6 col-lg-2">
+                                <h5>Wat we maken</h5>
+                                <ul class="list-unstyled">
+                                    <li><a href="/keukens">Keukens</a></li>
+                                    <li><a href="/badkamers">Badkamers</a></li>
+                                    <li><a href="/slaapkamers">Slaapkamers &amp; dressings</a></li>
+                                    <li><a href="/interieur">Interieur &amp; bureaus</a></li>
+                                    <li><a href="/buitenschrijnwerk">Buitenschrijnwerk</a></li>
+                                    <li><a href="/winkelinrichting">Winkelinrichting</a></li>
+                                    <li><a href="/isoleren">Isoleren</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-6 col-lg-2">
+                                <h5>MC Interieur</h5>
+                                <ul class="list-unstyled">
+                                    <li><a href="/over-ons">Over ons</a></li>
+                                    <li><a href="/over-ons#atelier">Ons atelier</a></li>
+                                    <li><a href="/#werkwijze">Werkwijze</a></li>
+                                    <li><a href="/my">Klantportaal</a></li>
+                                    <li><a href="/contactus">Contact</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4">
+                                <h5>Contact</h5>
+                                <ul class="list-unstyled o_mcw_footer_contact">
+                                    <li t-if="res_company.street or res_company.city">
+                                        <t t-out="res_company.street"/><t t-if="res_company.street and res_company.city">, </t>
+                                        <t t-out="res_company.zip"/> <t t-out="res_company.city"/>
+                                    </li>
+                                    <li t-if="res_company.phone"><a t-attf-href="tel:#{res_company.phone}" t-out="res_company.phone"/></li>
+                                    <li t-if="res_company.email"><a t-attf-href="mailto:#{res_company.email}" t-out="res_company.email"/></li>
+                                    <li t-if="res_company.vat">Btw <t t-out="res_company.vat"/></li>
+                                </ul>
+                                <a href="/contactus" class="btn btn-primary mt-2">Afspraak maken</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+</odoo>
