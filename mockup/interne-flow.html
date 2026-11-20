@@ -145,6 +145,18 @@ footer{padding-block:0 40px;color:var(--muted);font-size:13px}
 .bc b{display:block;font-size:16px;margin-bottom:2px}
 .bc small{display:block;font-size:12.5px;color:var(--muted);font-weight:600}
 .bc p{margin:6px 0 0;font-size:14.5px}
+.optbox{border:2px dashed var(--line-strong);border-radius:16px;padding:22px;display:grid;gap:18px;background:var(--paper)}
+.optflag{justify-self:start;font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--amber);background:var(--amber-soft);border-radius:999px;padding:4px 12px}
+.optbox .map{border:0;background:var(--bg)}
+.map .optapp{fill:var(--amber-soft);stroke:var(--amber);stroke-width:1.8;stroke-dasharray:6 4}
+.map .optt{fill:var(--amber);font:700 15px var(--font)}
+.map .opts{fill:var(--amber);font:500 12px var(--font)}
+.map .divider{stroke:var(--line-strong);stroke-width:1}
+.optbox .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.optbox .two > div{background:var(--bg);border-radius:12px;padding:14px 16px;min-width:0}
+.optbox .two h3{font-size:16px;margin:0}
+.optbox ul{margin:6px 0 0;padding-left:1.1rem;font-size:15px}
+.optbox p{margin:0}
 .h3{font-size:18px;font-weight:800;margin:0 0 10px}
 table.opts td,table.opts th{text-align:left;vertical-align:top}
 table.opts{min-width:720px}
@@ -336,6 +348,84 @@ table.opts{min-width:720px}
     </table></div>
   </section>
 
+  <section aria-labelledby="app-title">
+    <h2 id="app-title">Eventuele optie: een aparte werkvloer-app</h2>
+    <p class="sub">Dit is geen onderdeel van de huidige flow. Het is een mogelijke variant voor het scannen op de werkvloer, die pas gebouwd wordt als Odoo de licentievraag positief beantwoordt en MC Interieur ervoor kiest. Intake, offerte, portaal, werkvoorbereiding en plaatsing blijven in beide gevallen gelijk.</p>
+    <div class="optbox">
+      <span class="optflag">Optie · nog niet beslist</span>
+      <div class="map">
+        <svg viewBox="0 0 900 330" role="img" aria-labelledby="opt-t opt-d">
+          <title id="opt-t">Nu tegenover de optie werkvloer-app</title>
+          <desc id="opt-d">Links de huidige opzet: de werkposten paneelzaag, CNC en montage scannen rechtstreeks in Odoo, met een Odoo-login per operator of werkpost. Rechts de optie: een werkvloer-app op een Linux-server in het atelier staat tussen Odoo en de werkposten; operators melden zich aan met een badge en de app praat met Odoo via één technische gebruiker.</desc>
+          <defs><marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" class="head"/></marker></defs>
+
+          <text x="40" y="40" class="t">Nu: scannen in Odoo</text>
+          <rect x="125" y="64" width="200" height="56" rx="12" class="core"/>
+          <text x="225" y="88" text-anchor="middle" class="t">Odoo</text>
+          <text x="225" y="107" text-anchor="middle" class="s">scanscherm in de module</text>
+          <path d="M190 124 L100 232" class="arr" marker-end="url(#ah2)"/>
+          <path d="M225 124 L225 232" class="arr" marker-end="url(#ah2)"/>
+          <path d="M260 124 L350 232" class="arr" marker-end="url(#ah2)"/>
+          <rect x="40" y="238" width="110" height="46" rx="10" class="floor"/>
+          <text x="95" y="266" text-anchor="middle" class="m">Paneelzaag</text>
+          <rect x="170" y="238" width="110" height="46" rx="10" class="floor"/>
+          <text x="225" y="266" text-anchor="middle" class="m">CNC</text>
+          <rect x="300" y="238" width="110" height="46" rx="10" class="floor"/>
+          <text x="355" y="266" text-anchor="middle" class="m">Montage</text>
+          <text x="225" y="312" text-anchor="middle" class="s">Odoo-login per operator of per werkpost</text>
+
+          <line x1="450" y1="24" x2="450" y2="312" class="divider"/>
+
+          <text x="490" y="40" class="optt">Optie: werkvloer-app</text>
+          <rect x="575" y="64" width="200" height="56" rx="12" class="core"/>
+          <text x="675" y="88" text-anchor="middle" class="t">Odoo</text>
+          <text x="675" y="107" text-anchor="middle" class="s">projecten, stukken, voorraad</text>
+          <path d="M675 124 L675 146" class="arr" marker-start="url(#ah2)" marker-end="url(#ah2)"/>
+          <rect x="545" y="150" width="260" height="54" rx="12" class="optapp"/>
+          <text x="675" y="173" text-anchor="middle" class="optt">Werkvloer-app · Linux</text>
+          <text x="675" y="192" text-anchor="middle" class="opts">in het atelier, badges, werkt offline</text>
+          <path d="M630 208 L545 232" class="arr" marker-end="url(#ah2)"/>
+          <path d="M675 208 L675 232" class="arr" marker-end="url(#ah2)"/>
+          <path d="M720 208 L805 232" class="arr" marker-end="url(#ah2)"/>
+          <rect x="490" y="238" width="110" height="46" rx="10" class="floor"/>
+          <text x="545" y="266" text-anchor="middle" class="m">Paneelzaag</text>
+          <rect x="620" y="238" width="110" height="46" rx="10" class="floor"/>
+          <text x="675" y="266" text-anchor="middle" class="m">CNC</text>
+          <rect x="750" y="238" width="110" height="46" rx="10" class="floor"/>
+          <text x="805" y="266" text-anchor="middle" class="m">Montage</text>
+          <text x="675" y="312" text-anchor="middle" class="s">1 technische gebruiker, operators met badge</text>
+        </svg>
+      </div>
+      <div class="two">
+        <div>
+          <h3>Wat er anders wordt</h3>
+          <ul>
+            <li>Operators melden zich aan met een badge, niet met een Odoo-login</li>
+            <li>De werkvloer werkt door als het internet wegvalt</li>
+            <li>De app stuurt de scans elke minuut naar Odoo; Odoo schuift het project door zoals nu</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Wat hetzelfde blijft</h3>
+          <ul>
+            <li>Etiketten, barcodes en de volgorde zaag, CNC, montage</li>
+            <li>Alles van intake tot plaatsing in Odoo</li>
+            <li>Het scanscherm in Odoo blijft als terugval</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Voorwaarden</h3>
+          <ul>
+            <li>Schriftelijk akkoord van Odoo: één technische gebruiker voor meerdere operators</li>
+            <li>Een Linux-server of mini-pc in het atelier</li>
+            <li>Iemand die de app en de server onderhoudt</li>
+          </ul>
+        </div>
+      </div>
+      <p>Architectuur, flow per werkpost en fasering: <a href="https://claude.ai/artifact/NFUCTPbYn1msAPwtFmePpF" target="_blank" rel="noopener">Werkvloer-app</a>. Kosten tegenover de andere opties: <a href="https://claude.ai/artifact/1zFBfQdopYd6a2Hojb9eQP" target="_blank" rel="noopener">Odoo-licenties</a>, scenario D.</p>
+    </div>
+  </section>
+
   <section aria-labelledby="dec-title">
     <h2 id="dec-title">Beslissingen om samen met MC Interieur te nemen</h2>
     <p class="sub">Deze keuzes bepalen hoe de flow precies ingesteld wordt. Per thema: wat er beslist moet worden en waarom het telt. De meeste vragen hebben een voorstel als startpunt.</p>
@@ -441,6 +531,7 @@ const DECISIONS=[
   ['Wie beheert de restplaten: Ardis of Odoo?','Voorkomt dubbele voorraad.','Voorstel: Ardis voor resten, Odoo voor volle platen.'],
   ['Hoe vaak wordt een zaagbatch gemaakt?','Meer projecten per batch geeft minder afval, maar later zagen.','Bijvoorbeeld dagelijks of per halve week.']]},
  {title:'Werkvloer',items:[
+  ['Scannen op de werkvloer: in Odoo (zoals nu), via Shop Floor van Odoo, of via een aparte werkvloer-app?','Bepaalt de licentiekost per operator, of de werkvloer zonder internet werkt en hoeveel er nog gebouwd moet worden.','Eerst de licentievragen aan Odoo; zie "Eventuele optie: een aparte werkvloer-app".'],
   ['Kan een scan het CNC-programma op de machine laden?','Anders toont Odoo enkel het programma en houdt het de status bij.','Afhankelijk van de CNC-besturing.'],
   ['Gaan stukken met kantenband eerst langs de kantenlijmmachine, vóór de CNC?','Dan wordt de kantenlijmmachine een aparte stap in de flow (met of zonder scan); nu gaat een stuk van de zaag rechtstreeks naar CNC of montage.',''],
   ['Monteren jullie in het atelier, op de werf, of beide?','Bepaalt waar het verzamelen per kast gebeurt.',''],
