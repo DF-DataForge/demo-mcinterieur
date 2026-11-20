@@ -29,6 +29,7 @@ Maatwerkflow voor een interieurbouwer / schrijnwerker
         'security/ir.access.csv',
         'data/ir_sequence_data.xml',
         'data/mc_intake_data.xml',
+        'data/mc_intake_condition_data.xml',
         'data/product_data.xml',
         'data/portal_entry_data.xml',
         'views/mc_intake_config_views.xml',

@@ -83,6 +83,9 @@ class McProject(models.Model):
     intake_total = fields.Integer(string="Intakevragen", compute='_compute_intake_progress')
     attachment_count = fields.Integer(string="Foto's en plannen ", compute='_compute_attachment_count')
     topsolid_folder = fields.Char(string="TopSolid-projectmap", compute='_compute_topsolid_folder')
+    intake_hidden_keys = fields.Json(
+        string="Verborgen intakevragen", compute='_compute_intake_hidden_keys',
+        help="Vragen die door een voorwaarde niet getoond worden.")
     intake_summary_html = fields.Html(
         string="Samenvatting intake", compute='_compute_intake_summary_html', sanitize=True)
 
@@ -127,7 +130,8 @@ class McProject(models.Model):
     # ------------------------------------------------------------------
     # Computes
     # ------------------------------------------------------------------
-    @api.depends('project_type_id', 'intake_template_id', *[section[0] for section in INTAKE_SECTIONS])
+    @api.depends('project_type_id', 'intake_template_id', 'intake_template_id.condition_ids.when_option',
+                 *[section[0] for section in INTAKE_SECTIONS])
     def _compute_intake_progress(self):
         for project in self:
             items = project._mc_intake_items()
@@ -148,6 +152,12 @@ class McProject(models.Model):
         for project in self:
             customer = ''.join((project.partner_id.name or 'klant').split())
             project.topsolid_folder = f"\\\\server\\TopSolid\\Projecten\\{project.ref}_{customer}"
+
+    @api.depends('intake_template_id.condition_ids.question_key', 'intake_template_id.condition_ids.when_option',
+                 *[section[0] for section in INTAKE_SECTIONS])
+    def _compute_intake_hidden_keys(self):
+        for project in self:
+            project.intake_hidden_keys = sorted(project._mc_intake_hidden_keys())
 
     @api.depends('project_type_id', 'intake_template_id', *[section[0] for section in INTAKE_SECTIONS])
     def _compute_intake_summary_html(self):
@@ -282,15 +292,36 @@ class McProject(models.Model):
         return [section for section in INTAKE_SECTIONS
                 if section[0] != 'intake_appliances' or self.project_type_id.show_appliances]
 
-    def _mc_intake_items(self):
-        """Every intake question of this project: key (field.name), label, type, value, filled."""
+    def _mc_intake_hidden_keys(self):
+        """Questions hidden by a condition (Configuratie > Intakevragen > Voorwaarden) for this project."""
+        self.ensure_one()
+        wanted = {}
+        for condition in self.intake_template_id.condition_ids:
+            wanted.setdefault(condition.question_key, []).append(condition.when_option)
+        hidden = set()
+        for question_key, options in wanted.items():
+            for option in options:
+                question, _sep, value = (option or '').partition('|')
+                field_name, _dot, name = question.partition('.')
+                values = self[field_name] if field_name in self._fields else None
+                if values and values.get(name) == value:
+                    break
+            else:
+                hidden.add(question_key)
+        return hidden
+
+    def _mc_intake_items(self, include_hidden=False):
+        """Every intake question shown for this project: key (field.name), label, type, value, filled."""
         self.ensure_one()
         items = []
         template = self.intake_template_id
+        hidden = set() if include_hidden else self._mc_intake_hidden_keys()
         for field_name, definition_field, _label in self._mc_intake_sections():
             values = self[field_name]
             for definition in template[definition_field] or []:
                 if definition.get('type') == 'separator':
+                    continue
+                if f"{field_name}.{definition['name']}" in hidden:
                     continue
                 value = values.get(definition['name']) if values else None
                 items.append({

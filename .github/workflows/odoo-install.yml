@@ -121,10 +121,10 @@ jobs:
           if grep -E "ERROR|CRITICAL|Traceback" mig.log; then exit 1; fi
           python odoo/odoo-bin shell $NEW -d mc_mig --log-level=warn > mig2.log 2>&1 <<'EOF' || (cat mig2.log; exit 1)
           p = env.ref('mc_interieur.project_maes_keuken')
-          print('MIGRATED', p.project_type_id.code, p._mc_intake('worktop'), p._mc_intake('space_width'), p.stage)
+          print('MIGRATED', p.project_type_id.code, p._mc_intake('worktop'), p._mc_intake('space_width'), p.stage, len(env['mc.intake.condition'].search([])))
           EOF
           cat mig2.log | tail -5
-          grep -q "MIGRATED kitchen stone 3240 validation" mig2.log
+          grep -q "MIGRATED kitchen stone 3240 validation 5" mig2.log
 
       - name: Upload log
         if: always()

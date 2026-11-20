@@ -31,3 +31,5 @@ access_mc_project_type_shopfloor,mc.project.type shopfloor,mc.project.type,mc_in
 access_mc_project_type_manager,mc.project.type manager,mc.project.type,mc_interieur_group_manager,crud,
 access_mc_intake_template_shopfloor,mc.intake.template shopfloor,mc.intake.template,mc_interieur_group_shopfloor,r,
 access_mc_intake_template_manager,mc.intake.template manager,mc.intake.template,mc_interieur_group_manager,crud,
+access_mc_intake_condition_shopfloor,mc.intake.condition shopfloor,mc.intake.condition,mc_interieur_group_shopfloor,r,
+access_mc_intake_condition_manager,mc.intake.condition manager,mc.intake.condition,mc_interieur_group_manager,crud,

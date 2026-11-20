@@ -23,6 +23,7 @@ class McIntakeTemplate(models.Model):
     hardware_definition = fields.PropertiesDefinition(string="Beslag & indeling")
     appliances_definition = fields.PropertiesDefinition(string="Werkblad & toestellen")
     installation_definition = fields.PropertiesDefinition(string="Plaatsing")
+    condition_ids = fields.One2many('mc.intake.condition', 'template_id', string="Voorwaarden")
 
     # Preview of the intake on the configuration screen. Odoo edits question definitions from a form that shows
     # the questions themselves (menu "Edit Properties"), so the template shows its own questions as a preview.

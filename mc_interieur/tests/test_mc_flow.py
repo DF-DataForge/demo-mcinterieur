@@ -90,6 +90,25 @@ class TestMcFlow(TransactionCase):
         self.assertTrue(question.done, "Answering the intake closes the open question")
         self.assertIn('Afvalsysteem', project.intake_summary_html)
 
+    def test_conditional_intake_question(self):
+        Project = self.env['mc.project']
+        project = Project.create({
+            'name': "Test voorwaarde",
+            'partner_id': self.env.ref('mc_interieur.partner_peeters').id,
+            'project_type_id': self.env.ref('mc_interieur.project_type_wardrobe').id,
+            'intake_general': {'third_party': 'none'},
+            'drawer_id': self.env.ref('mc_interieur.user_jonas').id,
+        })
+        self.assertIn('intake_general.third_party_contact', project.intake_hidden_keys)
+        total_hidden = project.intake_total
+        project.action_handoff_drawer()
+        self.assertFalse(
+            project.question_ids.filtered(lambda q: q.field_name == 'intake_general.third_party_contact'),
+            "A hidden question does not become an open question")
+        project.write({'intake_general': {'third_party': 'architect'}})
+        self.assertNotIn('intake_general.third_party_contact', project.intake_hidden_keys)
+        self.assertEqual(project.intake_total, total_hidden + 1)
+
     def test_label_reports_render(self):
         pieces = self.env.ref('mc_interieur.project_vandamme_dressing').piece_ids[:15]
         Report = self.env['ir.actions.report']
@@ -147,6 +166,18 @@ class TestMcBackendScreens(HttpCase):
 
     def test_scan_station(self):
         self._open('/odoo/action-mc_interieur.mc_scan_station_action_assembly')
+
+    def test_conditional_question_hidden_in_form(self):
+        hidden = self.env.ref('mc_interieur.project_maes_keuken')      # architect / aannemer: Geen
+        shown = self.env.ref('mc_interieur.project_peeters_keuken')    # architect / aannemer: Aannemer
+        for project, expected in ((hidden, False), (shown, True)):
+            code = f"""setTimeout(() => {{
+                const labels = [...document.querySelectorAll('.o_field_property_label')].map(e => e.textContent);
+                const present = labels.some(t => t.includes('Contact architect'));
+                if (present === {str(expected).lower()}) {{ console.log('test successful'); }}
+                else {{ console.error('Contact question visible: ' + present + ', expected {str(expected).lower()}'); }}
+            }}, 2500)"""
+            self.browser_js(f'/odoo/action-mc_interieur.mc_project_action/{project.id}', code, login='admin')
 
     def test_intake_configuration_is_editable(self):
         code = """setTimeout(() => {

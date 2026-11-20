@@ -67,6 +67,20 @@
                         <page string="Plaatsing" name="installation">
                             <field name="preview_installation" nolabel="1" editMode="1" columns="2"/>
                         </page>
+                        <page string="Voorwaarden" name="conditions">
+                            <p class="text-muted">
+                                Een vraag met een voorwaarde verschijnt enkel als een andere vraag een bepaalde keuze heeft,
+                                bv. "Contact architect / aannemer" enkel als bij "Architect / aannemer" iets anders dan Geen
+                                gekozen is. Meerdere lijnen voor dezelfde vraag: de vraag verschijnt zodra één lijn klopt.
+                                Een verborgen vraag telt niet mee voor de intakescore en wordt geen open vraag.
+                            </p>
+                            <field name="condition_ids">
+                                <list editable="bottom">
+                                    <field name="question_key"/>
+                                    <field name="when_option"/>
+                                </list>
+                            </field>
+                        </page>
                     </notebook>
                 </sheet>
             </form>

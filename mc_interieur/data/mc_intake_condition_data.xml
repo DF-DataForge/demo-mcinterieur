@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Starting conditions. Managed in Odoo afterwards (Configuratie > Intakevragen > Voorwaarden). -->
+<odoo noupdate="1">
+    <record id="intake_condition_contact_architect" model="mc.intake.condition">
+        <field name="template_id" ref="intake_template_default"/>
+        <field name="question_key">intake_general.third_party_contact</field>
+        <field name="when_option">intake_general.third_party|architect</field>
+    </record>
+    <record id="intake_condition_contact_contractor" model="mc.intake.condition">
+        <field name="template_id" ref="intake_template_default"/>
+        <field name="question_key">intake_general.third_party_contact</field>
+        <field name="when_option">intake_general.third_party|contractor</field>
+    </record>
+    <record id="intake_condition_contact_both" model="mc.intake.condition">
+        <field name="template_id" ref="intake_template_default"/>
+        <field name="question_key">intake_general.third_party_contact</field>
+        <field name="when_option">intake_general.third_party|both</field>
+    </record>
+    <record id="intake_condition_handle_model_handles" model="mc.intake.condition">
+        <field name="template_id" ref="intake_template_default"/>
+        <field name="question_key">intake_hardware.handle_model</field>
+        <field name="when_option">intake_hardware.handles|handles</field>
+    </record>
+    <record id="intake_condition_handle_model_knobs" model="mc.intake.condition">
+        <field name="template_id" ref="intake_template_default"/>
+        <field name="question_key">intake_hardware.handle_model</field>
+        <field name="when_option">intake_hardware.handles|knobs</field>
+    </record>
+</odoo>

@@ -150,6 +150,7 @@
 
                     <notebook>
                         <page string="Algemeen" name="intake_general">
+                            <field name="intake_hidden_keys" invisible="1"/>
                             <group>
                                 <group>
                                     <field name="project_type_id" widget="badges_many2one" options="{'no_create': True}"/>

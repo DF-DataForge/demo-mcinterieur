@@ -3,6 +3,7 @@ from . import mc_team
 from . import mc_material_mapping
 from . import mc_project_type
 from . import mc_intake_template
+from . import mc_intake_condition
 from . import mc_project
 from . import mc_project_question
 from . import mc_drawing_version
