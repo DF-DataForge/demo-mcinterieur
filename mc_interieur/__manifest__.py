@@ -48,6 +48,7 @@ Maatwerkflow voor een interieurbouwer / schrijnwerker
         'views/mc_portal_templates.xml',
         'report/mc_piece_reports.xml',
         'report/mc_piece_templates.xml',
+        'data/mc_company_colours_data.xml',
         'data/mc_demo_setup_data.xml',
         'data/mc_intake_sync_data.xml',
     ],

@@ -214,6 +214,11 @@ class TestMcPortal(HttpCase):
         self.assertIn('Vragen van ons', response.text)
         self.assertIn('Offerte', response.text)
 
+    def test_portal_in_house_colours(self):
+        self.assertEqual(self.env.company.email_secondary_color.upper(), '#574A36')
+        response = self.url_open('/web/login')
+        self.assertIn('--portal-primary-color: #574A36', response.text)
+
     def test_portal_page_in_browser(self):
         # loads the frontend assets (portal styling) and the portal page as a customer
         project = self.env.ref('mc_interieur.project_maes_keuken')

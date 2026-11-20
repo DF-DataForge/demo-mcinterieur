@@ -15,3 +15,4 @@ from . import mc_installation_check
 from . import mc_installation_punch
 from . import sale_order
 from . import mc_project_demo
+from . import res_company

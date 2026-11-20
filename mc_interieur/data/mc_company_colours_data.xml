@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- House colours for the customer portal and e-mail buttons; runs on install and on every upgrade,
+         but leaves a colour that was changed by hand alone. -->
+    <function model="res.company" name="_mc_house_colours"/>
+</odoo>
