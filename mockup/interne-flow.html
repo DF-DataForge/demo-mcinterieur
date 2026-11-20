@@ -135,6 +135,31 @@ td button:hover{color:var(--brown)}
 .open ul{margin:0;padding-left:20px;display:grid;gap:6px;max-width:80ch}
 .open b{color:var(--amber)}
 footer{padding-block:0 40px;color:var(--muted);font-size:13px}
+
+/* barcode flow */
+.bc{list-style:none;margin:0 0 26px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:12px;counter-reset:none}
+.bc li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.bc-n{width:34px;height:34px;border-radius:50%;background:var(--brown);color:var(--on-brown);display:grid;place-items:center;font-weight:800}
+.bc li:nth-child(1) .bc-n,.bc li:nth-child(2) .bc-n{background:var(--brown-2)}
+.bc li:nth-child(3) .bc-n,.bc li:nth-child(4) .bc-n{background:var(--green-strong);color:var(--on-green)}
+.bc b{display:block;font-size:16px;margin-bottom:2px}
+.bc small{display:block;font-size:12.5px;color:var(--muted);font-weight:600}
+.bc p{margin:6px 0 0;font-size:14.5px}
+.h3{font-size:18px;font-weight:800;margin:0 0 10px}
+table.opts td,table.opts th{text-align:left;vertical-align:top}
+table.opts{min-width:720px}
+
+/* decisions */
+.dec{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
+.dgroup{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
+.dgroup h3{font-size:16px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.dgroup h3 span{font:600 11.5px var(--mono);color:var(--muted);font-weight:500}
+.dgroup ol{margin:0;padding-left:20px;display:grid;gap:10px}
+.dgroup li{font-size:15px}
+.dgroup li b{display:block}
+.dgroup li small{display:block;color:var(--muted);font-size:13.5px}
+.dgroup li em{font-style:normal;display:inline-block;margin-top:3px;font-size:12.5px;font-weight:700;color:var(--green-strong);background:var(--green-soft);border-radius:6px;padding:1px 7px}
+.dgroup.key{border:2px solid var(--brown)}
 </style>
 
 <header class="band">
@@ -234,15 +259,35 @@ footer{padding-block:0 40px;color:var(--muted);font-size:13px}
     </div>
   </section>
 
-  <section class="open" aria-labelledby="open-title">
-    <h2 id="open-title">Nog samen af te stemmen</h2>
-    <ul>
-      <li><b>TopSolid 6:</b> welk exportformaat de materiaallijst krijgt (kolommen, materiaalnamen, kantenband, CNC-programmanaam).</li>
-      <li><b>Ardis:</b> het importprofiel en het resultaatbestand, en of etiketten met de Odoo-barcode geprint kunnen worden.</li>
-      <li><b>CNC:</b> of een scan het programma op de machine kan laden, of dat Odoo enkel de status bijhoudt.</li>
-      <li><b>Prijzen en tarieven:</b> plaatprijzen, kantenband, beslag, machine- en montage-uren, dagtarief plaatsing, voorschot en btw-regels.</li>
-      <li><b>Montage:</b> monteren jullie in het atelier of enkel op de werf? Dat bepaalt of de stap "verzamelen per kast" in het atelier of bij het laden gebeurt.</li>
-    </ul>
+  <section aria-labelledby="bc-title">
+    <h2 id="bc-title">De barcode-flow: van code tot oplevering</h2>
+    <p class="sub">Elk fysiek stuk krijgt één etiket met een unieke code, bv. <code>PRJ-2026-0153-017.2</code>: project 0153, onderdeel 17 van de materiaallijst, stuk 2. Een onderdeel met aantal 6 krijgt dus 6 etiketten. Hetzelfde etiket wordt gescand aan de zaag, de CNC en de montagebank.</p>
+    <ol class="bc">
+      <li><span class="bc-n">1</span><div><b>Code aanmaken</b><small>Wanneer: bij de goedkeuring door de klant</small><small>Wie: Odoo, automatisch</small><p>Odoo maakt per stuk een code. Er wordt nog niets geprint.</p></div></li>
+      <li><span class="bc-n">2</span><div><b>Mee naar Ardis</b><small>Wanneer: Exporteer naar Ardis</small><small>Wie: werkvoorbereiding</small><p>De code staat in de eerste kolom van het exportbestand. Ardis weet zo welk etiket bij welk stuk op welke plaat hoort.</p></div></li>
+      <li><span class="bc-n">3</span><div><b>Printen</b><small>Wanneer: aan de zaag, per plaat of per snede</small><small>Wie: Ardis of de zaag</small><p>De printer hangt aan Ardis of aan de zaag, niet aan Odoo. Terugvaloptie: Odoo print de etiketten zelf als PDF.</p></div></li>
+      <li><span class="bc-n">4</span><div><b>Plakken en scannen</b><small>Wanneer: meteen na het zagen</small><small>Wie: zaagoperator</small><p>Etiket op een zijde zonder kantenband die later niet zichtbaar is, voor het stuk op de stapel gaat. Daarna scannen: gezaagd.</p></div></li>
+      <li><span class="bc-n">5</span><div><b>Kantenlijmen</b><small>Wanneer: tussen zaag en CNC</small><small>Wie: atelier</small><p>Het etiket blijft zitten. Dit is nu geen scanpunt; dat kan later toegevoegd worden.</p></div></li>
+      <li><span class="bc-n">6</span><div><b>CNC</b><small>Wanneer: voor de bewerking</small><small>Wie: CNC-operator</small><p>Scannen toont het juiste programma uit de TopSolid-plugin. Na de bewerking: bevestigen.</p></div></li>
+      <li><span class="bc-n">7</span><div><b>Montage</b><small>Wanneer: bij het verzamelen per kast</small><small>Wie: atelier</small><p>Scannen zegt bij welke kast het stuk hoort. Kast compleet: monteren.</p></div></li>
+      <li><span class="bc-n">8</span><div><b>Etiket weg of laten</b><small>Wanneer: na de montage</small><small>Wie: afspraak</small><p>Verwijderen, of laten zitten op een onzichtbare plek voor de service later.</p></div></li>
+    </ol>
+
+    <h3 class="h3">Drie manieren om te printen</h3>
+    <div class="matrix"><table class="opts">
+      <thead><tr><th>Manier</th><th>Hoe</th><th>Voordeel</th><th>Aandachtspunt</th></tr></thead>
+      <tbody>
+        <tr><td><b>Printer in de zaag</b></td><td>De zaag krijgt het zaagplan van Ardis en print bij elke snede het etiket van dat stuk.</td><td>Etiket hoort altijd bij het juiste stuk</td><td>Moet de zaag ondersteunen</td></tr>
+        <tr><td><b>Etiketprinter naast de zaag</b></td><td>Ardis print per plaat alle etiketten van die plaat, net voor het zagen.</td><td>Werkt met de meeste zagen</td><td>Operator plakt in de juiste volgorde</td></tr>
+        <tr><td><b>Terugval: printen uit Odoo</b></td><td>Knop "Etiketten printen (Odoo)" op de zaagbatch of het project: PDF op 100 x 50 mm of op A4 (2 x 7).</td><td>Kan meteen, zonder Ardis-instelling</td><td>Per batch vooraf geprint: meer kans op verwisselen</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section aria-labelledby="dec-title">
+    <h2 id="dec-title">Beslissingen om samen met MC Interieur te nemen</h2>
+    <p class="sub">Deze keuzes bepalen hoe de flow precies ingesteld wordt. Per thema: wat er beslist moet worden en waarom het telt. De meeste vragen hebben een voorstel als startpunt.</p>
+    <div class="dec" id="decisions"></div>
   </section>
 </main>
 
@@ -286,7 +331,7 @@ const PHASES=[
  {short:'Werkvoorbereiding',title:'Zaagbatch en Ardis-export',roles:['prep'],from:'Werkvoorbereiding',to:'Zagen',
   where:'Interieur > Werkvoorbereiding > Zaagbatches',
   lead:'Goedgekeurde projecten worden gebundeld in een zaagbatch, zodat Ardis over projecten heen optimaliseert.',
-  does:['Projecten in een zaagbatch zetten','Materiaal en voorraad nakijken','Tekorten bestellen bij de leverancier','"Exporteer naar Ardis", optimaliseren in Ardis','"Resultaat Ardis inlezen"'],
+  does:['Projecten in een zaagbatch zetten','Materiaal en voorraad nakijken','Tekorten bestellen bij de leverancier','"Exporteer naar Ardis", optimaliseren in Ardis','"Resultaat Ardis inlezen"','Indien nodig: "Etiketten printen (Odoo)" als terugval'],
   auto:['Materiaalbehoefte: platen (82 % rendement) en kantenband (+10 %)','Aankooporders per leverancier','CSV voor Ardis, één lijn per etiket','Verbruik en resten geboekt op de voorraad'],
   sys:['Odoo','Ardis']},
  {short:'Zagen',title:'Paneelzaag',roles:['floor'],from:'Zagen',to:'CNC',
@@ -313,6 +358,52 @@ const PHASES=[
   does:['Planner: ploeg en dag kiezen','Plaatser: werfgegevens bekijken, controlelijst afvinken','Nazorgpunten en foto\'s toevoegen','Klant laten tekenen op de tablet'],
   auto:['Werfgegevens uit de intake: toegang, parkeren, demontage','Controlelijst op maat van het project','Tekenen pas mogelijk als alles afgevinkt is','Project opgeleverd, nazorg als taak'],
   sys:['Odoo']},
+];
+
+// Decisions to take with MC Interieur: [question, why it matters, proposal]
+const DECISIONS=[
+ {title:'Barcodes en etiketten',key:true,items:[
+  ['Wie print de etiketten: de zaag, Ardis met een etiketprinter, of Odoo?','Bepaalt welke koppeling nodig is en hoe zeker het etiket bij het juiste stuk hoort.','Voorstel: Ardis of de zaag; Odoo als terugval.'],
+  ['Kan Ardis een etiket printen met de code uit het importbestand?','Zonder dat kunnen zaag, CNC en montage het stuk niet terugvinden in Odoo.','Vragen aan de Ardis-verdeler.'],
+  ['Welke etiketprinter en welk etiketformaat?','Bepaalt het sjabloon in Ardis en het PDF-formaat in Odoo.','Voorstel: thermische printer, 100 x 50 mm.'],
+  ['Waar komt het etiket op het stuk?','Het mag niet op een kant die kantenband krijgt, en niet op een zichtzijde.','Voorstel: binnenzijde, vaste hoek.'],
+  ['Moet het etiket blijven zitten na de montage?','Handig voor service later, maar mag niet zichtbaar zijn bij de klant.',''],
+  ['Wordt er ook gescand aan de kantenlijmmachine?','Geeft meer zicht op waar een stuk ligt, maar is een extra handeling.','Voorstel: niet in de eerste fase.'],
+  ['Welke scanners: vaste scanner per machine of draadloze handscanner?','Bepaalt aankoop en hoe de operator werkt.','']]},
+ {title:'TopSolid 6',items:[
+  ['Welke export van de materiaallijst kan TopSolid 6 maken?','Bepaalt hoe Odoo de onderdelen inleest: kolommen, materiaalnamen, kantenband, CNC-programma.','Voorbeeldbestand opvragen.'],
+  ['Wordt de projectreferentie uit Odoo de naam van het TopSolid-project?','Zo koppelt Odoo de materiaallijst automatisch aan het juiste project.','Voorstel: ja.'],
+  ['Komt het beslag mee in de TopSolid-export?','Dan is de picklijst en offerte nauwkeuriger dan met vaste regels.',''],
+  ['Is een overstap naar TopSolid 7 gepland?','Een overstap verandert de koppeling.','']]},
+ {title:'Ardis',items:[
+  ['Welk importprofiel gebruikt Ardis voor de onderdelen?','Odoo moet exact dat formaat schrijven.','Voorbeeldbestand en profiel opvragen.'],
+  ['Kan Ardis het verbruik terug exporteren (platen, kantenband, resten)?','Daarmee boekt Odoo de voorraad af.',''],
+  ['Wie beheert de restplaten: Ardis of Odoo?','Voorkomt dubbele voorraad.','Voorstel: Ardis voor resten, Odoo voor volle platen.'],
+  ['Hoe vaak wordt een zaagbatch gemaakt?','Meer projecten per batch geeft minder afval, maar later zagen.','Bijvoorbeeld dagelijks of per halve week.']]},
+ {title:'Werkvloer',items:[
+  ['Kan een scan het CNC-programma op de machine laden?','Anders toont Odoo enkel het programma en houdt het de status bij.','Afhankelijk van de CNC-besturing.'],
+  ['Monteren jullie in het atelier, op de werf, of beide?','Bepaalt waar het verzamelen per kast gebeurt.',''],
+  ['Wanneer wordt het verbruik geboekt: bij het Ardis-resultaat of bij het zagen?','Bepaalt hoe actueel de voorraad is.','Voorstel: bij het Ardis-resultaat.'],
+  ['Welke toestellen op de werkvloer: tablet, pc of beide?','Bepaalt aankoop en schermgrootte.','']]},
+ {title:'Offertes en prijzen',items:[
+  ['Welke tarieven: machine-uur, montage-uur, dagtarief plaatsing, lakwerk per m2?','Basis van elke offerte.',''],
+  ['Welke marges op eigen productie en op extern werk?','',''],
+  ['Welk voorschot en wanneer factureren?','Wordt automatisch voorgesteld bij goedkeuring.','Voorstel: 30 % bij goedkeuring.'],
+  ['Wanneer 6 % en wanneer 21 % btw?','Odoo stelt het voor uit de intake; de verkoper moet het bevestigen.',''],
+  ['Mogen klanten opties aanvinken in het portaal (bv. verlichting)?','Kan later toegevoegd worden.','']]},
+ {title:'Klantportaal en communicatie',items:[
+  ['Is een getypte naam met bevestiging genoeg als handtekening?','Juridische zekerheid van de goedkeuring.','Alternatief: handtekening tekenen.'],
+  ['Wie volgt de klantvragen op en stuurt herinneringen?','Een open vraag blokkeert de goedkeuring.','Voorstel: de verkoper.'],
+  ['Welke e-mails krijgt de klant automatisch?','Nieuwe versie, nieuwe vraag, plaatsingsdatum.','']]},
+ {title:'Plaatsing',items:[
+  ['Hoe zijn de ploegen samengesteld?','Planning per ploeg.',''],
+  ['Welke punten moeten altijd op de controlelijst?','Basis voor de oplevering.',''],
+  ['Wie volgt de nazorgpunten op?','Worden automatisch taken.','Voorstel: de verkoper.']]},
+ {title:'Odoo en IT',items:[
+  ['Odoo Community of Enterprise?','Enterprise geeft o.a. de Barcode-app, IoT-box voor printers en handtekeningen; Community volstaat voor deze flow.',''],
+  ['Waar draait Odoo (Cloudpepper, Odoo.sh, eigen server)?','Bepaalt updates, back-ups en kosten.',''],
+  ['Welke gebruikers en rechten?','Verkoop, tekenaar, werkvoorbereiding, werkvloer, plaatsing.',''],
+  ['Welke gegevens worden overgenomen uit het huidige systeem?','Klanten, artikelen, prijzen, openstaande projecten.','']]},
 ];
 
 let cur=0, role='';
@@ -360,5 +451,6 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(cur+1)}if(e.key==='ArrowLeft'){e.preventDefault();go(cur-1)}});
 const m=location.hash.match(/^#fase-(\d)$/); if(m)cur=Math.max(0,Math.min(PHASES.length-1,Number(m[1])-1));
+$('decisions').innerHTML=DECISIONS.map(g=>`<div class="dgroup ${g.key?'key':''}"><h3>${esc(g.title)} <span>${g.items.length} vragen</span></h3><ol>${g.items.map(([q,why,prop])=>`<li><b>${esc(q)}</b>${why?`<small>${esc(why)}</small>`:''}${prop?`<em>${esc(prop)}</em>`:''}</li>`).join('')}</ol></div>`).join('');
 render();
 </script>
