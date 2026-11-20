@@ -26,7 +26,7 @@ class TestMcWebsite(HttpCase):
             self.assertIn('o_mcw_footer', response.text, f"{url}: footer")
 
     def test_setup(self):
-        website = self.env['website'].get_current_website()
+        website = self.env.ref('website.default_website')
         self.assertTrue(website.logo)
         urls = set(self.env['website.menu'].search([('website_id', '=', website.id)]).mapped('url'))
         self.assertTrue({'/keukens', '/over-ons', '/contactus'} <= urls, urls)
@@ -36,4 +36,12 @@ class TestMcWebsite(HttpCase):
 
     def test_homepage_in_browser(self):
         # compiles the frontend assets with the palette and the module's styles
-        self.browser_js('/', "setTimeout(() => console.log('test successful'), 1500)")
+        code = """setTimeout(() => {
+            const hero = document.querySelector('.o_mcw_hero');
+            const footer = document.querySelector('.o_mcw_footer');
+            const ok = hero && getComputedStyle(hero).display === 'flex'
+                && footer && getComputedStyle(footer).borderTopWidth === '6px';
+            if (ok) { console.log('test successful'); }
+            else { console.error('MC Interieur website styles are not applied'); }
+        }, 1500)"""
+        self.browser_js('/', code)

@@ -35,7 +35,8 @@ $mcw-radius: 14px;
     background-position: center;
 
     &.o_mcw_hero_big {
-        min-height: min(88vh, 820px);
+        min-height: 640px;
+        min-height: unquote("min(88vh, 820px)");
     }
     .o_mcw_hero_filter {
         background: linear-gradient(180deg, rgba($mcw-brown-deep, .25) 0%, rgba($mcw-brown-deep, .55) 45%, rgba($mcw-brown-deep, .88) 100%);

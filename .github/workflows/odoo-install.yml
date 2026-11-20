@@ -79,7 +79,7 @@ jobs:
             -d mc_web -i website_mc_interieur \
             --test-tags=/website_mc_interieur \
             --stop-after-init --log-level=info 2>&1 | tee website.log
-          if grep -E "ERROR|CRITICAL|Traceback" website.log | grep -v "INFO" ; then
+          if grep -E "ERROR|CRITICAL|Traceback|assetsbundle: .*Error" website.log | grep -v " INFO " ; then
             echo "::error::Errors found in the Odoo log"
             exit 1
           fi
