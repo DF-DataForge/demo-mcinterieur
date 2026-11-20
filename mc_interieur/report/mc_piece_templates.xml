@@ -3,10 +3,12 @@
     <!-- Content of one label: code as Code128 barcode plus what the workshop reads by eye -->
     <template id="report_mc_piece_label_content">
         <t t-set="part" t-value="piece.part_id"/>
-        <div class="o_mc_label_top">
-            <span class="o_mc_label_customer" t-out="piece.project_id.partner_id.name"/>
-            <span class="o_mc_label_ref" t-out="piece.project_id.ref"/>
-        </div>
+        <table class="o_mc_label_top">
+            <tr>
+                <td class="o_mc_label_ref" t-out="piece.project_id.ref"/>
+                <td class="o_mc_label_customer" t-out="piece.project_id.partner_id.name"/>
+            </tr>
+        </table>
         <div class="o_mc_label_name">
             <t t-out="part.name"/>
             <span class="o_mc_label_cabinet" t-if="part.cabinet"> - <t t-out="part.cabinet"/></span>
@@ -26,8 +28,9 @@
     <template id="report_mc_piece_label_style">
         <style>
             .o_mc_label { box-sizing: border-box; overflow: hidden; font-family: Arial, Helvetica, sans-serif; color: #000; }
-            .o_mc_label_top { font-size: 8pt; border-bottom: 1px solid #000; padding-bottom: 0.5mm; overflow: hidden; }
-            .o_mc_label_customer { float: right; }
+            .o_mc_label_top { width: 100%; border-collapse: collapse; font-size: 8pt; border-bottom: 1px solid #000; }
+            .o_mc_label_top td { padding: 0 0 0.5mm 0; white-space: nowrap; }
+            .o_mc_label_customer { text-align: right; overflow: hidden; }
             .o_mc_label_ref { font-weight: bold; }
             .o_mc_label_name { font-size: 11.5pt; font-weight: bold; margin-top: 0.8mm; line-height: 1.15; }
             .o_mc_label_cabinet { font-weight: normal; }
