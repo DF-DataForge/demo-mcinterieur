@@ -164,6 +164,7 @@ mockup/                intake-odoo.html: clickable HTML mockup the module is bas
                        odoo-licenties.html: Odoo Enterprise licensing, calculator, open questions
                        werkvloer-app.html: proposal for a separate shop floor app next to Odoo
                        presentatie/: 30-minute slide deck (Slides artifact files) for MC Interieur
+                       aanpak.html: high-level overview of the approach, for a one-hour meeting
 .github/workflows/     installs the module with demo data on Odoo 20.0 and runs the tests
 ```
 

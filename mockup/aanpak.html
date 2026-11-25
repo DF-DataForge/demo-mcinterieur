@@ -1,0 +1,512 @@
+<title>Aanpak MC Interieur</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+<style>
+/* Layout: a guided story in full-width bands; each band carries one idea and, where useful, one visual. */
+:root{
+  --walnut:#574A36; --walnut-deep:#2E271D; --oak:#78664A; --leaf:#95BA3C; --leaf-ink:#5F7D1C;
+  --bg:#F7F5F0; --paper:#FFFFFF; --sand:#EFEAE0; --ink:#2A241B; --muted:#625849; --line:#E2DBCE;
+  --amber:#8A5300; --amber-bg:#FBEBD2;
+  --on-dark:#F7F5F0; --on-dark-muted:#CFC6B4;
+  --chart:#78664A; --chart-hi:#5F7D1C; --grid:#E2DBCE;
+  --f-head:'Archivo','Arial Narrow',Arial,sans-serif;
+  --f-body:'Open Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1B1813; --paper:#24201A; --sand:#2C271F; --ink:#EEE8DD; --muted:#B5AB99; --line:#3B342A;
+  --leaf-ink:#A9CC57; --amber:#F0B25A; --amber-bg:#3A2C15; --oak:#C2AE8B;
+  --chart:#BFA982; --chart-hi:#A9CC57; --grid:#3B342A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1B1813; --paper:#24201A; --sand:#2C271F; --ink:#EEE8DD; --muted:#B5AB99; --line:#3B342A;
+  --leaf-ink:#A9CC57; --amber:#F0B25A; --amber-bg:#3A2C15; --oak:#C2AE8B;
+  --chart:#BFA982; --chart-hi:#A9CC57; --grid:#3B342A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-head);line-height:1.12;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h2{font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:800}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0}
+a{color:var(--leaf-ink)}
+.eyebrow{font-family:var(--f-head);font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf-ink)}
+.lead{font-size:1.15rem;color:var(--muted);max-width:62ch}
+
+/* hero */
+.hero{background:var(--walnut-deep);color:var(--on-dark);margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);border-bottom:6px solid var(--leaf)}
+.hero .wrap{padding-block:56px 48px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:40px;align-items:end}
+@media (max-width:860px){.hero .wrap{grid-template-columns:minmax(0,1fr)}}
+.hero .eyebrow{color:var(--leaf)}
+.hero h1{font-size:clamp(2.2rem,5.4vw,3.6rem);font-weight:800;margin-top:10px}
+.hero h1 em{font-style:normal;color:var(--leaf)}
+.hero .lead{color:var(--on-dark-muted);margin-top:16px}
+.agenda{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:20px 22px;display:grid;gap:10px}
+.agenda h3{color:var(--on-dark);font-size:1rem}
+.agenda ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.agenda li{display:grid;grid-template-columns:62px minmax(0,1fr);gap:10px;font-size:.95rem;color:var(--on-dark-muted)}
+.agenda .min{font-family:var(--f-head);font-weight:700;color:var(--leaf);font-variant-numeric:tabular-nums}
+.agenda a{color:var(--on-dark)}
+
+main section{padding-block:64px;border-bottom:1px solid var(--line)}
+main section .wrap{display:grid;gap:24px}
+section.alt{background:var(--sand)}
+
+/* before / after */
+.ba{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+@media (max-width:760px){.ba{grid-template-columns:minmax(0,1fr)}}
+.ba-card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:14px;align-content:start}
+.ba-card svg{width:100%;height:auto;display:block}
+.ba-card ul{margin:0;padding-left:1.1rem;display:grid;gap:4px;color:var(--muted)}
+.tagline{font-family:var(--f-head);font-weight:700;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase}
+.tag-now{color:var(--amber)} .tag-new{color:var(--leaf-ink)}
+
+/* svg text & shapes */
+.sv-node{fill:var(--paper);stroke:var(--line);stroke-width:2}
+.sv-core{fill:var(--walnut);stroke:var(--walnut)}
+.sv-cust{fill:var(--leaf);stroke:var(--leaf)}
+.sv-t{font-family:var(--f-head);font-weight:700;font-size:15px;fill:var(--ink)}
+.sv-s{font-family:var(--f-body);font-size:12px;fill:var(--muted)}
+.sv-tc{font-family:var(--f-head);font-weight:800;font-size:20px;fill:#F7F5F0}
+.sv-sc{font-family:var(--f-body);font-size:12px;fill:#CFC6B4}
+.sv-tk{font-family:var(--f-head);font-weight:700;font-size:15px;fill:#2E271D}
+.sv-line{stroke:var(--oak);stroke-width:2;fill:none}
+.sv-broken{stroke:var(--amber);stroke-width:2;stroke-dasharray:5 6;fill:none}
+.sv-q{font-family:var(--f-head);font-weight:800;font-size:18px;fill:var(--amber)}
+.hub{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px;overflow-x:auto}
+.hub svg{display:block;width:100%;min-width:640px;height:auto}
+
+/* journey */
+.journey{overflow-x:auto;padding-bottom:6px}
+.jt{display:grid;grid-template-columns:repeat(9,minmax(104px,1fr));gap:8px;min-width:980px}
+.js{display:grid;gap:8px;align-content:start}
+.jb{height:10px;border-radius:5px}
+.jb.office{background:var(--oak)} .jb.cust{background:var(--leaf)} .jb.floor{background:var(--walnut)}
+.jn{font-family:var(--f-head);font-weight:800;font-size:1.6rem;color:var(--oak);line-height:1}
+.js h3{font-size:1rem}
+.js p{font-size:.88rem;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:18px;font-size:.92rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{display:inline-block;width:22px;height:10px;border-radius:5px}
+.loopnote{background:var(--amber-bg);color:var(--amber);border-radius:10px;padding:10px 14px;font-size:.95rem;justify-self:start}
+
+/* benefits */
+.benefits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.benefits{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.benefits{grid-template-columns:minmax(0,1fr)}}
+.benefit{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:8px;align-content:start}
+.benefit .big{font-family:var(--f-head);font-weight:800;font-size:1.9rem;color:var(--leaf-ink);line-height:1}
+.benefit p{color:var(--muted);font-size:.95rem}
+
+/* customer */
+.cust{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:center}
+@media (max-width:820px){.cust{grid-template-columns:minmax(0,1fr)}}
+.mock{background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.mock-top{background:var(--walnut);color:var(--on-dark);padding:12px 18px;font-family:var(--f-head);font-weight:700;display:flex;justify-content:space-between;gap:10px;border-top:4px solid var(--leaf)}
+.mock-top span{font-family:var(--f-body);font-weight:400;font-size:.85rem;color:var(--on-dark-muted)}
+.mock-body{padding:18px;display:grid;gap:14px}
+.steps5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;text-align:center;font-size:.78rem;color:var(--muted)}
+.steps5 b{display:grid;place-items:center;width:30px;height:30px;margin:0 auto 4px;border-radius:50%;background:var(--sand);color:var(--muted);font-family:var(--f-head)}
+.steps5 .done b{background:var(--leaf);color:#2E271D}
+.steps5 .now b{background:var(--walnut);color:#F7F5F0}
+.mock-row{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:.92rem}
+.mock-row .pill{font-size:.78rem;font-weight:700;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.pill.ok{background:#E3EFCB;color:#3F5513} .pill.wait{background:var(--amber-bg);color:var(--amber)}
+.mock-btn{justify-self:start;background:var(--walnut);color:#F7F5F0;border-radius:8px;padding:8px 14px;font-weight:600;font-size:.9rem}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.checks li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px}
+.checks li::before{content:"";width:20px;height:20px;margin-top:3px;border-radius:50%;background:var(--leaf) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%232E271D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/80% no-repeat}
+
+/* barcode */
+.label{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;background:var(--paper);border:1px dashed var(--oak);border-radius:12px;padding:14px 18px;justify-self:start;max-width:100%}
+.label svg{width:120px;height:46px;display:block}
+.label b{font-family:var(--f-head);font-size:1.05rem}
+.label small{display:block;color:var(--muted);font-size:.85rem}
+.trail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.trail{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stop{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:6px;align-content:start}
+.stop h3{font-size:1rem}
+.stop p{font-size:.9rem;color:var(--muted)}
+.stop .scan{font-family:var(--f-head);font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--leaf-ink)}
+
+/* options */
+.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.opts{grid-template-columns:minmax(0,1fr)}}
+.opt{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:10px;align-content:start}
+.opt.d{border:2px dashed var(--amber)}
+.opt .letters{font-family:var(--f-head);font-weight:800;font-size:.85rem;letter-spacing:.1em;color:var(--oak)}
+.opt ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:.94rem}
+.opt .pro::before{content:"+ ";font-weight:700;color:var(--leaf-ink)}
+.opt .con::before{content:"− ";font-weight:700;color:var(--amber)}
+.flag{justify-self:start;font-size:.75rem;font-weight:700;border-radius:999px;padding:3px 10px;background:var(--amber-bg);color:var(--amber)}
+
+/* charts */
+.chart{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:12px;position:relative}
+.chart svg{display:block;width:100%;height:auto}
+.chart .ax{font-family:var(--f-body);font-size:12px;fill:var(--muted);font-variant-numeric:tabular-nums}
+.chart .cl{font-family:var(--f-body);font-size:13px;fill:var(--ink)}
+.chart .vl{font-family:var(--f-head);font-weight:700;font-size:13px;fill:var(--ink);font-variant-numeric:tabular-nums}
+.chart .gl{stroke:var(--grid);stroke-width:1}
+.chart .bar{fill:var(--chart)}
+.chart .bar.hi{fill:var(--chart-hi)}
+.chart .hit{fill:transparent;cursor:default}
+.chart .note{font-size:.88rem;color:var(--muted)}
+.tip{position:absolute;pointer-events:none;background:var(--walnut-deep);color:var(--on-dark);font-size:.85rem;padding:8px 10px;border-radius:8px;max-width:260px;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+details{font-size:.92rem;color:var(--muted)}
+details table{border-collapse:collapse;margin-top:8px;font-variant-numeric:tabular-nums}
+details th,details td{text-align:left;padding:4px 14px 4px 0;border-bottom:1px solid var(--line)}
+.charts2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.charts2{grid-template-columns:minmax(0,1fr)}}
+
+/* costs */
+.costs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.costs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.costs{grid-template-columns:minmax(0,1fr)}}
+.cost{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:6px;align-content:start}
+.cost .big{font-family:var(--f-head);font-weight:800;font-size:1.8rem;line-height:1.05;font-variant-numeric:tabular-nums}
+.cost p{color:var(--muted);font-size:.92rem}
+
+/* questions & next */
+.qs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:860px){.qs{grid-template-columns:minmax(0,1fr)}}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:10px;align-content:start}
+.q ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;color:var(--muted);font-size:.95rem}
+.next{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+@media (max-width:760px){.next{grid-template-columns:minmax(0,1fr);gap:12px}}
+.next li{position:relative;padding:18px 18px 18px 0;display:grid;gap:6px;align-content:start}
+.next li::before{content:"";display:block;height:6px;border-radius:3px;background:var(--leaf);margin-bottom:10px}
+.next li:nth-child(n+2)::before{background:var(--line)}
+.next .when{font-family:var(--f-head);font-weight:700;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--oak)}
+.next p{color:var(--muted);font-size:.93rem}
+.more{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px}
+.more a{display:grid;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;text-decoration:none;color:var(--ink)}
+.more a:hover,.more a:focus-visible{border-color:var(--oak)}
+.more small{color:var(--muted)}
+a:focus-visible{outline:2px solid var(--leaf-ink);outline-offset:2px}
+footer .wrap{padding-block:28px 48px;color:var(--muted);font-size:.88rem}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">MC Interieur · de aanpak</p>
+      <h1>Eén project, één plek. <em>Van eerste gesprek tot oplevering.</em></h1>
+      <p class="lead">Alle informatie over een project zit straks op één plaats: van de intake bij de klant, over de tekening en de offerte, tot de werkvloer, de plaatsing en de factuur. De programma’s die goed werken, TopSolid en Ardis, blijven.</p>
+    </div>
+    <aside class="agenda" aria-label="Agenda voor een uur">
+      <h3>Agenda, 60 minuten</h3>
+      <ol>
+        <li><span class="min">10 min</span><span><a href="#vandaag">Vandaag en straks</a>, het principe</span></li>
+        <li><span class="min">15 min</span><span><a href="#reis">De reis van een project</a>, wat het oplevert, de klant</span></li>
+        <li><span class="min">20 min</span><span><a href="#keuze">De keuze voor de werkvloer</a> en <a href="#kosten">de kosten</a></span></li>
+        <li><span class="min">15 min</span><span><a href="#vragen">Open vragen</a> en <a href="#stappen">volgende stappen</a></span></li>
+      </ol>
+    </aside>
+  </div>
+</header>
+
+<main>
+
+<section id="vandaag">
+  <div class="wrap">
+    <p class="eyebrow">Vandaag en straks</p>
+    <h2>Van losse eilanden naar één verhaal</h2>
+    <div class="ba">
+      <div class="ba-card">
+        <p class="tagline tag-now">Vandaag</p>
+        <svg viewBox="0 0 440 220" role="img" aria-label="Vandaag: mails, papier, TopSolid, Ardis, Excel en wat in hoofden zit, staan los van elkaar">
+          <path class="sv-broken" d="M110 60 L210 110"/><path class="sv-broken" d="M330 60 L230 110"/><path class="sv-broken" d="M110 170 L210 120"/><path class="sv-broken" d="M330 170 L230 120"/>
+          <rect x="20" y="30" width="140" height="44" rx="10" class="sv-node"/><text x="90" y="57" text-anchor="middle" class="sv-t">Mails</text>
+          <rect x="280" y="30" width="140" height="44" rx="10" class="sv-node"/><text x="350" y="57" text-anchor="middle" class="sv-t">TopSolid</text>
+          <rect x="20" y="150" width="140" height="44" rx="10" class="sv-node"/><text x="90" y="177" text-anchor="middle" class="sv-t">Papier, Excel</text>
+          <rect x="280" y="150" width="140" height="44" rx="10" class="sv-node"/><text x="350" y="177" text-anchor="middle" class="sv-t">Ardis</text>
+          <circle cx="220" cy="115" r="26" fill="var(--amber-bg)"/><text x="220" y="122" text-anchor="middle" class="sv-q">?</text>
+          <text x="220" y="20" text-anchor="middle" class="sv-s">info in hoofden</text>
+        </svg>
+        <ul>
+          <li>Intake-info niet altijd beschikbaar bij het tekenen of na goedkeuring</li>
+          <li>Informatie verspreid, geen centrale aansturing</li>
+          <li>Veel manueel werk: dezelfde lijst meerdere keren ingeven</li>
+          <li>Geen zicht op waar een stuk op de werkvloer ligt</li>
+        </ul>
+      </div>
+      <div class="ba-card">
+        <p class="tagline tag-new">Straks</p>
+        <svg viewBox="0 0 440 220" role="img" aria-label="Straks: Odoo in het midden, verbonden met klant, TopSolid, Ardis en werkvloer">
+          <path class="sv-line" d="M220 64 V88"/><path class="sv-line" d="M150 115 H170"/><path class="sv-line" d="M270 115 H290"/><path class="sv-line" d="M220 142 V156"/>
+          <rect x="150" y="20" width="140" height="44" rx="10" class="sv-cust"/><text x="220" y="47" text-anchor="middle" class="sv-tk">Klant</text>
+          <rect x="10" y="93" width="140" height="44" rx="10" class="sv-node"/><text x="80" y="120" text-anchor="middle" class="sv-t">TopSolid</text>
+          <rect x="170" y="88" width="100" height="54" rx="12" class="sv-core"/><text x="220" y="121" text-anchor="middle" class="sv-tc">Odoo</text>
+          <rect x="290" y="93" width="140" height="44" rx="10" class="sv-node"/><text x="360" y="120" text-anchor="middle" class="sv-t">Ardis</text>
+          <rect x="130" y="156" width="180" height="44" rx="10" class="sv-node"/><text x="220" y="183" text-anchor="middle" class="sv-t">Werkvloer</text>
+        </svg>
+        <ul>
+          <li>Eén projectreferentie, alles op één plek</li>
+          <li>De materiaallijst één keer inlezen: offerte, zaaglijst en bestelling volgen</li>
+          <li>Klant keurt online goed, vragen eerst beantwoord</li>
+          <li>Elk stuk gevolgd met een etiket</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="principe">
+  <div class="wrap">
+    <p class="eyebrow">Het principe</p>
+    <h2>Odoo in het midden, wat goed werkt blijft</h2>
+    <p class="lead">Odoo is de centrale plek voor projecten, offertes, voorraad, aankoop, planning en facturen. De tekenaar blijft tekenen in TopSolid, de zaagoptimalisatie blijft in Ardis. Odoo zorgt dat de gegevens tussen hen doorstromen zonder overtypen.</p>
+    <div class="hub">
+      <svg viewBox="0 0 900 380" role="img" aria-label="Odoo in het midden. Boven: klantportaal en website. Links: TopSolid. Rechts: Ardis. Onder: werkvloer en plaatsing.">
+        <path class="sv-line" d="M450 96 V140"/><path class="sv-line" d="M250 190 H310"/><path class="sv-line" d="M590 190 H650"/><path class="sv-line" d="M450 240 V284"/>
+        <rect x="320" y="26" width="260" height="70" rx="12" class="sv-cust"/>
+        <text x="450" y="56" text-anchor="middle" class="sv-tk">Klantportaal en website</text>
+        <text x="450" y="78" text-anchor="middle" class="sv-s" style="fill:#2E271D">tekening, offerte, vragen, facturen</text>
+        <rect x="20" y="150" width="230" height="80" rx="12" class="sv-node"/>
+        <text x="135" y="183" text-anchor="middle" class="sv-t">TopSolid</text>
+        <text x="135" y="205" text-anchor="middle" class="sv-s">tekenen, materiaallijst</text>
+        <rect x="310" y="140" width="280" height="100" rx="14" class="sv-core"/>
+        <text x="450" y="182" text-anchor="middle" class="sv-tc">Odoo</text>
+        <text x="450" y="206" text-anchor="middle" class="sv-sc">projecten · offertes · voorraad</text>
+        <text x="450" y="224" text-anchor="middle" class="sv-sc">aankoop · planning · facturen</text>
+        <rect x="650" y="150" width="230" height="80" rx="12" class="sv-node"/>
+        <text x="765" y="183" text-anchor="middle" class="sv-t">Ardis</text>
+        <text x="765" y="205" text-anchor="middle" class="sv-s">zaagplannen, etiketten</text>
+        <rect x="270" y="284" width="360" height="70" rx="12" class="sv-node"/>
+        <text x="450" y="314" text-anchor="middle" class="sv-t">Werkvloer en plaatsing</text>
+        <text x="450" y="336" text-anchor="middle" class="sv-s">zaag · CNC · montage · werf</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="reis">
+  <div class="wrap">
+    <p class="eyebrow">De reis van een project</p>
+    <h2>Negen stappen, één projectreferentie</h2>
+    <p class="lead">Elke stap weet wat de vorige deed. Is een stap klaar, dan schuift het project zelf door naar de volgende.</p>
+    <div class="legend">
+      <span><i style="background:var(--oak)"></i>Kantoor</span>
+      <span><i style="background:var(--leaf)"></i>Klant</span>
+      <span><i style="background:var(--walnut)"></i>Werkvloer en plaatsing</span>
+    </div>
+    <div class="journey" tabindex="0" aria-label="Negen stappen van een project">
+      <ol class="jt" style="list-style:none;margin:0;padding:0;">
+        <li class="js"><div class="jb office"></div><span class="jn">1</span><h3>Intake</h3><p>Verkoper meet op en noteert wensen</p></li>
+        <li class="js"><div class="jb office"></div><span class="jn">2</span><h3>Tekening</h3><p>Tekenaar werkt uit in TopSolid</p></li>
+        <li class="js"><div class="jb office"></div><span class="jn">3</span><h3>Offerte</h3><p>Prijs uit de tekening zelf</p></li>
+        <li class="js"><div class="jb cust"></div><span class="jn">4</span><h3>Goedkeuring</h3><p>Klant keurt online goed</p></li>
+        <li class="js"><div class="jb office"></div><span class="jn">5</span><h3>Voorbereiding</h3><p>Materiaal, bestelling, zaaglijst</p></li>
+        <li class="js"><div class="jb floor"></div><span class="jn">6</span><h3>Zagen</h3><p>Etiket op elk stuk</p></li>
+        <li class="js"><div class="jb floor"></div><span class="jn">7</span><h3>CNC</h3><p>Boren en frezen</p></li>
+        <li class="js"><div class="jb floor"></div><span class="jn">8</span><h3>Montage</h3><p>Kasten per stuk verzameld</p></li>
+        <li class="js"><div class="jb floor"></div><span class="jn">9</span><h3>Plaatsing</h3><p>Oplevering en eindfactuur</p></li>
+      </ol>
+    </div>
+    <p class="loopnote">Wil de klant iets aanpassen, dan gaat het terug naar de tekenaar met een nieuwe versie.</p>
+  </div>
+</section>
+
+<section class="alt" id="oplevert">
+  <div class="wrap">
+    <p class="eyebrow">Wat het oplevert</p>
+    <h2>Minder overtypen, minder zoeken, meer zicht</h2>
+    <div class="benefits">
+      <div class="benefit"><span class="big">1×</span><h3>Eén keer ingeven</h3><p>De materiaallijst uit TopSolid wordt offerte, zaaglijst, materiaalbehoefte en bestelling.</p></div>
+      <div class="benefit"><span class="big">1 plek</span><h3>Alles bij het project</h3><p>Intake, vragen, tekeningversies, offerte, planning en facturen samen.</p></div>
+      <div class="benefit"><span class="big">0</span><h3>Halve beslissingen</h3><p>Zolang er vragen open staan, kan de klant niet goedkeuren en start de productie niet.</p></div>
+      <div class="benefit"><span class="big">Elk stuk</span><h3>Gevolgd</h3><p>Kantoor ziet waar een project staat en welke kast compleet is.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="klant">
+  <div class="wrap">
+    <p class="eyebrow">Voor de klant</p>
+    <h2>Een eigen klantportaal en een nieuwe website</h2>
+    <div class="cust">
+      <div class="mock" aria-label="Voorbeeld van het klantportaal">
+        <div class="mock-top">Keuken Maes <span>voorbeeld</span></div>
+        <div class="mock-body">
+          <div class="steps5">
+            <div class="done"><b>✓</b>Intake</div>
+            <div class="done"><b>✓</b>Ontwerp</div>
+            <div class="now"><b>3</b>Uw goedkeuring</div>
+            <div><b>4</b>Productie</div>
+            <div><b>5</b>Plaatsing</div>
+          </div>
+          <div class="mock-row"><span>Tekening versie 2 en offerte</span><span class="pill wait">Wacht op u</span></div>
+          <div class="mock-row"><span>2 vragen van de tekenaar</span><span class="pill wait">Open</span></div>
+          <div class="mock-row"><span>Voorschotfactuur</span><span class="pill ok">Betaald</span></div>
+          <span class="mock-btn">Tekening en offerte goedkeuren</span>
+        </div>
+      </div>
+      <div style="display:grid;gap:16px;">
+        <ul class="checks">
+          <li><span><b>Alles op één plek:</b> tekening, offerte, vragen, planning en facturen per project.</span></li>
+          <li><span><b>Online goedkeuren:</b> tekening en offerte samen, met naam en bevestiging.</span></li>
+          <li><span><b>Gratis voor de klant:</b> klanten in het portaal kosten geen licentie.</span></li>
+          <li><span><b>Nieuwe website</b> in de huisstijl, op hetzelfde Odoo, met een contactformulier dat rechtstreeks binnenkomt.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="werkvloer">
+  <div class="wrap">
+    <p class="eyebrow">Op de werkvloer</p>
+    <h2>Elk stuk krijgt een etiket met barcode</h2>
+    <div class="label" aria-label="Voorbeeld van een etiket">
+      <svg viewBox="0 0 120 46" aria-hidden="true">
+        <g fill="currentColor" style="color:var(--ink)">
+          <rect x="2" y="2" width="3" height="42"/><rect x="8" y="2" width="1.5" height="42"/><rect x="12" y="2" width="4" height="42"/><rect x="19" y="2" width="1.5" height="42"/><rect x="23" y="2" width="2" height="42"/><rect x="28" y="2" width="4" height="42"/><rect x="35" y="2" width="1.5" height="42"/><rect x="39" y="2" width="3" height="42"/><rect x="45" y="2" width="1.5" height="42"/><rect x="49" y="2" width="4" height="42"/><rect x="56" y="2" width="2" height="42"/><rect x="61" y="2" width="1.5" height="42"/><rect x="65" y="2" width="3" height="42"/><rect x="71" y="2" width="4" height="42"/><rect x="78" y="2" width="1.5" height="42"/><rect x="82" y="2" width="2" height="42"/><rect x="87" y="2" width="3" height="42"/><rect x="93" y="2" width="1.5" height="42"/><rect x="97" y="2" width="4" height="42"/><rect x="104" y="2" width="1.5" height="42"/><rect x="108" y="2" width="3" height="42"/><rect x="114" y="2" width="4" height="42"/>
+        </g>
+      </svg>
+      <div><b>PRJ-2026-0153-017.2</b><small>Keuken Maes · kast O1 · zijwand · 720 x 560</small></div>
+    </div>
+    <div class="trail">
+      <div class="stop"><span class="scan">Odoo</span><h3>Code</h3><p>Bij de goedkeuring krijgt elk stuk een code.</p></div>
+      <div class="stop"><span class="scan">Ardis</span><h3>Zaagplan</h3><p>De code gaat mee in de zaaglijst.</p></div>
+      <div class="stop"><span class="scan">Scan</span><h3>Zagen</h3><p>Etiket kleven en scannen.</p></div>
+      <div class="stop"><span class="scan">Scan</span><h3>CNC</h3><p>Toont het juiste programma.</p></div>
+      <div class="stop"><span class="scan">Scan</span><h3>Montage</h3><p>Zegt bij welke kast het hoort.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="keuze">
+  <div class="wrap">
+    <p class="eyebrow">De keuze</p>
+    <h2>Hoe melden de operators zich aan om te scannen?</h2>
+    <p class="lead">Dit is de enige grote keuze die nog openligt. Ze bepaalt de licentiekost, of de werkvloer zonder internet kan werken en hoeveel er nog gebouwd moet worden.</p>
+    <div class="opts">
+      <div class="opt">
+        <span class="letters">A · B</span>
+        <h3>Een login per persoon of per machine</h3>
+        <p class="note" style="color:var(--muted);font-size:.94rem;">Scannen rechtstreeks in Odoo. Werkt vandaag al.</p>
+        <ul><li class="pro">Niets meer te bouwen</li><li class="pro">Per persoon: elke scan op naam</li><li class="con">Per persoon het duurst</li><li class="con">Per machine: niet te zien wie scande</li><li class="con">Stopt zonder internet</li></ul>
+      </div>
+      <div class="opt">
+        <span class="letters">C · E</span>
+        <h3>Machine-login + badge per operator</h3>
+        <p class="note" style="color:var(--muted);font-size:.94rem;">In de eigen module (C) of via de standaard Werkvloer-app van Odoo (E).</p>
+        <ul><li class="pro">Scans op naam, lagere kost</li><li class="pro">E: tijd per opdracht, nacalculatie</li><li class="con">Aanpassing (C) of grote ombouw (E)</li><li class="con">Stopt zonder internet</li></ul>
+      </div>
+      <div class="opt d">
+        <span class="flag">optie, nog niet beslist</span>
+        <span class="letters">D</span>
+        <h3>Een eigen werkvloer-app in het atelier</h3>
+        <p class="note" style="color:var(--muted);font-size:.94rem;">Eenvoudige toepassing op een kleine server, aanmelden met badge.</p>
+        <ul><li class="pro">Laagste licentiekost</li><li class="pro">Blijft werken zonder internet</li><li class="con">Odoo moet schriftelijk akkoord gaan</li><li class="con">Een app en server om te onderhouden</li></ul>
+      </div>
+    </div>
+    <div class="charts2">
+      <div class="chart" id="c1">
+        <h3>Licentie werkvloer per maand</h3>
+        <p class="note">Voorbeeld: 5 operators aan 3 werkposten, prijs vanaf jaar 2, excl. btw.</p>
+        <svg id="c1svg" viewBox="0 0 480 250" role="img" aria-label="Licentiekost werkvloer per maand: A 224,50 euro, B 134,70, C 174,20, D 44,90, E 174,20"></svg>
+        <details><summary>Als tabel</summary><table><tr><th>Optie</th><th>Per maand</th></tr><tr><td>A · login per operator</td><td>€ 224,50</td></tr><tr><td>B · login per werkpost</td><td>€ 134,70</td></tr><tr><td>C · werkpost + badge</td><td>€ 174,20</td></tr><tr><td>D · werkvloer-app</td><td>€ 44,90 (€ 84,40 met operators in Werknemers)</td></tr><tr><td>E · Shop Floor van Odoo</td><td>€ 174,20</td></tr></table></details>
+      </div>
+      <div class="chart" id="c2">
+        <h3>Licenties + hardware, 3 jaar</h3>
+        <p class="note">Hele team (5 kantoor, 3 plaatsers, 5 operators). Bouwwerk voor C, D en E niet inbegrepen.</p>
+        <svg id="c2svg" viewBox="0 0 480 250" role="img" aria-label="Totaal over 3 jaar: A 22.663 tot 25.063 euro, B 19.430 tot 21.830, C 20.852 tot 23.252, D 17.048 tot 20.298, E 20.852 tot 23.252"></svg>
+        <details><summary>Als tabel</summary><table><tr><th>Optie</th><th>3 jaar</th></tr><tr><td>A</td><td>€ 22.663 à 25.063</td></tr><tr><td>B</td><td>€ 19.430 à 21.830</td></tr><tr><td>C</td><td>€ 20.852 à 23.252</td></tr><tr><td>D</td><td>€ 17.048 à 20.298</td></tr><tr><td>E</td><td>€ 20.852 à 23.252</td></tr></table></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="kosten">
+  <div class="wrap">
+    <p class="eyebrow">Kosten in het kort</p>
+    <h2>Wat betaal je, en wie is gratis?</h2>
+    <div class="costs">
+      <div class="cost"><h3>Gebruiker op kantoor</h3><span class="big">€ 44,90</span><p>per persoon per maand (jaar 1: € 35,90). Iedereen die in Odoo werkt.</p></div>
+      <div class="cost"><h3>Light-gebruiker</h3><span class="big">€ 7,90</span><p>per persoon per maand. Bv. werknemers zonder eigen login.</p></div>
+      <div class="cost"><h3>Klanten en website</h3><span class="big">€ 0</span><p>Klanten, leveranciers en websitebezoekers zijn altijd gratis.</p></div>
+      <div class="cost"><h3>Hardware werkvloer</h3><span class="big">€ 550–1.350</span><p>per werkpost (scherm + scanner). Eigen server alleen bij D: € 850–1.700.</p></div>
+    </div>
+    <p class="lead" style="font-size:1rem;">Odoo-prijzen van odoo.com (november 2026), plan voor eigen aanpassingen, jaarlijks betaald. Hardware: grove richtprijzen. Alles te bevestigen in de offertes.</p>
+  </div>
+</section>
+
+<section id="vragen">
+  <div class="wrap">
+    <p class="eyebrow">Nog open</p>
+    <h2>Wat we nog moeten weten</h2>
+    <div class="qs">
+      <div class="q"><h3>Aan Odoo</h3><ul><li>Mag één login per machine gedeeld worden?</li><li>Mag een eigen werkvloer-app via één technische gebruiker werken?</li></ul></div>
+      <div class="q"><h3>Aan Ardis en SCM</h3><ul><li>Kan de zaag zelf etiketten printen?</li><li>Kan Ardis per stuk zeggen uit welke plaat het komt?</li><li>Kan de CNC een programma laden via een scan?</li></ul></div>
+      <div class="q"><h3>Voor MC Interieur</h3><ul><li>Welke optie voor de werkvloer?</li><li>Hebben we al badges?</li><li>Werken plaatsers met eigen login of één tablet per ploeg?</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="stappen">
+  <div class="wrap">
+    <p class="eyebrow">Volgende stappen</p>
+    <h2>Van voorstel naar werkvloer</h2>
+    <ol class="next">
+      <li><span class="when">Nu</span><h3>Vragen uitsturen</h3><p>Schriftelijk naar Odoo, Ardis en SCM.</p></li>
+      <li><span class="when">Daarna</span><h3>Optie kiezen</h3><p>Op basis van antwoorden, kosten en de werkvloer zelf.</p></li>
+      <li><span class="when">Proef</span><h3>Eén werkpost</h3><p>Aan de paneelzaag, met echte projecten.</p></li>
+      <li><span class="when">Uitrol</span><h3>Alle werkposten</h3><p>CNC, montage en plaatsing, met opleiding per rol.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="meer">
+  <div class="wrap">
+    <p class="eyebrow">Meer detail</p>
+    <h2>Voor wie verder wil lezen</h2>
+    <div class="more">
+      <a href="https://claude.ai/artifact/ANaJVmpUYZpR2xe1NQ23mf" target="_blank" rel="noopener"><b>Interne projectflow</b><small>De 9 fases in detail, wie doet wat</small></a>
+      <a href="https://claude.ai/artifact/T2NoMxL53ZyPdM8TKd966q" target="_blank" rel="noopener"><b>Uw project in 8 stappen</b><small>Het traject voor de klant</small></a>
+      <a href="https://claude.ai/artifact/1zFBfQdopYd6a2Hojb9eQP" target="_blank" rel="noopener"><b>Odoo-licenties</b><small>Prijzen, rekenhulp, alle scenario’s</small></a>
+      <a href="https://claude.ai/artifact/NFUCTPbYn1msAPwtFmePpF" target="_blank" rel="noopener"><b>Werkvloer-app</b><small>Optie D: architectuur, badges, hardware</small></a>
+      <a href="https://claude.ai/artifact/DpF1oELQCHwkQp93C6XwBW" target="_blank" rel="noopener"><b>Presentatie</b><small>15 slides, 30 minuten</small></a>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer><div class="wrap">Voorstel voor MC Interieur. Bedragen zijn voorbeelden en richtprijzen, excl. btw.</div></footer>
+
+<script>
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  const eur=n=>'€ '+n.toLocaleString('nl-BE',{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
+  function el(name,attrs,text){const e=document.createElementNS(NS,name);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;return e;}
+  function tipFor(chart){const t=document.createElement('div');t.className='tip';t.hidden=true;chart.appendChild(t);return t;}
+  function bind(hit,chart,tip,html){
+    const show=e=>{tip.innerHTML=html;tip.hidden=false;const r=chart.getBoundingClientRect();const x=(e.clientX||r.left+r.width/2)-r.left+12;const y=(e.clientY||r.top+40)-r.top+12;tip.style.left=Math.min(x,r.width-270)+'px';tip.style.top=y+'px';};
+    hit.addEventListener('mousemove',show);hit.addEventListener('mouseenter',show);hit.addEventListener('mouseleave',()=>tip.hidden=true);
+  }
+  // Chart 1: monthly licence for the shop floor, horizontal bars from zero
+  const d1=[['A · per operator',224.50],['B · per werkpost',134.70],['C · werkpost + badge',174.20],['D · werkvloer-app',44.90],['E · Shop Floor',174.20]];
+  const s1=document.getElementById('c1svg'),c1=document.getElementById('c1'),t1=tipFor(c1);
+  const L=150,R=470,max=250,sx=v=>L+(R-L-50)*v/max;
+  [0,100,200].forEach(v=>{s1.appendChild(el('line',{x1:sx(v),x2:sx(v),y1:10,y2:228,class:'gl'}));s1.appendChild(el('text',{x:sx(v),y:244,'text-anchor':'middle',class:'ax'},eur(v)));});
+  d1.forEach(([name,v],i)=>{const y=18+i*42;
+    s1.appendChild(el('text',{x:L-10,y:y+17,'text-anchor':'end',class:'cl'},name));
+    const w=sx(v)-L;s1.appendChild(el('path',{d:`M${L} ${y} H${L+w-4} Q${L+w} ${y} ${L+w} ${y+4} V${y+20} Q${L+w} ${y+24} ${L+w-4} ${y+24} H${L} Z`,class:'bar'+(i===3?' hi':'')}));
+    s1.appendChild(el('text',{x:L+w+6,y:y+17,class:'vl'},eur(v)));
+    const hit=el('rect',{x:L,y:y-6,width:R-L,height:36,class:'hit'});s1.appendChild(hit);
+    bind(hit,c1,t1,`<b>${name}</b><br>${eur(v)} per maand`+(i===3?'<br>€ 84,40 met operators in Werknemers':''));
+  });
+  // Chart 2: 3-year total, range bars (min-max) on a zero-based axis
+  const d2=[['A · per operator',22663,25063],['B · per werkpost',19430,21830],['C · werkpost + badge',20852,23252],['D · werkvloer-app',17048,20298],['E · Shop Floor',20852,23252]];
+  const s2=document.getElementById('c2svg'),c2=document.getElementById('c2'),t2=tipFor(c2);
+  const max2=26000,sx2=v=>L+(R-L-10)*v/max2;
+  [0,10000,20000].forEach(v=>{s2.appendChild(el('line',{x1:sx2(v),x2:sx2(v),y1:10,y2:228,class:'gl'}));s2.appendChild(el('text',{x:sx2(v),y:244,'text-anchor':'middle',class:'ax'},v?eur(v/1000)+'k':'€ 0'));});
+  d2.forEach(([name,lo,hi],i)=>{const y=18+i*42;
+    s2.appendChild(el('text',{x:L-10,y:y+17,'text-anchor':'end',class:'cl'},name));
+    s2.appendChild(el('rect',{x:L,y:y+10,width:sx2(lo)-L,height:4,rx:2,class:'gl',style:'fill:var(--grid)'}));
+    s2.appendChild(el('rect',{x:sx2(lo),y:y,width:Math.max(6,sx2(hi)-sx2(lo)),height:24,rx:4,class:'bar'+(i===3?' hi':'')}));
+    const hit=el('rect',{x:L,y:y-6,width:R-L,height:36,class:'hit'});s2.appendChild(hit);
+    bind(hit,c2,t2,`<b>${name}</b><br>${eur(lo)} à ${eur(hi)} over 3 jaar`+(i>=2?'<br>zonder bouwwerk':''));
+  });
+})();
+</script>
