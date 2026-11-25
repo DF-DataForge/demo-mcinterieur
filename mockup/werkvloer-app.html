@@ -224,6 +224,65 @@ footer .wrap{padding-block:0 40px;color:var(--muted);font-size:.85rem}
     </div>
   </section>
 
+  <section aria-labelledby="badge-t">
+    <h2 id="badge-t">Aanmelden met badge</h2>
+    <p class="sub">Operators krijgen geen Odoo-account. Ze melden zich aan de werkpost aan met een badge; de app kent de badges zelf, dus aanmelden werkt ook zonder internet.</p>
+    <div class="panel scroll">
+      <table class="grid">
+        <thead><tr><th>Badge</th><th>Hoe</th><th>Kost (richtprijs)</th><th>Voor en tegen</th></tr></thead>
+        <tbody>
+          <tr><td>NFC-badge <span class="tag" style="background:var(--app);color:var(--app-ink);">voorstel</span></td><td>Kaart of sleutelhanger (13,56 MHz, bv. MIFARE). Aan elke werkpost een USB-lezer die het badgenummer "typt", zoals een scanner</td><td class="price">Lezer € 30 à 150 per werkpost, badge € 1 à 3</td><td>Contactloos, ook met handschoenen; bestand tegen stof; moeilijk te kopiëren. Bestaande toegangsbadges misschien herbruikbaar (frequentie nakijken)</td></tr>
+          <tr><td>QR-code</td><td>Op de achterkant van de badge, gescand met de scanner die er al staat</td><td class="price">Bijna € 0</td><td>Reserve als de lezer ontbreekt of stuk is; een foto van de kaart werkt ook</td></tr>
+          <tr><td>Pincode</td><td>Vier cijfers op het scherm</td><td class="price">€ 0</td><td>Laatste terugval bij een vergeten badge; trager met vuile handen</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Werkplaats met 4 werkposten en 15 medewerkers: ongeveer € 150 à 650 voor lezers en badges, niet bij leveranciers nagekeken.</p>
+    <ol class="steps">
+      <li><h3>In rust</h3><p>Het scherm toont "Scan je badge". Zonder aanmelding wordt niets geregistreerd.</p></li>
+      <li><h3>Aanmelden</h3><p>Badge scannen: naam en foto in beeld. Elke scan van een stuk staat vanaf dan op naam van die operator.</p></li>
+      <li><h3>Wisselen</h3><p>Een collega scant zijn badge en neemt over; de vorige wordt automatisch afgemeld.</p></li>
+      <li><h3>Afmelden</h3><p>De eigen badge opnieuw scannen, of automatisch na een ingestelde tijd zonder scans (bv. 15 minuten).</p></li>
+      <li><h3>Onbekende badge</h3><p>"Badge onbekend, meld je bij de werkvoorbereiding." Er wordt niets geregistreerd.</p></li>
+    </ol>
+    <div class="two">
+      <div class="panel">
+        <h3>Badge of stuk?</h3>
+        <ul>
+          <li>Badges en stukken gaan via hetzelfde invoerveld</li>
+          <li>De app ziet het verschil aan het formaat: stukken beginnen met <code>PRJ-</code>, een badge is het nummer van de lezer of krijgt een vast voorvoegsel (in de lezer in te stellen)</li>
+          <li>Optioneel: twee operators tegelijk aangemeld (bv. invoeren en afnemen aan de zaag); elke scan krijgt dan beide namen</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Beheer</h3>
+        <ul>
+          <li>Beheerscherm in de app voor werkvoorbereiding of zaakvoerder: nieuwe badge scannen en aan een medewerker koppelen, eventueel per werkpost</li>
+          <li>Verloren badge: met één klik inactief</li>
+          <li>Badgenummer versleuteld opgeslagen (gehasht), niet leesbaar</li>
+          <li>In Odoo komt per scan de naam of code van de operator als tekst</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Medewerkers: waar beheerd?</h3>
+        <ul>
+          <li><b>Alleen in de app:</b> geen Odoo-licentie voor de operators</li>
+          <li><b>Uit de app Werknemers van Odoo:</b> Odoo heeft daar al een veld voor badgenummer en pincode, maar elke werknemer telt dan als light-gebruiker (€ 7,90 per maand)</li>
+          <li>Gebruikt MC Interieur Werknemers niet voor verlof of loon: dan is "alleen in de app" de goedkoopste keuze</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Privacy</h3>
+        <ul>
+          <li>Medewerkers vooraf informeren over wat er vastgelegd wordt</li>
+          <li>Doel afspreken: traceerbaarheid van stukken, niet prestatiemeting, tenzij zo afgesproken</li>
+          <li>Bewaartermijn vastleggen, bv. de garantieperiode van het project</li>
+          <li>Laten nakijken door wie het privacybeleid opvolgt</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <section aria-labelledby="sync-t">
     <h2 id="sync-t">Synchronisatie en werken zonder internet</h2>
     <div class="two">
@@ -312,6 +371,7 @@ footer .wrap{padding-block:0 40px;color:var(--muted);font-size:.85rem}
         <tbody>
           <tr><td>Scherm</td><td>Panel-pc of robuuste tablet met wandhouder; browser in kioskmodus</td><td class="price">€ 300 à 900</td></tr>
           <tr><td>Scanner</td><td>Robuuste, stofdichte scanner (bv. Zebra DS3600-reeks, Honeywell Granit); een kantoorscanner gaat niet lang mee</td><td class="price">€ 250 à 450</td></tr>
+          <tr><td>Badgelezer</td><td>USB-NFC-lezer die het badgenummer typt (zie Aanmelden met badge)</td><td class="price">€ 30 à 150</td></tr>
           <tr><td>Etiketprinter</td><td>Alleen als Odoo print: thermisch, 100 x 50 mm (bv. Zebra ZD421, Brother TD-4)</td><td class="price">€ 400 à 600</td></tr>
         </tbody>
       </table>
@@ -388,6 +448,8 @@ footer .wrap{padding-block:0 40px;color:var(--muted);font-size:.85rem}
     <ol class="qs">
       <li><b>Odoo:</b> mag een aparte app via één technische API-gebruiker scans van meerdere operators doorsturen?</li>
       <li><b>MC Interieur:</b> staan de operators in de app Werknemers van Odoo (dan tellen ze als light-gebruiker), of beheren we de badges in de werkvloer-app?</li>
+      <li><b>MC Interieur:</b> zijn er al badges (toegang, tijdsregistratie), en van welk type?</li>
+      <li><b>MC Interieur:</b> mogen twee operators tegelijk aangemeld zijn aan één werkpost, en na hoeveel minuten zonder scan volgt automatisch afmelden?</li>
       <li><b>MC Interieur:</b> welke toestellen aan de werkposten: pc, tablet of beide, en welke scanners?</li>
       <li><b>MC Interieur:</b> waar komt de server: op kantoor (voorkeur) of in een kast in het atelier, en is er een UPS?</li>
       <li><b>MC Interieur:</b> is er al een server of NAS op kantoor waarop de app kan draaien, of kopen we een aparte mini-pc?</li>
