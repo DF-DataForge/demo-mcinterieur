@@ -97,7 +97,7 @@ STEPS = [
 
 MACHINES = [
     ("CNC-bewerkingscentrum", "Morbidelli 4415TV, 4 assen met automatisch gereedschapsmagazijn, werkveld 4,20 x 1,53 m."),
-    ("Paneelzaag", "Casadei AX0300, zaagt platen tot 4,10 m breed, tot vier platen tegelijk."),
+    ("Paneelzaag", "Gabbiani-opdeelzaag, met etiketprinter aan de zaag."),
     ("Kantenlijmmachine", "BI-Matic CH7.5RA57 voor kantenband in PVC en laminaat."),
     ("Vlaktepers", "ItalPRESSE, verwarmde pers voor eigen laminaten en fineer."),
 ]
