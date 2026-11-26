@@ -141,11 +141,11 @@ footer .wrap{padding-block:24px 44px;color:var(--muted);font-size:.86rem}
   <div class="wrap">
     <p class="eyebrow">MC Interieur · module design</p>
     <h1>From Excel offer to project: <code style="background:none;color:inherit;padding:0">mc_offer_import</code></h1>
-    <p class="lead">A new Odoo module that reads MC Interieur’s standard Excel offer and turns it into a project: the analysis, the furniture per room, and the questions that must be answered for that type of project. The TopSolid material list is added to the same project and checked against the offer.</p>
+    <p class="lead">A new Odoo module that reads MC Interieur’s Excel offer, built in the Bouwsoft structure of chapters, posts and text posts, and turns it into a project: the analysis, the furniture per room, and the questions that must be answered for that type of project. The TopSolid material list is added to the same project and checked against the offer.</p>
     <div class="chips">
       <span>Status: <b>design</b>, not built</span>
       <span>Depends on <b>mc_interieur</b></span>
-      <span>Waiting for: <b>a real sample offer</b></span>
+      <span>Structure: <b>Bouwsoft</b></span><span>Waiting for: <b>the offer template</b></span>
     </div>
   </div>
 </header>
@@ -162,11 +162,11 @@ footer .wrap{padding-block:24px 44px;color:var(--muted);font-size:.86rem}
         <defs><marker id="h" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9z" class="ah"/></marker></defs>
         <rect x="10" y="40" width="150" height="70" rx="10" class="n-in"/>
         <text x="85" y="70" text-anchor="middle" class="t">Excel offer</text>
-        <text x="85" y="90" text-anchor="middle" class="s">standard format .xlsx</text>
+        <text x="85" y="90" text-anchor="middle" class="s">Bouwsoft structure</text>
         <path d="M160 75 H200" class="ar" marker-end="url(#h)"/>
         <rect x="204" y="40" width="170" height="70" rx="10" class="n"/>
         <text x="289" y="70" text-anchor="middle" class="t">Read and check</text>
-        <text x="289" y="90" text-anchor="middle" class="s">template, cell names</text>
+        <text x="289" y="90" text-anchor="middle" class="s">chapters, posts, text</text>
         <path d="M374 75 H414" class="ar" marker-end="url(#h)"/>
         <rect x="418" y="40" width="170" height="70" rx="10" class="n"/>
         <text x="503" y="70" text-anchor="middle" class="t">Preview</text>
@@ -199,47 +199,76 @@ footer .wrap{padding-block:24px 44px;color:var(--muted);font-size:.86rem}
 <section class="alt">
   <div class="wrap">
     <p class="eyebrow">The offer</p>
-    <h2>What the module reads from the Excel</h2>
-    <p class="lead">The real format is not known yet. Below is the assumed layout, with the three parts asked for: the analysis, which furniture is made, and which furniture per room. Each piece of information gets a fixed place, so the module never has to guess.</p>
-    <div class="xl" aria-label="Assumed layout of the Excel offer">
-      <div class="xl-tabs"><span class="on">Offerte</span><span>Analyse</span><span>Meubels</span><span>Voorwaarden</span></div>
+    <h2>The Bouwsoft structure, read line by line</h2>
+    <p class="lead">MC Interieur’s offers follow the layout and breakdown of Bouwsoft: chapters, posts under them, and text posts in between. The module reads that structure. The real template is not in yet, so the example below is an assumption of how the levels are used.</p>
+    <div class="xl" aria-label="Assumed offer in Bouwsoft structure">
+      <div class="xl-tabs"><span class="on">Offerte</span></div>
       <table class="sheet">
-        <tr class="hd"><th class="rh"></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th></tr>
-        <tr><td class="rh">2</td><td class="lab">Klant</td><td colspan="3">Karen Maes <span class="mark">mc_klant</span></td><td class="lab">Offertenr.</td><td colspan="2">OFF-2026-041 <span class="mark">mc_offertenr</span></td></tr>
-        <tr><td class="rh">3</td><td class="lab">Adres werf</td><td colspan="3">Stationsstraat 12, 8700 Tielt <span class="mark">mc_adres</span></td><td class="lab">Datum</td><td colspan="2">20/11/2026 <span class="mark">mc_datum</span></td></tr>
-        <tr><td class="rh">4</td><td class="lab">Projecttype</td><td colspan="3">Keuken <span class="mark">mc_type</span></td><td class="lab">Verkoper</td><td colspan="2">Sofie <span class="mark">mc_verkoper</span></td></tr>
-        <tr class="sec"><td class="rh">6</td><td colspan="7">ANALYSE VAN HET PROJECT <span class="mark">mc_analyse</span></td></tr>
-        <tr><td class="rh">7</td><td colspan="7">Open keuken in L-vorm met eiland, renovatie. Plafond 2,62 m. Bestaande vloer blijft. Budget ± € 25.000. Plaatsing gewenst voor eind maart.</td></tr>
-        <tr class="sec"><td class="rh">9</td><td colspan="7">MEUBELS PER RUIMTE <span class="mark">mc_meubels</span></td></tr>
-        <tr class="hd"><td class="rh">10</td><th>Ruimte</th><th>Code</th><th>Meubel</th><th>Afwerking</th><th class="num">B x H x D (mm)</th><th class="num">Aantal</th><th class="num">Prijs</th></tr>
-        <tr><td class="rh">11</td><td>Keuken</td><td>O1-O4</td><td>Onderkasten wand</td><td>Melamine wit, eiken greeplijst</td><td class="num">3200 x 720 x 600</td><td class="num">1</td><td class="num">€ 6.850</td></tr>
-        <tr><td class="rh">12</td><td>Keuken</td><td>H1</td><td>Kolomkast oven + koelkast</td><td>Melamine wit</td><td class="num">1200 x 2300 x 600</td><td class="num">1</td><td class="num">€ 3.420</td></tr>
-        <tr><td class="rh">13</td><td>Keuken</td><td>E1</td><td>Eiland met zitplaats</td><td>Eiken fineer</td><td class="num">2400 x 900 x 1000</td><td class="num">1</td><td class="num">€ 5.900</td></tr>
-        <tr><td class="rh">14</td><td>Berging</td><td>B1</td><td>Voorraadkast</td><td>Melamine wit</td><td class="num">900 x 2300 x 600</td><td class="num">1</td><td class="num">€ 1.640</td></tr>
-        <tr><td class="rh">15</td><td>Algemeen</td><td></td><td>Plaatsing (3 dagen)</td><td></td><td class="num"></td><td class="num">3</td><td class="num">€ 2.100</td></tr>
+        <tr class="hd"><th class="rh"></th><th>A · Code</th><th>B · Omschrijving</th><th>C · Eenh.</th><th class="num">D · Hoev.</th><th class="num">E · EP</th><th class="num">F · Totaal</th><th>Wordt</th></tr>
+        <tr><td class="rh">2</td><td class="lab">Klant</td><td colspan="2">Karen Maes, Stationsstraat 12, 8700 Tielt</td><td class="lab">Offerte</td><td colspan="2">OFF-2026-041 · 20/11/2026</td><td><span class="mark">header</span></td></tr>
+        <tr><td class="rh">4</td><td></td><td colspan="5"><i>Open keuken in L-vorm met eiland, renovatie. Plafond 2,62 m. Bestaande vloer blijft. Budget ± € 25.000. Plaatsing gewenst voor eind maart.</i></td><td><span class="mark">analysis</span></td></tr>
+        <tr class="sec"><td class="rh">6</td><td>1</td><td colspan="4">KEUKEN</td><td class="num">€ 16.170</td><td><span class="mark">room</span></td></tr>
+        <tr><td class="rh">7</td><td>1.1</td><td>Onderkasten wand O1-O4, melamine wit, eiken greeplijst, 3200 x 720 x 600</td><td>st</td><td class="num">1</td><td class="num">6.850</td><td class="num">6.850</td><td><span class="mark">furniture</span></td></tr>
+        <tr><td class="rh">8</td><td>1.1.1</td><td>Optie: softclose lades</td><td>st</td><td class="num">4</td><td class="num">45</td><td class="num">180</td><td><span class="mark">option</span></td></tr>
+        <tr><td class="rh">9</td><td>1.2</td><td>Kolomkast H1 oven + koelkast, melamine wit, 1200 x 2300 x 600</td><td>st</td><td class="num">1</td><td class="num">3.240</td><td class="num">3.240</td><td><span class="mark">furniture</span></td></tr>
+        <tr><td class="rh">10</td><td>1.3</td><td>Eiland E1 met zitplaats, eiken fineer, 2400 x 900 x 1000</td><td>st</td><td class="num">1</td><td class="num">5.900</td><td class="num">5.900</td><td><span class="mark">furniture</span></td></tr>
+        <tr><td class="rh">11</td><td></td><td colspan="5"><i>Toestellen worden door de klant aangekocht en aangeleverd.</i></td><td><span class="mark">note</span></td></tr>
+        <tr class="sec"><td class="rh">13</td><td>2</td><td colspan="4">BERGING</td><td class="num">€ 1.640</td><td><span class="mark">room</span></td></tr>
+        <tr><td class="rh">14</td><td>2.1</td><td>Voorraadkast B1, melamine wit, 900 x 2300 x 600</td><td>st</td><td class="num">1</td><td class="num">1.640</td><td class="num">1.640</td><td><span class="mark">furniture</span></td></tr>
+        <tr class="sec"><td class="rh">16</td><td>3</td><td colspan="4">PLAATSING</td><td class="num">€ 2.100</td><td><span class="mark">services</span></td></tr>
+        <tr><td class="rh">17</td><td>3.1</td><td>Plaatsing en afstelling</td><td>dag</td><td class="num">3</td><td class="num">700</td><td class="num">2.100</td><td><span class="mark">service</span></td></tr>
       </table>
     </div>
-    <p class="note">Green labels are named cells or named tables (Excel “Namen beheren”). Example content, not MC Interieur’s real data.</p>
+    <p class="note">Example content, not MC Interieur’s real data. The column “Wordt” is not in the Excel; it shows what the module makes of each line.</p>
     <div class="cards">
       <div class="card">
-        <h3>How the module finds the data</h3>
+        <h3>How the module recognises each line</h3>
         <ul>
-          <li><b>Preferred:</b> named cells and a named table in the Excel template (<code>mc_klant</code>, <code>mc_analyse</code>, <code>mc_meubels</code>…). Rows and columns can move; the names stay.</li>
-          <li><b>Fallback:</b> an <i>offer template</i> record in Odoo that says which sheet, which cell or which column header holds what. Changing the Excel layout means changing that record, not the code.</li>
-          <li>Column headers are matched loosely: case, spaces and accents don’t matter, and a few synonyms are allowed (“Ruimte” = “Lokaal”).</li>
+          <li><b>Level from the code:</b> <code>1</code> is a chapter, <code>1.1</code> a post, <code>1.1.1</code> a sub-post. No guessing from colours or fonts.</li>
+          <li><b>Text post:</b> a line with a description but no code, quantity or price. Before the first chapter it is the project analysis; elsewhere a note at that place.</li>
+          <li><b>Furniture code:</b> taken from the description (O1-O4, H1, E1) by a pattern set in Odoo, or from its own column if the template gets one.</li>
+          <li><b>Chapters that are not rooms</b> (Plaatsing, Transport) are marked as services in the offer template record.</li>
+          <li>Columns are found by their header (Code, Omschrijving, Eenheid…), so an extra or moved column doesn’t break it.</li>
         </ul>
       </div>
       <div class="card">
         <h3>What becomes what</h3>
         <ul>
-          <li><b>Klant, adres:</b> matched to an existing contact (VAT, e-mail, then name and city); new contact only after confirmation</li>
-          <li><b>Projecttype:</b> matched to an Odoo project type; decides the questions</li>
-          <li><b>Analyse:</b> the project’s analysis text, kept as written</li>
-          <li><b>Meubels:</b> one line per furniture item, grouped by room; rooms created as needed</li>
-          <li><b>Lines without a code</b> (placement, transport): kept as service lines, not as furniture</li>
-          <li><b>The Excel file itself:</b> attached to the project as offer version 1, 2, …</li>
+          <li><b>Header:</b> customer (matched to an existing contact), job-site address, offer number and date</li>
+          <li><b>Text post before chapter 1:</b> the analysis of the project</li>
+          <li><b>Chapter:</b> a room</li>
+          <li><b>Post:</b> a furniture item, with code, description, size, finish, quantity and price</li>
+          <li><b>Sub-post:</b> an option or detail of that furniture item</li>
+          <li><b>Service chapter:</b> service lines (placement, transport), not furniture</li>
+          <li><b>The file itself:</b> attached to the project as offer version 1, 2, …</li>
         </ul>
       </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">One structure, three sources</p>
+    <h2>Now Excel, during the migration Bouwsoft, later Odoo itself</h2>
+    <p class="lead">Because the offer already follows the Bouwsoft structure, the same reader serves the migration too. After the switch to Odoo, offers are made directly in Odoo in the same structure, and the Excel import is no longer needed.</p>
+    <div class="panel scroll">
+      <table class="t">
+        <thead><tr><th>Bouwsoft</th><th>Odoo quotation</th><th>Project in Odoo</th></tr></thead>
+        <tbody>
+          <tr><td>Hoofdstuk (1, 2, 3)</td><td>Section line</td><td>Room</td></tr>
+          <tr><td>Post (1.1, 1.2)</td><td>Product line</td><td>Furniture item</td></tr>
+          <tr><td>Subpost (1.1.1)</td><td>Product line, optional</td><td>Option of the furniture item</td></tr>
+          <tr><td>Tekstpost</td><td>Note line</td><td>Analysis (first one) or note</td></tr>
+          <tr><td>Hoofdstuk Plaatsing, Transport</td><td>Section with service products</td><td>Service lines</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cards">
+      <div class="card"><h3>Now: Excel offer in Bouwsoft layout</h3><ul><li>Upload the Excel, preview, create the project</li><li>Works as long as offers are still made outside Odoo</li></ul></div>
+      <div class="card"><h3>Migration: open offers from Bouwsoft</h3><ul><li>The same reader takes Bouwsoft’s export of open offers</li><li>Each open offer becomes a project with rooms and furniture, without retyping</li></ul></div>
+      <div class="card"><h3>Later: offer made in Odoo</h3><ul><li>Same chapters, posts and text posts, as sections, lines and notes</li><li>The project, rooms and questions come straight from the Odoo quotation</li></ul></div>
+      <div class="card"><h3>What stays the same</h3><ul><li>Rooms, furniture, questions per type and the TopSolid check work the same, whatever the source</li><li>So the work done for the Excel import is not lost</li></ul></div>
     </div>
   </div>
 </section>
@@ -259,9 +288,10 @@ footer .wrap{padding-block:24px 44px;color:var(--muted);font-size:.86rem}
             <dt>Project</dt><dd>Nieuw project <span class="pill p-new">of: kies bestaand</span></dd>
           </dl>
           <div class="msgs">
-            <div><span class="pill p-ok">OK</span><span>4 meubels in 2 ruimtes, 1 dienstlijn</span></div>
-            <div><span class="pill p-new">Let op</span><span>Rij 13: afwerking “Eiken fineer” niet in de materiaalkoppeling</span></div>
-            <div><span class="pill p-err">Fout</span><span>Rij 16: aantal “twee” is geen getal; rij wordt overgeslagen</span></div>
+            <div><span class="pill p-ok">OK</span><span>3 hoofdstukken: 2 ruimtes en 1 dienst; 4 posten als meubel, 1 optie</span></div>
+            <div><span class="pill p-ok">OK</span><span>Tekstpost vóór hoofdstuk 1 gebruikt als analyse</span></div>
+            <div><span class="pill p-new">Let op</span><span>Post 1.3: afwerking “Eiken fineer” niet in de materiaalkoppeling</span></div>
+            <div><span class="pill p-err">Fout</span><span>Post 2.2: geen meubelcode gevonden in de omschrijving</span></div>
             <div><span class="pill p-new">Vragen</span><span>8 vragen voor “Keuken”, 3 al beantwoord uit de analyse</span></div>
           </div>
         </div>
@@ -280,16 +310,19 @@ footer .wrap{padding-block:24px 44px;color:var(--muted);font-size:.86rem}
 <section class="alt">
   <div class="wrap">
     <p class="eyebrow">Data model</p>
-    <h2>Three new models, two extended</h2>
+    <h2>Four new models, two extended</h2>
     <div class="model">
       <div class="ent new"><h3>mc.offer.template <small>new</small></h3>
-        <ul><li><code>name</code><span>"Standaard 2026"</span></li><li><code>sheet / cell names</code><span>per field</span></li><li><code>column headers</code><span>+ synonyms</span></li><li><code>active</code><span>bool</span></li></ul>
-        <p>Where each piece of information sits in the Excel. Editable by a manager.</p></div>
+        <ul><li><code>name</code><span>"Bouwsoft 2026"</span></li><li><code>column headers</code><span>Code, Omschrijving…</span></li><li><code>header cells</code><span>klant, offertenr…</span></li><li><code>service chapters</code><span>Plaatsing, Transport</span></li><li><code>code pattern</code><span>O1-O4, H1…</span></li></ul>
+        <p>How the Bouwsoft layout maps to Odoo. Editable by a manager, no code change.</p></div>
       <div class="ent new"><h3>mc.offer <small>new</small></h3>
         <ul><li><code>project_id</code><span>→ mc.project</span></li><li><code>version</code><span>1, 2, 3…</span></li><li><code>file</code><span>the .xlsx</span></li><li><code>offer_ref, date, total</code><span>from Excel</span></li><li><code>analysis</code><span>html</span></li><li><code>log</code><span>warnings, errors</span></li></ul>
         <p>Each upload is a version; the newest is the current offer.</p></div>
+      <div class="ent new"><h3>mc.offer.line <small>new</small></h3>
+        <ul><li><code>offer_id</code><span>→ mc.offer</span></li><li><code>code</code><span>1 / 1.1 / 1.1.1</span></li><li><code>line_type</code><span>chapter, post, sub-post, text</span></li><li><code>description, unit</code><span>text</span></li><li><code>quantity, unit price, total</code><span>numbers</span></li><li><code>furniture_id</code><span>→ result</span></li></ul>
+        <p>Every offer line as it was, so nothing gets lost and an Odoo quotation can be built in the same structure.</p></div>
       <div class="ent new"><h3>mc.project.furniture <small>new</small></h3>
-        <ul><li><code>project_id, offer_id</code><span>→</span></li><li><code>room</code><span>Keuken, Berging…</span></li><li><code>code</code><span>O1-O4, H1…</span></li><li><code>name, finish</code><span>text</span></li><li><code>width, height, depth</code><span>mm</span></li><li><code>quantity, price</code><span>numbers</span></li><li><code>part_ids</code><span>TopSolid parts</span></li><li><code>check_state</code><span>ok / no parts / …</span></li></ul>
+        <ul><li><code>project_id, offer_id</code><span>→</span></li><li><code>room</code><span>from the chapter</span></li><li><code>code</code><span>O1-O4, H1…</span></li><li><code>name, finish</code><span>text</span></li><li><code>option_ids</code><span>sub-posts</span></li><li><code>width, height, depth</code><span>mm</span></li><li><code>quantity, price</code><span>numbers</span></li><li><code>part_ids</code><span>TopSolid parts</span></li><li><code>check_state</code><span>ok / no parts / …</span></li></ul>
         <p>Grouped by room in the project; matched to TopSolid parts by code.</p></div>
       <div class="ent ext"><h3>mc.project <small>extended</small></h3>
         <ul><li><code>offer_ids</code><span>versions</span></li><li><code>analysis</code><span>from current offer</span></li><li><code>furniture_ids</code><span>per room</span></li><li><code>question_progress</code><span>answered / required</span></li></ul>
@@ -344,13 +377,15 @@ footer .wrap{padding-block:24px 44px;color:var(--muted);font-size:.86rem}
   <div class="wrap">
     <p class="eyebrow">Decisions</p>
     <h2>To settle before building</h2>
-    <div class="warn"><h3>Offer in Excel vs. quote from TopSolid</h3><p>The current module calculates the final quote from the TopSolid material list. The Excel offer comes earlier, before the drawing. Proposal: treat the Excel offer as the <b>first estimate</b> (it starts the project and the questions), and keep the TopSolid-based quote as the <b>final quote</b> the customer approves with the drawing. Later, the Excel could be replaced by entering the offer directly in Odoo.</p></div>
+    <div class="warn"><h3>Offer in Excel vs. quote from TopSolid</h3><p>The current module calculates the final quote from the TopSolid material list. The Excel offer comes earlier, before the drawing. Proposal: treat the Excel offer as the <b>first estimate</b> (it starts the project and the questions), and keep the TopSolid-based quote as the <b>final quote</b> the customer approves with the drawing. After the Bouwsoft migration, the first estimate is made directly in Odoo in the same chapter and post structure.</p></div>
     <ol class="qs">
-      <li>A real offer file, ideally three different ones (kitchen, bathroom, dressing)<span class="why">Decides the parser; the layout above is an assumption.</span></li>
-      <li>Can the Excel template get named cells and a named table?<span class="why">Makes reading robust; otherwise the offer template record in Odoo carries the positions.</span></li>
-      <li>Is the furniture code in the offer the same as the cabinet code in TopSolid?<span class="why">That is the key for the offer-vs-drawing check. If not, agree on a convention.</span></li>
+      <li>The offer template, plus one or two real offers in Bouwsoft layout (anonymised is fine)<span class="why">Decides the parser; the example above is an assumption.</span></li>
+      <li>Does every line keep Bouwsoft’s code numbering (1, 1.1, 1.1.1)?<span class="why">The level of each line comes from that code. Without it, we need another fixed marker.</span></li>
+      <li>Is a chapter always a room, and which chapters are services?<span class="why">Decides how chapters become rooms or service lines.</span></li>
+      <li>Where is the analysis written: a text post before chapter 1, or elsewhere?<span class="why">Decides where the module takes the analysis from.</span></li>
+      <li>Does every post contain a furniture code, and is it the same as the cabinet code in TopSolid?<span class="why">That is the key for the offer-vs-drawing check. If not, agree on a convention, or add a code column to the template.</span></li>
       <li>Which project types, and which questions per type?<span class="why">Start list to load as data; managers can change it later in Odoo.</span></li>
-      <li>Should the Excel prices become an Odoo quotation, or stay information only?<span class="why">See the box above.</span></li>
+      <li>Should the offer already become an Odoo quotation (sections, lines, notes), or stay information only until the migration?<span class="why">See the box above.</span></li>
       <li>What happens to a new offer version: replace the furniture, or show the differences first?<span class="why">Proposal: show added, removed and changed lines, then apply.</span></li>
     </ol>
   </div>
@@ -361,14 +396,14 @@ footer .wrap{padding-block:24px 44px;color:var(--muted);font-size:.86rem}
     <p class="eyebrow">Building it</p>
     <h2>Phases</h2>
     <div class="phases">
-      <div class="ph"><span class="k">phase 1</span><h3>Read the offer</h3><p>Template record, parser with openpyxl (already in Odoo), preview wizard, project with analysis and furniture per room, offer file as version. Tests with the sample files in CI.</p></div>
+      <div class="ph"><span class="k">phase 1</span><h3>Read the offer</h3><p>Template record for the Bouwsoft layout, parser with openpyxl (already in Odoo), preview wizard, project with analysis and furniture per room, offer file as version. Tests with the real offers in CI.</p></div>
       <div class="ph"><span class="k">phase 2</span><h3>Questions per type</h3><p>Question templates per project type, required-before-stage, progress on the project, portal for customer questions.</p></div>
       <div class="ph"><span class="k">phase 3</span><h3>Check against TopSolid</h3><p>Match parts to furniture by cabinet code, check status and size, overview for drawer and sales.</p></div>
-      <div class="ph"><span class="k">phase 4</span><h3>New offer versions</h3><p>Differences between versions, apply after confirmation, history per furniture item.</p></div>
+      <div class="ph"><span class="k">phase 4</span><h3>Versions and migration</h3><p>Differences between offer versions; the same reader for the open offers from Bouwsoft; after the migration, projects straight from an Odoo quotation in the same structure.</p></div>
     </div>
     <p class="note">Technical: separate module <code>mc_offer_import</code> depending on <code>mc_interieur</code>; reads .xlsx with openpyxl; Dutch UI like the rest; access rights like the project (sales and managers import, drawers read).</p>
   </div>
 </section>
 
 </main>
-<footer><div class="wrap">Design for MC Interieur. The Excel layout and all example content are assumptions until a real offer is available.</div></footer>
+<footer><div class="wrap">Design for MC Interieur. The offer follows the Bouwsoft structure; the exact layout and all example content are assumptions until the offer template is available.</div></footer>
