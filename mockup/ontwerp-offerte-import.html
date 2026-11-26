@@ -1,0 +1,371 @@
+<title>Offer import module design</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Open+Sans:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a design spec; flow and data model as drawings, the rest as tight reference blocks. */
+:root{
+  --walnut:#574A36; --walnut-deep:#2E271D; --oak:#78664A; --leaf:#95BA3C; --leaf-ink:#5F7D1C;
+  --bg:#F7F5F0; --paper:#FFFFFF; --sand:#EFEAE0; --ink:#2A241B; --muted:#625849; --line:#E2DBCE;
+  --amber:#8A5300; --amber-bg:#FBEBD2; --excel:#E6F0E2; --excel-line:#B9CDB0; --excel-head:#D3E3CC;
+  --f-head:'Archivo','Arial Narrow',Arial,sans-serif;
+  --f-body:'Open Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1B1813; --paper:#24201A; --sand:#2C271F; --ink:#EEE8DD; --muted:#B5AB99; --line:#3B342A; --leaf-ink:#A9CC57; --oak:#C2AE8B;
+  --amber:#F0B25A; --amber-bg:#3A2C15; --excel:#22301E; --excel-line:#3E5236; --excel-head:#2C3D26; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1B1813; --paper:#24201A; --sand:#2C271F; --ink:#EEE8DD; --muted:#B5AB99; --line:#3B342A; --leaf-ink:#A9CC57; --oak:#C2AE8B;
+  --amber:#F0B25A; --amber-bg:#3A2C15; --excel:#22301E; --excel-line:#3E5236; --excel-head:#2C3D26; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.6}
+.wrap{max-width:1060px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-head);line-height:1.15;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h2{font-size:clamp(1.45rem,3vw,2rem);font-weight:800}
+h3{font-size:1.05rem;font-weight:700}
+p{margin:0}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--sand);padding:1px 5px;border-radius:4px}
+.eyebrow{font-family:var(--f-head);font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf-ink)}
+.lead{font-size:1.08rem;color:var(--muted);max-width:68ch}
+.note{font-size:.9rem;color:var(--muted)}
+header.hero{background:var(--walnut-deep);color:#F7F5F0;border-bottom:6px solid var(--leaf);margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px)}
+.hero .wrap{padding-block:44px 36px;display:grid;gap:12px}
+.hero .eyebrow{color:var(--leaf)}
+.hero h1{font-size:clamp(1.9rem,4.6vw,3rem);font-weight:800}
+.hero .lead{color:#CFC6B4}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:5px 13px;font-size:.88rem;color:#F7F5F0}
+.chips b{color:var(--leaf)}
+main section{padding-block:48px;border-bottom:1px solid var(--line)}
+main section .wrap{display:grid;gap:20px}
+section.alt{background:var(--sand)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px}
+.warn{background:var(--amber-bg);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:6px}
+.warn h3{color:var(--amber)}
+
+/* excel mock */
+.xl{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow-x:auto}
+.xl-tabs{display:flex;gap:2px;padding:8px 10px 0;background:var(--sand);border-bottom:1px solid var(--line)}
+.xl-tabs span{font-size:.8rem;padding:5px 12px;border-radius:6px 6px 0 0;background:var(--paper);border:1px solid var(--line);border-bottom:0;color:var(--muted)}
+.xl-tabs span.on{color:var(--ink);font-weight:700}
+table.sheet{border-collapse:collapse;font-size:.85rem;min-width:780px;width:100%}
+.sheet td,.sheet th{border:1px solid var(--excel-line);padding:5px 8px;text-align:left;vertical-align:top}
+.sheet .rh{background:var(--excel-head);color:var(--muted);font-family:var(--f-mono);font-size:.75rem;text-align:center;width:34px}
+.sheet .lab{background:var(--excel);font-weight:700}
+.sheet .hd th{background:var(--excel-head)}
+.sheet .num{text-align:right;font-variant-numeric:tabular-nums}
+.sheet .sec td{background:var(--excel);font-family:var(--f-head);font-weight:700;letter-spacing:.04em}
+.mark{display:inline-block;font-family:var(--f-mono);font-size:.7rem;font-weight:500;background:var(--leaf);color:#2E271D;border-radius:4px;padding:0 5px;margin-left:6px}
+
+/* flow drawing */
+.flow{padding:16px;overflow-x:auto}
+.flow svg{display:block;width:100%;min-width:760px;height:auto}
+.n{fill:var(--paper);stroke:var(--oak);stroke-width:1.6}
+.n-in{fill:var(--excel);stroke:var(--excel-line);stroke-width:1.6}
+.n-core{fill:var(--walnut);stroke:var(--walnut)}
+.n-ok{fill:var(--leaf);stroke:var(--leaf)}
+.n-q{fill:var(--amber-bg);stroke:var(--amber);stroke-width:1.6;stroke-dasharray:5 4}
+.t{font-family:var(--f-head);font-weight:700;font-size:14px;fill:var(--ink)}
+.s{font-family:var(--f-body);font-size:11.5px;fill:var(--muted)}
+.tw{font-family:var(--f-head);font-weight:700;font-size:14px;fill:#F7F5F0}
+.sw{font-family:var(--f-body);font-size:11.5px;fill:#CFC6B4}
+.tk{font-family:var(--f-head);font-weight:700;font-size:14px;fill:#2E271D}
+.sk{font-family:var(--f-body);font-size:11.5px;fill:#2E271D}
+.ar{stroke:var(--oak);stroke-width:1.8;fill:none}
+.ah{fill:var(--oak)}
+.lb{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+
+/* model */
+.model{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:900px){.model{grid-template-columns:minmax(0,1fr)}}
+.ent{background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ent.new{border:2px solid var(--leaf-ink)}
+.ent.ext{border:2px dashed var(--oak)}
+.ent h3{font-family:var(--f-mono);font-size:.92rem;padding:10px 14px;background:var(--sand);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px}
+.ent h3 small{font-family:var(--f-body);font-weight:600;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--leaf-ink)}
+.ent.ext h3 small{color:var(--oak)}
+.ent ul{list-style:none;margin:0;padding:10px 14px;display:grid;gap:4px;font-size:.88rem}
+.ent li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+.ent li code{background:none;padding:0}
+.ent li span{color:var(--muted);font-size:.8rem;text-align:right}
+.ent p{padding:0 14px 12px;font-size:.85rem;color:var(--muted)}
+
+/* odoo mock */
+.mock{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.mock-bar{background:var(--walnut);color:#F7F5F0;padding:10px 16px;font-family:var(--f-head);font-weight:700;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.mock-bar span{font-family:var(--f-body);font-weight:400;font-size:.85rem;color:#CFC6B4}
+.mock-body{padding:16px;display:grid;gap:14px}
+.mock-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+@media (max-width:760px){.mock-grid{grid-template-columns:minmax(0,1fr)}}
+.kv{display:grid;grid-template-columns:120px minmax(0,1fr);gap:4px 12px;font-size:.9rem}
+.kv dt{color:var(--muted)} .kv dd{margin:0}
+.pill{display:inline-block;font-size:.75rem;font-weight:700;border-radius:999px;padding:1px 9px;white-space:nowrap}
+.p-ok{background:#E3EFCB;color:#3F5513} .p-new{background:var(--amber-bg);color:var(--amber)} .p-err{background:#F8DCDC;color:#8A2222}
+.room{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.room-h{background:var(--sand);padding:7px 12px;font-weight:700;font-size:.9rem;display:flex;justify-content:space-between;gap:10px}
+.room table{width:100%;border-collapse:collapse;font-size:.86rem}
+.room td{padding:6px 12px;border-top:1px solid var(--line);vertical-align:top}
+.room td.r{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.msgs{display:grid;gap:6px;font-size:.88rem}
+.msgs div{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font-size:.88rem;font-weight:600;border-radius:8px;padding:7px 14px;border:1px solid var(--line);background:var(--paper)}
+.btn.pri{background:var(--walnut);color:#F7F5F0;border-color:var(--walnut)}
+.scroll{overflow-x:auto}
+
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.cards{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:10px;align-content:start}
+.card ul,.card ol{margin:0;padding-left:1.15rem;display:grid;gap:5px;font-size:.94rem}
+table.t{border-collapse:collapse;width:100%;font-size:.9rem;min-width:620px}
+.t th,.t td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.t th{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.qs{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:q}
+.qs li{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px 14px 56px;position:relative}
+.qs li::before{counter-increment:q;content:counter(q);position:absolute;left:16px;top:14px;width:28px;height:28px;border-radius:50%;background:var(--walnut);color:#F7F5F0;display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.qs .why{display:block;font-size:.88rem;color:var(--muted);margin-top:2px}
+.phases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:860px){.phases{grid-template-columns:minmax(0,1fr)}}
+.ph{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:6px;align-content:start}
+.ph .k{font-family:var(--f-mono);font-size:.8rem;color:var(--leaf-ink)}
+.ph p{font-size:.9rem;color:var(--muted)}
+footer .wrap{padding-block:24px 44px;color:var(--muted);font-size:.86rem}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">MC Interieur · module design</p>
+    <h1>From Excel offer to project: <code style="background:none;color:var(--leaf);padding:0">mc_offer_import</code></h1>
+    <p class="lead">A new Odoo module that reads MC Interieur’s standard Excel offer and turns it into a project: the analysis, the furniture per room, and the questions that must be answered for that type of project. The TopSolid material list is added to the same project and checked against the offer.</p>
+    <div class="chips">
+      <span>Status: <b>design</b>, not built</span>
+      <span>Depends on <b>mc_interieur</b></span>
+      <span>Waiting for: <b>a real sample offer</b></span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">The flow</p>
+    <h2>Upload, check, create</h2>
+    <p class="lead">The salesperson uploads the offer. Odoo reads it and shows a preview with anything it is unsure of. Only after confirmation does it create or update the project.</p>
+    <div class="panel flow">
+      <svg viewBox="0 0 980 300" role="img" aria-label="Flow: Excel offer, read and preview, confirm, project with analysis, rooms and furniture, questions per project type, then TopSolid material list matched to the furniture">
+        <defs><marker id="h" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9z" class="ah"/></marker></defs>
+        <rect x="10" y="40" width="150" height="70" rx="10" class="n-in"/>
+        <text x="85" y="70" text-anchor="middle" class="t">Excel offer</text>
+        <text x="85" y="90" text-anchor="middle" class="s">standard format .xlsx</text>
+        <path d="M160 75 H200" class="ar" marker-end="url(#h)"/>
+        <rect x="204" y="40" width="170" height="70" rx="10" class="n"/>
+        <text x="289" y="70" text-anchor="middle" class="t">Read and check</text>
+        <text x="289" y="90" text-anchor="middle" class="s">template, cell names</text>
+        <path d="M374 75 H414" class="ar" marker-end="url(#h)"/>
+        <rect x="418" y="40" width="170" height="70" rx="10" class="n"/>
+        <text x="503" y="70" text-anchor="middle" class="t">Preview</text>
+        <text x="503" y="90" text-anchor="middle" class="s">customer, type, warnings</text>
+        <path d="M588 75 H628" class="ar" marker-end="url(#h)"/>
+        <rect x="632" y="30" width="330" height="90" rx="12" class="n-core"/>
+        <text x="797" y="62" text-anchor="middle" class="tw">Project</text>
+        <text x="797" y="84" text-anchor="middle" class="sw">analysis · rooms · furniture · offer file</text>
+        <text x="797" y="102" text-anchor="middle" class="sw">offer version 1, 2, 3 …</text>
+        <path d="M720 120 V190" class="ar" marker-end="url(#h)"/>
+        <path d="M880 120 V190" class="ar" marker-end="url(#h)"/>
+        <rect x="610" y="194" width="210" height="80" rx="10" class="n-q"/>
+        <text x="715" y="226" text-anchor="middle" class="t">Questions</text>
+        <text x="715" y="246" text-anchor="middle" class="s">set per project type</text>
+        <text x="715" y="262" text-anchor="middle" class="s">must be answered</text>
+        <rect x="830" y="194" width="140" height="80" rx="10" class="n-ok"/>
+        <text x="900" y="226" text-anchor="middle" class="tk">Furniture check</text>
+        <text x="900" y="246" text-anchor="middle" class="sk">offer vs TopSolid</text>
+        <rect x="380" y="200" width="180" height="70" rx="10" class="n-in"/>
+        <text x="470" y="230" text-anchor="middle" class="t">TopSolid list</text>
+        <text x="470" y="250" text-anchor="middle" class="s">existing import, per cabinet</text>
+        <path d="M560 222 H598" class="ar"/>
+        <path d="M598 222 V290 H900 V278" class="ar" marker-end="url(#h)"/>
+        <text x="460" y="186" text-anchor="middle" class="lb">later, from the drawer</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <p class="eyebrow">The offer</p>
+    <h2>What the module reads from the Excel</h2>
+    <p class="lead">The real format is not known yet. Below is the assumed layout, with the three parts asked for: the analysis, which furniture is made, and which furniture per room. Each piece of information gets a fixed place, so the module never has to guess.</p>
+    <div class="xl" aria-label="Assumed layout of the Excel offer">
+      <div class="xl-tabs"><span class="on">Offerte</span><span>Analyse</span><span>Meubels</span><span>Voorwaarden</span></div>
+      <table class="sheet">
+        <tr class="hd"><th class="rh"></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th></tr>
+        <tr><td class="rh">2</td><td class="lab">Klant</td><td colspan="3">Karen Maes <span class="mark">mc_klant</span></td><td class="lab">Offertenr.</td><td colspan="2">OFF-2026-041 <span class="mark">mc_offertenr</span></td></tr>
+        <tr><td class="rh">3</td><td class="lab">Adres werf</td><td colspan="3">Stationsstraat 12, 8700 Tielt <span class="mark">mc_adres</span></td><td class="lab">Datum</td><td colspan="2">20/11/2026 <span class="mark">mc_datum</span></td></tr>
+        <tr><td class="rh">4</td><td class="lab">Projecttype</td><td colspan="3">Keuken <span class="mark">mc_type</span></td><td class="lab">Verkoper</td><td colspan="2">Sofie <span class="mark">mc_verkoper</span></td></tr>
+        <tr class="sec"><td class="rh">6</td><td colspan="7">ANALYSE VAN HET PROJECT <span class="mark">mc_analyse</span></td></tr>
+        <tr><td class="rh">7</td><td colspan="7">Open keuken in L-vorm met eiland, renovatie. Plafond 2,62 m. Bestaande vloer blijft. Budget ± € 25.000. Plaatsing gewenst voor eind maart.</td></tr>
+        <tr class="sec"><td class="rh">9</td><td colspan="7">MEUBELS PER RUIMTE <span class="mark">mc_meubels</span></td></tr>
+        <tr class="hd"><td class="rh">10</td><th>Ruimte</th><th>Code</th><th>Meubel</th><th>Afwerking</th><th class="num">B x H x D (mm)</th><th class="num">Aantal</th><th class="num">Prijs</th></tr>
+        <tr><td class="rh">11</td><td>Keuken</td><td>O1-O4</td><td>Onderkasten wand</td><td>Melamine wit, eiken greeplijst</td><td class="num">3200 x 720 x 600</td><td class="num">1</td><td class="num">€ 6.850</td></tr>
+        <tr><td class="rh">12</td><td>Keuken</td><td>H1</td><td>Kolomkast oven + koelkast</td><td>Melamine wit</td><td class="num">1200 x 2300 x 600</td><td class="num">1</td><td class="num">€ 3.420</td></tr>
+        <tr><td class="rh">13</td><td>Keuken</td><td>E1</td><td>Eiland met zitplaats</td><td>Eiken fineer</td><td class="num">2400 x 900 x 1000</td><td class="num">1</td><td class="num">€ 5.900</td></tr>
+        <tr><td class="rh">14</td><td>Berging</td><td>B1</td><td>Voorraadkast</td><td>Melamine wit</td><td class="num">900 x 2300 x 600</td><td class="num">1</td><td class="num">€ 1.640</td></tr>
+        <tr><td class="rh">15</td><td>Algemeen</td><td></td><td>Plaatsing (3 dagen)</td><td></td><td class="num"></td><td class="num">3</td><td class="num">€ 2.100</td></tr>
+      </table>
+    </div>
+    <p class="note">Green labels are named cells or named tables (Excel “Namen beheren”). Example content, not MC Interieur’s real data.</p>
+    <div class="cards">
+      <div class="card">
+        <h3>How the module finds the data</h3>
+        <ul>
+          <li><b>Preferred:</b> named cells and a named table in the Excel template (<code>mc_klant</code>, <code>mc_analyse</code>, <code>mc_meubels</code>…). Rows and columns can move; the names stay.</li>
+          <li><b>Fallback:</b> an <i>offer template</i> record in Odoo that says which sheet, which cell or which column header holds what. Changing the Excel layout means changing that record, not the code.</li>
+          <li>Column headers are matched loosely: case, spaces and accents don’t matter, and a few synonyms are allowed (“Ruimte” = “Lokaal”).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What becomes what</h3>
+        <ul>
+          <li><b>Klant, adres:</b> matched to an existing contact (VAT, e-mail, then name and city); new contact only after confirmation</li>
+          <li><b>Projecttype:</b> matched to an Odoo project type; decides the questions</li>
+          <li><b>Analyse:</b> the project’s analysis text, kept as written</li>
+          <li><b>Meubels:</b> one line per furniture item, grouped by room; rooms created as needed</li>
+          <li><b>Lines without a code</b> (placement, transport): kept as service lines, not as furniture</li>
+          <li><b>The Excel file itself:</b> attached to the project as offer version 1, 2, …</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">In Odoo</p>
+    <h2>The preview before anything is created</h2>
+    <div class="mock" aria-label="Mockup of the import preview">
+      <div class="mock-bar">Offerte inlezen: OFF-2026-041.xlsx <span>voorbeeld</span></div>
+      <div class="mock-body">
+        <div class="mock-grid">
+          <dl class="kv">
+            <dt>Klant</dt><dd>Karen Maes <span class="pill p-ok">bestaand contact</span></dd>
+            <dt>Werfadres</dt><dd>Stationsstraat 12, 8700 Tielt</dd>
+            <dt>Projecttype</dt><dd>Keuken <span class="pill p-ok">herkend</span></dd>
+            <dt>Project</dt><dd>Nieuw project <span class="pill p-new">of: kies bestaand</span></dd>
+          </dl>
+          <div class="msgs">
+            <div><span class="pill p-ok">OK</span><span>4 meubels in 2 ruimtes, 1 dienstlijn</span></div>
+            <div><span class="pill p-new">Let op</span><span>Rij 13: afwerking “Eiken fineer” niet in de materiaalkoppeling</span></div>
+            <div><span class="pill p-err">Fout</span><span>Rij 16: aantal “twee” is geen getal; rij wordt overgeslagen</span></div>
+            <div><span class="pill p-new">Vragen</span><span>8 vragen voor “Keuken”, 3 al beantwoord uit de analyse</span></div>
+          </div>
+        </div>
+        <div class="room"><div class="room-h"><span>Keuken</span><span>3 meubels</span></div>
+          <table><tr><td>O1-O4</td><td>Onderkasten wand</td><td>Melamine wit, eiken greeplijst</td><td class="r">3200 x 720 x 600</td></tr><tr><td>H1</td><td>Kolomkast oven + koelkast</td><td>Melamine wit</td><td class="r">1200 x 2300 x 600</td></tr><tr><td>E1</td><td>Eiland met zitplaats</td><td>Eiken fineer</td><td class="r">2400 x 900 x 1000</td></tr></table>
+        </div>
+        <div class="room"><div class="room-h"><span>Berging</span><span>1 meubel</span></div>
+          <table><tr><td>B1</td><td>Voorraadkast</td><td>Melamine wit</td><td class="r">900 x 2300 x 600</td></tr></table>
+        </div>
+        <div class="btns"><span class="btn pri">Project aanmaken</span><span class="btn">Annuleren</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <p class="eyebrow">Data model</p>
+    <h2>Three new models, two extended</h2>
+    <div class="model">
+      <div class="ent new"><h3>mc.offer.template <small>new</small></h3>
+        <ul><li><code>name</code><span>"Standaard 2026"</span></li><li><code>sheet / cell names</code><span>per field</span></li><li><code>column headers</code><span>+ synonyms</span></li><li><code>active</code><span>bool</span></li></ul>
+        <p>Where each piece of information sits in the Excel. Editable by a manager.</p></div>
+      <div class="ent new"><h3>mc.offer <small>new</small></h3>
+        <ul><li><code>project_id</code><span>→ mc.project</span></li><li><code>version</code><span>1, 2, 3…</span></li><li><code>file</code><span>the .xlsx</span></li><li><code>offer_ref, date, total</code><span>from Excel</span></li><li><code>analysis</code><span>html</span></li><li><code>log</code><span>warnings, errors</span></li></ul>
+        <p>Each upload is a version; the newest is the current offer.</p></div>
+      <div class="ent new"><h3>mc.project.furniture <small>new</small></h3>
+        <ul><li><code>project_id, offer_id</code><span>→</span></li><li><code>room</code><span>Keuken, Berging…</span></li><li><code>code</code><span>O1-O4, H1…</span></li><li><code>name, finish</code><span>text</span></li><li><code>width, height, depth</code><span>mm</span></li><li><code>quantity, price</code><span>numbers</span></li><li><code>part_ids</code><span>TopSolid parts</span></li><li><code>check_state</code><span>ok / no parts / …</span></li></ul>
+        <p>Grouped by room in the project; matched to TopSolid parts by code.</p></div>
+      <div class="ent ext"><h3>mc.project <small>extended</small></h3>
+        <ul><li><code>offer_ids</code><span>versions</span></li><li><code>analysis</code><span>from current offer</span></li><li><code>furniture_ids</code><span>per room</span></li><li><code>question_progress</code><span>answered / required</span></li></ul>
+        <p>New tabs: Analyse, Meubels per ruimte, Vragen.</p></div>
+      <div class="ent ext"><h3>mc.project.type <small>extended</small></h3>
+        <ul><li><code>question_template_ids</code><span>the checklist</span></li><li><code>offer keywords</code><span>"Keuken", "Badkamer"…</span></li></ul>
+        <p>The project type decides which questions are asked.</p></div>
+      <div class="ent new"><h3>mc.question.template <small>new</small></h3>
+        <ul><li><code>project_type_ids</code><span>which types</span></li><li><code>question</code><span>text</span></li><li><code>answered_by</code><span>sales / customer / drawer</span></li><li><code>required_before</code><span>stage</span></li><li><code>intake_key</code><span>optional link</span></li></ul>
+        <p>Becomes an open question (the existing <code>mc.project.question</code>) on every new project of that type.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Questions per project type</p>
+    <h2>A checklist that blocks the next step</h2>
+    <p class="lead">Each project type has its own list of questions, managed in Odoo. When a project is created from an offer, the questions for its type are added as open questions. A question can be marked as required before a stage: then the project cannot move on until it is answered.</p>
+    <div class="panel scroll">
+      <table class="t">
+        <thead><tr><th>Question (example, Keuken)</th><th>Answered by</th><th>Required before</th><th>Filled from</th></tr></thead>
+        <tbody>
+          <tr><td>Welk werkblad (materiaal, dikte)?</td><td>Verkoper</td><td>Tekening</td><td>Intake</td></tr>
+          <tr><td>Toestellen: merk, type en inbouwmaten?</td><td>Klant</td><td>Tekening</td><td>Klantportaal</td></tr>
+          <tr><td>Greep of greeploos?</td><td>Verkoper</td><td>Offerte</td><td>Intake</td></tr>
+          <tr><td>Plafondhoogte en vloer afgewerkt?</td><td>Verkoper</td><td>Tekening</td><td>Analyse (automatisch)</td></tr>
+          <tr><td>Toegang tot de werf, verdieping, parkeren?</td><td>Klant</td><td>Plaatsing</td><td>Klantportaal</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cards">
+      <div class="card"><h3>How it fits what exists</h3><ul><li>Reuses the existing open questions and the portal, so customer questions still block approval</li><li>Reuses the intake: a question linked to an intake field is closed as soon as that field is filled</li><li>Conditional questions keep working (e.g. no architect → no “contact architect” question)</li></ul></div>
+      <div class="card"><h3>What is new</h3><ul><li>A checklist per project type, managed by a manager in Odoo</li><li>“Required before stage”: the stage button shows what is still missing</li><li>Progress on the project card: “6 / 8 vragen”</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <p class="eyebrow">TopSolid material list</p>
+    <h2>The drawing checked against the offer</h2>
+    <p class="lead">The TopSolid list is imported with the existing import. Its cabinet column (<code>Kast</code>) is matched to the furniture code in the offer, so every furniture item knows its parts.</p>
+    <div class="cards">
+      <div class="card"><h3>What the check shows</h3><ul><li><b>OK:</b> furniture with parts</li><li><b>No parts:</b> in the offer but not (yet) drawn</li><li><b>Not in the offer:</b> parts with a cabinet code the offer doesn’t have, e.g. an extra cabinet added during drawing</li><li><b>Size differs:</b> overall size from the parts differs strongly from the offer (tolerance to agree)</li></ul></div>
+      <div class="card"><h3>Why it helps</h3><ul><li>The drawer sees at once if something from the offer is missing</li><li>Sales sees if the drawing grew beyond the offer, before the final quote</li><li>The cabinet code becomes the common key from offer to label: the same code is on the TopSolid list, in Ardis and on every piece’s label</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Decisions</p>
+    <h2>To settle before building</h2>
+    <div class="warn"><h3>Offer in Excel vs. quote from TopSolid</h3><p>The current module calculates the final quote from the TopSolid material list. The Excel offer comes earlier, before the drawing. Proposal: treat the Excel offer as the <b>first estimate</b> (it starts the project and the questions), and keep the TopSolid-based quote as the <b>final quote</b> the customer approves with the drawing. Later, the Excel could be replaced by entering the offer directly in Odoo.</p></div>
+    <ol class="qs">
+      <li>A real offer file, ideally three different ones (kitchen, bathroom, dressing)<span class="why">Decides the parser; the layout above is an assumption.</span></li>
+      <li>Can the Excel template get named cells and a named table?<span class="why">Makes reading robust; otherwise the offer template record in Odoo carries the positions.</span></li>
+      <li>Is the furniture code in the offer the same as the cabinet code in TopSolid?<span class="why">That is the key for the offer-vs-drawing check. If not, agree on a convention.</span></li>
+      <li>Which project types, and which questions per type?<span class="why">Start list to load as data; managers can change it later in Odoo.</span></li>
+      <li>Should the Excel prices become an Odoo quotation, or stay information only?<span class="why">See the box above.</span></li>
+      <li>What happens to a new offer version: replace the furniture, or show the differences first?<span class="why">Proposal: show added, removed and changed lines, then apply.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <p class="eyebrow">Building it</p>
+    <h2>Phases</h2>
+    <div class="phases">
+      <div class="ph"><span class="k">phase 1</span><h3>Read the offer</h3><p>Template record, parser with openpyxl (already in Odoo), preview wizard, project with analysis and furniture per room, offer file as version. Tests with the sample files in CI.</p></div>
+      <div class="ph"><span class="k">phase 2</span><h3>Questions per type</h3><p>Question templates per project type, required-before-stage, progress on the project, portal for customer questions.</p></div>
+      <div class="ph"><span class="k">phase 3</span><h3>Check against TopSolid</h3><p>Match parts to furniture by cabinet code, check status and size, overview for drawer and sales.</p></div>
+      <div class="ph"><span class="k">phase 4</span><h3>New offer versions</h3><p>Differences between versions, apply after confirmation, history per furniture item.</p></div>
+    </div>
+    <p class="note">Technical: separate module <code>mc_offer_import</code> depending on <code>mc_interieur</code>; reads .xlsx with openpyxl; Dutch UI like the rest; access rights like the project (sales and managers import, drawers read).</p>
+  </div>
+</section>
+
+</main>
+<footer><div class="wrap">Design for MC Interieur. The Excel layout and all example content are assumptions until a real offer is available.</div></footer>
