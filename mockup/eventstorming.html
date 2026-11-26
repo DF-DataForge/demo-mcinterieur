@@ -1,0 +1,294 @@
+<title>EventStorming MC Interieur</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Open+Sans:wght@400;600;700&family=Caveat:wght@600&display=swap">
+<style>
+/* Layout: a facilitator's script; the sticky-note wall is the one visual motif, the rest reads like a run sheet. */
+:root{
+  --walnut:#574A36; --walnut-deep:#2E271D; --oak:#78664A; --leaf:#95BA3C; --leaf-ink:#5F7D1C;
+  --bg:#F7F5F0; --paper:#FFFFFF; --sand:#EFEAE0; --ink:#2A241B; --muted:#625849; --line:#E2DBCE;
+  --s-event:#F6A44C; --s-hot:#EE6A8A; --s-cmd:#6FA8E8; --s-actor:#F4DC5A; --s-sys:#C9A3E6; --s-policy:#9B7FD1; --s-read:#8FCB7A;
+  --s-ink:#2A241B;
+  --f-head:'Archivo','Arial Narrow',Arial,sans-serif;
+  --f-body:'Open Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-hand:'Caveat','Comic Sans MS',cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1B1813; --paper:#24201A; --sand:#2C271F; --ink:#EEE8DD; --muted:#B5AB99; --line:#3B342A; --leaf-ink:#A9CC57; --oak:#C2AE8B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1B1813; --paper:#24201A; --sand:#2C271F; --ink:#EEE8DD; --muted:#B5AB99; --line:#3B342A; --leaf-ink:#A9CC57; --oak:#C2AE8B; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-head);line-height:1.15;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h2{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--f-head);font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf-ink)}
+.lead{font-size:1.1rem;color:var(--muted);max-width:64ch}
+.note{font-size:.92rem;color:var(--muted)}
+
+header.hero{background:var(--walnut-deep);color:#F7F5F0;border-bottom:6px solid var(--leaf);margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px)}
+.hero .wrap{padding-block:48px 40px;display:grid;gap:14px}
+.hero .eyebrow{color:var(--leaf)}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800}
+.hero .lead{color:#CFC6B4}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.facts span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 14px;font-size:.92rem;color:#F7F5F0}
+.facts b{color:var(--leaf)}
+
+/* the sticky-note wall */
+.wall{background:#F3EFE6;border:1px solid var(--line);border-radius:14px;padding:22px 18px 18px;overflow-x:auto;position:relative}
+.wall::before{content:"";position:absolute;left:18px;right:18px;top:86px;height:2px;background:#CBBFA8}
+.strip{display:flex;gap:14px;min-width:860px;align-items:flex-start;position:relative}
+.col{display:grid;gap:8px;justify-items:start}
+.sticky{font-family:var(--f-hand);font-size:1.25rem;line-height:1.1;color:var(--s-ink);width:122px;min-height:84px;padding:10px 10px 12px;box-shadow:0 2px 0 rgba(0,0,0,.08),0 6px 12px rgba(0,0,0,.08)}
+.sticky.small{width:110px;min-height:54px;font-size:1.1rem}
+.ev{background:var(--s-event)} .hot{background:var(--s-hot);transform:rotate(-3deg)} .cmd{background:var(--s-cmd)} .act{background:var(--s-actor)} .sys{background:var(--s-sys)} .pol{background:var(--s-policy)} .rm{background:var(--s-read)}
+.col:nth-child(2) .ev{transform:rotate(1.5deg)} .col:nth-child(4) .ev{transform:rotate(-1deg)} .col:nth-child(5) .ev{transform:rotate(1deg)}
+
+main section{padding-block:52px;border-bottom:1px solid var(--line)}
+main section .wrap{display:grid;gap:20px}
+section.alt{background:var(--sand)}
+
+.goals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media (max-width:860px){.goals{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.goals{grid-template-columns:minmax(0,1fr)}}
+.goal{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:6px;align-content:start}
+.goal p{color:var(--muted);font-size:.95rem}
+
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+.leg{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.leg i{display:block;width:52px;height:40px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.leg b{display:block;font-family:var(--f-head)}
+.leg span{font-size:.9rem;color:var(--muted)}
+.leg .when{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--leaf-ink)}
+
+.people{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+.person{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:4px}
+.person .why{font-size:.92rem;color:var(--muted)}
+.person.opt{border-style:dashed}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 8px;background:var(--sand);color:var(--muted);margin-left:6px;vertical-align:middle}
+
+/* agenda */
+.bar{display:flex;height:18px;border-radius:9px;overflow:hidden;border:1px solid var(--line)}
+.bar span{display:block;height:100%}
+.agenda{display:grid;gap:0;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.slot{display:grid;grid-template-columns:96px 58px minmax(0,1fr);gap:14px;padding:14px 18px;border-top:1px solid var(--line);align-items:start}
+.slot:first-child{border-top:0}
+@media (max-width:620px){.slot{grid-template-columns:70px minmax(0,1fr)}.slot .dur{display:none}}
+.slot .time{font-family:var(--f-head);font-weight:700;font-variant-numeric:tabular-nums}
+.slot .dur{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.slot h3{font-size:1.02rem;margin-bottom:2px}
+.slot p{font-size:.94rem;color:var(--muted)}
+.slot .prompt{display:inline-block;margin-top:6px;font-family:var(--f-hand);font-size:1.25rem;color:var(--ink);background:var(--sand);padding:2px 10px;border-radius:6px}
+.slot.pause{background:var(--sand)}
+.k1{background:var(--oak)} .k2{background:var(--s-event)} .k3{background:var(--s-hot)} .k4{background:var(--line)} .k5{background:var(--s-cmd)} .k6{background:var(--leaf)}
+
+/* starter events */
+.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:860px){.phases{grid-template-columns:minmax(0,1fr)}}
+.phase{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;align-content:start}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font-family:var(--f-hand);font-size:1.15rem;line-height:1.1;color:var(--s-ink);background:var(--s-event);padding:6px 9px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:10px;align-content:start}
+.box ul,.box ol{margin:0;padding-left:1.15rem;display:grid;gap:6px;font-size:.96rem}
+.box li::marker{color:var(--leaf-ink)}
+.checklist{list-style:none;padding:0!important}
+.checklist li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px}
+.checklist li::before{content:"";width:16px;height:16px;margin-top:4px;border:2px solid var(--oak);border-radius:4px}
+footer .wrap{padding-block:26px 44px;color:var(--muted);font-size:.88rem}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">MC Interieur · workshop</p>
+    <h1>EventStorming: hoe loopt een project echt?</h1>
+    <p class="lead">Een halve dag met de mensen die het werk doen, een lange papierrol en veel stickers. We leggen samen vast wat er met een project gebeurt, van het eerste telefoontje tot de laatste factuur, en waar het vandaag knelt.</p>
+    <div class="facts">
+      <span><b>3,5 uur</b> met pauze</span>
+      <span><b>7 à 9</b> deelnemers</span>
+      <span><b>8 à 10 m</b> muur</span>
+      <span>Big Picture + één <b>diepteduik</b></span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Zo ziet de muur eruit</p>
+    <h2>Een tijdlijn van gebeurtenissen, in de verleden tijd</h2>
+    <div class="wall" aria-label="Voorbeeld van een stuk muur: gebeurtenissen op een tijdlijn, met een hotspot, een actie, een actor en een systeem">
+      <div class="strip">
+        <div class="col"><div class="sticky ev">Klant heeft gebeld</div><div class="sticky small act">Verkoper</div></div>
+        <div class="col"><div class="sticky ev">Intake gedaan bij de klant</div><div class="sticky small hot">Notities op papier, niet bij tekenaar</div></div>
+        <div class="col"><div class="sticky ev">Tekening gemaakt</div><div class="sticky small sys">TopSolid</div></div>
+        <div class="col"><div class="sticky ev">Offerte verstuurd</div><div class="sticky small cmd">Lijst overtypen</div></div>
+        <div class="col"><div class="sticky ev">Klant heeft goedgekeurd</div><div class="sticky small hot">Via mail, welke versie?</div></div>
+        <div class="col"><div class="sticky ev">Platen gezaagd</div><div class="sticky small sys">Ardis</div></div>
+      </div>
+    </div>
+    <p class="note">Een voorbeeld om de techniek uit te leggen. In de sessie schrijven de deelnemers alles zelf.</p>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <p class="eyebrow">Doel</p>
+    <h2>Wat we na de sessie willen hebben</h2>
+    <div class="goals">
+      <div class="goal"><h3>Eén gedeeld beeld</h3><p>Hoe een project vandaag echt loopt, gezien door verkoop, tekenaar, werkvoorbereiding, werkvloer en plaatsing samen.</p></div>
+      <div class="goal"><h3>De knelpunten</h3><p>Waar informatie zoekraakt, waar er gewacht of overgetypt wordt, in de woorden van wie het meemaakt.</p></div>
+      <div class="goal"><h3>Toets van het voorstel</h3><p>Past de flow in 9 stappen in Odoo op de werkelijkheid? Wat ontbreekt of moet anders?</p></div>
+      <div class="goal"><h3>Antwoorden</h3><p>Op de open vragen over etiketten, scannen, kantenlijmen en de plaatsing.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Deelnemers</p>
+    <h2>De mensen die het werk doen</h2>
+    <p class="lead">Liefst iemand per rol, en niet alleen leidinggevenden. Wie aan de zaag staat, weet het best wat er aan de zaag gebeurt.</p>
+    <div class="people">
+      <div class="person"><h3>Zaakvoerder</h3><p class="why">Neemt de beslissingen, bewaakt het doel. Zegt bij de start dat het geen evaluatie van mensen is.</p></div>
+      <div class="person"><h3>Verkoper</h3><p class="why">Eerste contact, intake, offerte, opvolging van de klant.</p></div>
+      <div class="person"><h3>Tekenaar</h3><p class="why">TopSolid, vragen aan de klant, wijzigingen en versies.</p></div>
+      <div class="person"><h3>Werkvoorbereiding</h3><p class="why">Materiaal, bestellingen, Ardis, planning van de werkvloer.</p></div>
+      <div class="person"><h3>Operator paneelzaag</h3><p class="why">Zagen, etiketten, wat er na de zaag met de stukken gebeurt.</p></div>
+      <div class="person"><h3>Operator CNC of montage</h3><p class="why">Programma’s, verzamelen per kast, wat er ontbreekt.</p></div>
+      <div class="person"><h3>Plaatser</h3><p class="why">Op de werf: wat ze nodig hebben, wat er misloopt, oplevering.</p></div>
+      <div class="person opt"><h3>Administratie <span class="tag">optioneel</span></h3><p class="why">Voorschotten, facturen, betalingen.</p></div>
+      <div class="person"><h3>Facilitator + helper</h3><p class="why">Leidt de sessie. De helper bewaakt de tijd, neemt foto’s en noteert.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <p class="eyebrow">Materiaal</p>
+    <h2>Stickers in zeven kleuren</h2>
+    <div class="legend">
+      <div class="leg"><i class="ev"></i><div><span class="when">Vanaf het begin</span><b>Gebeurtenis</b><span>Iets dat gebeurd is: "Offerte verstuurd"</span></div></div>
+      <div class="leg"><i class="hot"></i><div><span class="when">Vanaf het begin</span><b>Knelpunt of vraag</b><span>"Welke versie is goedgekeurd?"</span></div></div>
+      <div class="leg"><i class="act"></i><div><span class="when">Na de pauze</span><b>Wie</b><span>Verkoper, tekenaar, klant…</span></div></div>
+      <div class="leg"><i class="sys"></i><div><span class="when">Na de pauze</span><b>Systeem</b><span>TopSolid, Ardis, Excel, mail, zaag</span></div></div>
+      <div class="leg"><i class="cmd"></i><div><span class="when">Diepteduik</span><b>Actie</b><span>Wat iemand doet: "Lijst inlezen"</span></div></div>
+      <div class="leg"><i class="pol"></i><div><span class="when">Diepteduik</span><b>Regel</b><span>"Als alles gezaagd is, dan naar CNC"</span></div></div>
+      <div class="leg"><i class="rm"></i><div><span class="when">Diepteduik</span><b>Nodige info</b><span>Wat iemand moet zien om te beslissen</span></div></div>
+    </div>
+    <div class="box">
+      <h3>Checklist materiaal</h3>
+      <ul class="checklist">
+        <li>Papierrol (plotterpapier), 8 à 10 meter, op ooghoogte aan de muur</li>
+        <li>Grote sticky notes (76 x 76 mm) in de zeven kleuren, ruim voldoende</li>
+        <li>Zwarte stiften voor iedereen (geen balpennen: leesbaar op afstand)</li>
+        <li>Afplakband, stickertjes voor stemmen (3 per persoon)</li>
+        <li>Timer, fotocamera of gsm</li>
+        <li>De 9 stappen van het voorstel, geprint op A3, pas voor het laatste deel</li>
+        <li>Geen stoelen aan de muur, wel koffie</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Draaiboek</p>
+    <h2>3,5 uur, stap voor stap</h2>
+    <div class="bar" aria-hidden="true">
+      <span class="k1" style="width:7%"></span><span class="k2" style="width:24%"></span><span class="k3" style="width:10%"></span><span class="k4" style="width:7%"></span><span class="k2" style="width:10%"></span><span class="k5" style="width:12%"></span><span class="k5" style="width:16%"></span><span class="k6" style="width:7%"></span><span class="k6" style="width:7%"></span>
+    </div>
+    <div class="agenda">
+      <div class="slot"><span class="time">09:00</span><span class="dur">15 min</span><div><h3>Welkom en spelregels</h3><p>Doel van de dag, de kleuren uitleggen, de voorbeeldstrook tonen. Zaakvoerder: "dit gaat over het proces, niet over personen."</p></div></div>
+      <div class="slot"><span class="time">09:15</span><span class="dur">50 min</span><div><h3>Gebeurtenissen schrijven en ordenen</h3><p>Eerst 20 minuten iedereen zelf, in stilte, één gebeurtenis per sticker, in de verleden tijd. Dan samen op de tijdlijn leggen, dubbels samenvoegen.</p><span class="prompt">Wat gebeurt er met een project, van eerste telefoontje tot laatste factuur?</span></div></div>
+      <div class="slot"><span class="time">10:05</span><span class="dur">20 min</span><div><h3>Knelpunten en vragen</h3><p>Roze stickers waar het knelt, wacht, misloopt of niet duidelijk is. Discussies niet uitpraten: als knelpunt op de muur plakken.</p></div></div>
+      <div class="slot pause"><span class="time">10:25</span><span class="dur">15 min</span><div><h3>Pauze</h3><p>Helper neemt foto’s van de hele muur.</p></div></div>
+      <div class="slot"><span class="time">10:40</span><span class="dur">20 min</span><div><h3>Terug van achter naar voor</h3><p>Iemand vertelt het verhaal van de laatste factuur terug naar het eerste telefoontje. Zo vallen ontbrekende stappen op.</p></div></div>
+      <div class="slot"><span class="time">11:00</span><span class="dur">25 min</span><div><h3>Wie en welk systeem</h3><p>Gele en lila stickers: wie doet het, en in welk programma of op welk papier? Belangrijke momenten markeren, zoals "klant heeft goedgekeurd" en "zaagbatch naar Ardis".</p></div></div>
+      <div class="slot"><span class="time">11:25</span><span class="dur">35 min</span><div><h3>Diepteduik: van tekening naar productie</h3><p>Het knelpunt met de meeste stemmen, waarschijnlijk de overdracht van TopSolid naar de werkvloer. Met acties, regels en de info die iemand nodig heeft. De werkvloer neemt hier het woord.</p></div></div>
+      <div class="slot"><span class="time">12:00</span><span class="dur">15 min</span><div><h3>Naast het voorstel leggen</h3><p>De 9 stappen van de Odoo-flow ernaast hangen. Wat past, wat ontbreekt, wat moet anders?</p></div></div>
+      <div class="slot"><span class="time">12:15</span><span class="dur">15 min</span><div><h3>Stemmen en afspraken</h3><p>Ieder 3 stemstickers op de belangrijkste knelpunten. Top 3 vastleggen, met wie wat opvolgt.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <p class="eyebrow">Voor de facilitator</p>
+    <h2>Startset gebeurtenissen, als het stilvalt</h2>
+    <p class="lead">Niet vooraf tonen. Alleen gebruiken om een deel van de muur op gang te trekken: "Gebeurt dit ook bij jullie? Wat gebeurt ervoor?"</p>
+    <div class="phases">
+      <div class="phase"><h3>Verkoop en ontwerp</h3><div class="chips"><span>Klant heeft gebeld</span><span>Afspraak gemaakt</span><span>Intake gedaan</span><span>Ruimte opgemeten</span><span>Tekenaar toegewezen</span><span>Tekening gemaakt</span><span>Vraag aan klant gesteld</span><span>Offerte opgemaakt</span><span>Tekening + offerte verstuurd</span><span>Wijziging gevraagd</span><span>Klant heeft goedgekeurd</span><span>Voorschot betaald</span></div></div>
+      <div class="phase"><h3>Voorbereiding en atelier</h3><div class="chips"><span>Materiaallijst gemaakt</span><span>Materiaal besteld</span><span>Platen geleverd</span><span>Zaagbatch gemaakt</span><span>Zaagplan geoptimaliseerd</span><span>Etiketten geprint</span><span>Platen gezaagd</span><span>Kantenband gelijmd</span><span>CNC-bewerking klaar</span><span>Kast gemonteerd</span><span>Klaar voor plaatsing</span></div></div>
+      <div class="phase"><h3>Plaatsing en nazorg</h3><div class="chips"><span>Plaatsingsdatum afgesproken</span><span>Geladen en vertrokken</span><span>Geplaatst</span><span>Nazorgpunt genoteerd</span><span>Opgeleverd en getekend</span><span>Eindfactuur verstuurd</span><span>Betaald</span><span>Nazorg afgewerkt</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Ook meenemen</p>
+    <h2>Vragen die de sessie kan beantwoorden</h2>
+    <div class="two">
+      <div class="box">
+        <h3>Werkvloer</h3>
+        <ul>
+          <li>Wanneer krijgt een stuk zijn etiket, en wie print het?</li>
+          <li>Gaat elk stuk langs de kantenlijmmachine vóór de CNC?</li>
+          <li>Wordt er per stuk of per plaat gewerkt aan de zaag?</li>
+          <li>Hoe vinden ze vandaag de stukken van één kast terug?</li>
+          <li>Zijn er al badges, en wie werkt aan welke machine?</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Kantoor en werf</h3>
+        <ul>
+          <li>Welke intake-info mist de tekenaar het vaakst?</li>
+          <li>Hoe komt een wijziging van de klant bij de tekenaar en de werkvloer?</li>
+          <li>Wat nemen de plaatsers mee naar de werf, en wat ontbreekt er?</li>
+          <li>Hoe worden voorschot en eindfactuur vandaag opgevolgd?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <p class="eyebrow">Spelregels en opvolging</p>
+    <h2>Zo blijft het een goede sessie</h2>
+    <div class="two">
+      <div class="box">
+        <h3>Spelregels</h3>
+        <ul>
+          <li>Eén gebeurtenis per sticker, in de verleden tijd</li>
+          <li>Iedereen schrijft, ook wie stil is; de werkvloer eerst over de werkvloer</li>
+          <li>Niet corrigeren in het begin: de muur mag rommelig zijn</li>
+          <li>Een discussie die blijft duren wordt een roze sticker</li>
+          <li>Geen laptops, telefoons alleen voor foto’s</li>
+          <li>De facilitator schrijft niet zelf: de muur is van de deelnemers</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Voor en na</h3>
+        <ul class="checklist">
+          <li><b>Een week vooraf:</b> uitnodiging met het doel, ruimte met een lange muur reserveren, materiaal bestellen</li>
+          <li><b>Een dag vooraf:</b> papier ophangen, voorbeeldstrook en tijdlijnpijl tekenen</li>
+          <li><b>Na de sessie:</b> foto’s van de hele muur, voor het papier eraf gaat</li>
+          <li><b>Binnen een week:</b> de tijdlijn uitwerken, knelpunten gerangschikt, de interne projectflow en de beslissingen bijwerken</li>
+          <li><b>Terugkoppeling</b> aan alle deelnemers: wat we met hun knelpunten doen</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer><div class="wrap">Draaiboek EventStorming voor MC Interieur. Tijden zijn een voorstel; schuif mee met de energie in de groep.</div></footer>
